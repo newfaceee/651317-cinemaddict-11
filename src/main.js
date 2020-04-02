@@ -30,8 +30,8 @@ const createFilmsSectionTemplate = () => {
   return `<section class="films"></section>`;
 };
 const createFilmsContainerTemplate = (isAdditional, title) => {
-  return (`<section class="${isAdditional ? "films-list--extra" : "films-list"}">
-  <h2 class="films-list__title ${isAdditional ? "" : "visually-hidden"}">${title}</h2>
+  return (`<section class="${isAdditional ? `films-list--extra` : `films-list`}">
+  <h2 class="films-list__title ${isAdditional ? `` : `visually-hidden`}">${title}</h2>
       <div class="films-list__container">
       </div>
     </section>`);
@@ -233,53 +233,41 @@ const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 const siteBodyElement = document.body;
-const siteHeaderElement = document.querySelector(".header");
-const siteMainElement = document.querySelector(".main");
+const siteHeaderElement = document.querySelector(`.header`);
+const siteMainElement = document.querySelector(`.main`);
 
-render(siteHeaderElement, createProfileRatingTemplate(), "beforeend");
-render(siteMainElement, createNavigationTemplate(), "beforeend");
-render(siteMainElement, createSortTemplate(), "beforeend");
-render(siteMainElement, createFilmsSectionTemplate(), "beforeend");
+render(siteHeaderElement, createProfileRatingTemplate(), `beforeend`);
+render(siteMainElement, createNavigationTemplate(), `beforeend`);
+render(siteMainElement, createSortTemplate(), `beforeend`);
+render(siteMainElement, createFilmsSectionTemplate(), `beforeend`);
 
-const siteFilmsElement = document.querySelector(".films");
+const siteFilmsElement = document.querySelector(`.films`);
 
 render(
   siteFilmsElement,
-  createFilmsContainerTemplate(false, "All movies. Upcoming"),
+  createFilmsContainerTemplate(false, `All movies. Upcoming`),
   "beforeend"
 );
 
-const siteFilmsListElement = siteFilmsElement.querySelector(".films-list");
-const siteFilmsListContainerElement = siteFilmsListElement.querySelector(
-  ".films-list__container"
-);
+const siteFilmsListElement = siteFilmsElement.querySelector(`.films-list`);
+const siteFilmsListContainerElement = siteFilmsListElement.querySelector(`.films-list__container`);
 
 for (let i = 0; i < FILM_CARD_COUNT; i++) {
-  render(siteFilmsListContainerElement, createFilmCardTemplate(), "beforeend");
+  render(siteFilmsListContainerElement, createFilmCardTemplate(), `beforeend`);
 }
 
-render(siteFilmsListElement, createShowMoreButtonTemplate(), "beforeend");
+render(siteFilmsListElement, createShowMoreButtonTemplate(), `beforeend`);
 render(
   siteFilmsElement,
-  createFilmsContainerTemplate(true, "Top rated"),
-  "beforeend"
-);
-render(
-  siteFilmsElement,
-  createFilmsContainerTemplate(true, "Most commented"),
-  "beforeend"
-);
+  createFilmsContainerTemplate(true, `Top rated`), `beforeend`);
+render(siteFilmsElement, createFilmsContainerTemplate(true, `Most commented`), `beforeend`);
 
-const siteFilmsListExtraElement = document.querySelectorAll(
-  ".films-list--extra"
-);
+const siteFilmsListExtraElement = document.querySelectorAll(`.films-list--extra`);
 
 for (let filmsExtraItem of siteFilmsListExtraElement) {
-  let filmsExtraItemContainer = filmsExtraItem.querySelector(
-    ".films-list__container"
-  );
+  let filmsExtraItemContainer = filmsExtraItem.querySelector(`.films-list__container`);
   for (let i = 0; i < FILM_CARD_ADDITIONAL_COUNT; i++) {
-    render(filmsExtraItemContainer, createFilmCardTemplate(), "beforeend");
+    render(filmsExtraItemContainer, createFilmCardTemplate(), `beforeend`);
   }
 }
-render(siteBodyElement, createFilmsDetailsPopupTemplate(), "beforeend");
+render(siteBodyElement, createFilmsDetailsPopupTemplate(), `beforeend`);
