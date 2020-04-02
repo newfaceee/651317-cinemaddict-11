@@ -241,16 +241,24 @@ render(siteHeaderElement, createProfileRatingTemplate(), "beforeend");
 render(siteMainElement, createNavigationTemplate(), "beforeend");
 render(siteMainElement, createSortTemplate(), "beforeend");
 render(siteMainElement, createFilmsSectionTemplate(), "beforeend");
+
 const siteFilmsElement = document.querySelector(".films");
 
-render(siteFilmsElement, createFilmsContainerTemplate(), "beforeend");
+render(
+  siteFilmsElement,
+  createFilmsContainerTemplate(false, "All movies. Upcoming"),
+  "beforeend"
+);
+
 const siteFilmsListElement = siteFilmsElement.querySelector(".films-list");
 const siteFilmsListContainerElement = siteFilmsListElement.querySelector(
   ".films-list__container"
 );
+
 for (let i = 0; i < FILM_CARD_COUNT; i++) {
   render(siteFilmsListContainerElement, createFilmCardTemplate(), "beforeend");
 }
+
 render(siteFilmsListElement, createShowMoreButtonTemplate(), "beforeend");
 render(
   siteFilmsElement,
