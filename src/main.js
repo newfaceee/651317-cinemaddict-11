@@ -1,14 +1,15 @@
+"use strict";
 const FILM_CARD_COUNT = 5;
 const FILM_CARD_ADDITIONAL_COUNT = 2;
 
 const createProfileRatingTemplate = () => {
-  return `<section class="header__profile profile">
+  return (`<section class="header__profile profile">
         <p class="profile__rating">Movie Buff</p>
         <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-        </section>`;
+        </section>`);
 };
 const createNavigationTemplate = () => {
-  return `<nav class="main-navigation">
+  return (`<nav class="main-navigation">
         <div class="main-navigation__items">
           <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
           <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
@@ -16,29 +17,27 @@ const createNavigationTemplate = () => {
           <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
         </div>
         <a href="#stats" class="main-navigation__additional">Stats</a>
-      </nav>`;
+      </nav>`);
 };
 const createSortTemplate = () => {
-  return `<ul class="sort">
+  return (`<ul class="sort">
   <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
   <li><a href="#" class="sort__button">Sort by date</a></li>
   <li><a href="#" class="sort__button">Sort by rating</a></li>
-</ul>`;
+</ul>`);
 };
 const createFilmsSectionTemplate = () => {
   return `<section class="films"></section>`;
 };
 const createFilmsContainerTemplate = (isAdditional, title) => {
-  return `<section class="${isAdditional ? "films-list--extra" : "films-list"}">
-      <h2 class="films-list__title ${
-        isAdditional ? "" : "visually-hidden"
-      }">${title}</h2>
+  return (`<section class="${isAdditional ? "films-list--extra" : "films-list"}">
+  <h2 class="films-list__title ${isAdditional ? "" : "visually-hidden"}">${title}</h2>
       <div class="films-list__container">
       </div>
-    </section>`;
+    </section>`);
 };
 const createFilmCardTemplate = () => {
-  return `<article class="film-card">
+  return (`<article class="film-card">
     <h3 class="film-card__title">The Dance of Life</h3>
     <p class="film-card__rating">8.3</p>
     <p class="film-card__info">
@@ -54,13 +53,13 @@ const createFilmCardTemplate = () => {
       <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
       <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
     </form>
-  </article>`;
+  </article>`);
 };
 const createShowMoreButtonTemplate = () => {
   return `<button class="films-list__show-more">Show more</button>`;
 };
 const createFilmsDetailsPopupTemplate = () => {
-  return `<section class="film-details">
+  return (`<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
         <div class="film-details__close">
@@ -228,7 +227,7 @@ const createFilmsDetailsPopupTemplate = () => {
         </section>
       </div>
     </form>
-  </section>`;
+  </section>`);
 };
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
