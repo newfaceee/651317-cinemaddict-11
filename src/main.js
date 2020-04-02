@@ -243,11 +243,7 @@ render(siteMainElement, createFilmsSectionTemplate(), `beforeend`);
 
 const siteFilmsElement = document.querySelector(`.films`);
 
-render(
-  siteFilmsElement,
-  createFilmsContainerTemplate(false, `All movies. Upcoming`),
-  "beforeend"
-);
+render(siteFilmsElement, createFilmsContainerTemplate(false, `All movies. Upcoming`), `beforeend`);
 
 const siteFilmsListElement = siteFilmsElement.querySelector(`.films-list`);
 const siteFilmsListContainerElement = siteFilmsListElement.querySelector(`.films-list__container`);
@@ -257,9 +253,7 @@ for (let i = 0; i < FILM_CARD_COUNT; i++) {
 }
 
 render(siteFilmsListElement, createShowMoreButtonTemplate(), `beforeend`);
-render(
-  siteFilmsElement,
-  createFilmsContainerTemplate(true, `Top rated`), `beforeend`);
+render(siteFilmsElement, createFilmsContainerTemplate(true, `Top rated`), `beforeend`);
 render(siteFilmsElement, createFilmsContainerTemplate(true, `Most commented`), `beforeend`);
 
 const siteFilmsListExtraElement = document.querySelectorAll(`.films-list--extra`);
