@@ -1,7 +1,17 @@
+import { SORT_BY_TYPES } from '../const.js';
+
+const createSortMarkup = (sortByType, isActive) => {
+  const activeClass = isActive ? ` sort__button--active` : ``;
+  return (
+    `<li><a href="#" class="sort__button ${activeClass}">Sort by ${sortByType}</a></li>`
+  )
+}
+
 export const createSortTemplate = () => {
+  const sortByTypesMarkup = SORT_BY_TYPES.map((it, i) => {
+    return createSortMarkup(it, i === 0);
+  }).join('\n');
   return (`<ul class="sort">
-  <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-  <li><a href="#" class="sort__button">Sort by date</a></li>
-  <li><a href="#" class="sort__button">Sort by rating</a></li>
-</ul>`);
+    ${sortByTypesMarkup}
+  </ul>`);
 };
