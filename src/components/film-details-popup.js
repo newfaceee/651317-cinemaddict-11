@@ -1,6 +1,19 @@
-import {MONTH_NAMES, COMMENTS_EMOJIS, POPUP_CONTROLS} from '../const.js';
+import {MONTH_NAMES, COMMENTS_EMOJIS} from '../const.js';
 import {transformDuration} from '../utils.js';
 
+const popupControls = [{
+  name: `watchlist`,
+  text: `Add to watchlist`,
+},
+{
+  name: `watched`,
+  text: `Already watched`,
+},
+{
+  name: `favorite`,
+  text: `Add to favorites`,
+}
+];
 const createGenresMarkup = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
 };
@@ -27,11 +40,13 @@ const createCommentsMarkup = (comment) => {
 </li>`);
 };
 const createControlsMarkup = (control) => {
-  return (`<input type="checkbox" class="film-details__control-input visually-hidden" id=${control.name} name=${control.name}>
-  <label for=${control.name} class="film-details__control-label film-details__control-label--${control.name}">${control.text}</label>`);
+  const {name, text} = control;
+  return (`<input type="checkbox" class="film-details__control-input visually-hidden" id=${name} name=${name}>
+  <label for=${name} class="film-details__control-label film-details__control-label--${name}">${text}</label>`);
 };
+
 const createFilmDetailsPopupMarkup = (filmCard) => {
-  const {title, poster, original_title: originalTitle, comments, adult, rating, director, writers, actors, genres, country, duration, release_date: releaseDate, overview} = filmCard;
+  const {title, poster, originalTitle, comments, adult, rating, director, writers, actors, genres, country, duration, releaseDate, overview} = filmCard;
 
   const genresMarkup = genres.map((genre) => {
     return createGenresMarkup(genre);
@@ -45,7 +60,7 @@ const createFilmDetailsPopupMarkup = (filmCard) => {
     return createCommentsMarkup(comment);
   }).join(`\n`);
 
-  const controlsMarkup = POPUP_CONTROLS.map((control) => {
+  const controlsMarkup = popupControls.map((control) => {
     return createControlsMarkup(control);
   }).join(`\n`);
 
@@ -141,6 +156,6 @@ const createFilmDetailsPopupMarkup = (filmCard) => {
   </section>`);
 };
 
-export const createFilmsDetailsPopupTemplate = (filmCards) => {
-  return createFilmDetailsPopupMarkup(filmCards[1]);
+export const createFilmsDetailsPopupTemplate = (filmCard) => {
+  return createFilmDetailsPopupMarkup(filmCard);
 };

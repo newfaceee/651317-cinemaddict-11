@@ -17,11 +17,17 @@ const FILM_CARD_COUNT = 17;
 const FILM_CARD_COUNT_ON_START = 5;
 const STEP = 5;
 const filmCards = generateFilmCards(FILM_CARD_COUNT);
+
 const userProfile = generateUserProfile();
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
+const siteBodyElement = document.querySelector(`body`);
+const siteHeaderElement = document.querySelector(`.header`);
+const siteMainElement = document.querySelector(`.main`);
+const siteFooterStatisticsElement = document.querySelector(`.footer__statistics`);
+
 const renderAllMovies = () => {
   let firstFilmCardIndex = 0;
   let lastFilmCardIndex = FILM_CARD_COUNT_ON_START;
@@ -36,31 +42,32 @@ const renderAllMovies = () => {
 
   render(siteFilmsListContainerElement, createFilmCardTemplate(currentFilmCards), `beforeend`);
   render(siteFilmsListElement, createShowMoreButtonTemplate(), `beforeend`);
-  const siteShowMoreButtonElement = document.querySelector(`.films-list__show-more`);
-  siteShowMoreButtonElement.addEventListener(`click`, () => {
+  const siteShowMoreElement = document.querySelector(`.films-list__show-more`);
+  siteShowMoreElement.addEventListener(`click`, () => {
     const filmsListContainer = document.querySelector(`.films-list__container`);
     firstFilmCardIndex = firstFilmCardIndex + STEP;
     lastFilmCardIndex = lastFilmCardIndex + STEP > FILM_CARD_COUNT ? lastFilmCardIndex = FILM_CARD_COUNT : lastFilmCardIndex + 5;
     currentFilmCards = filmCards.slice(firstFilmCardIndex, lastFilmCardIndex);
     render(filmsListContainer, createFilmCardTemplate(currentFilmCards), `beforeend`);
     if (lastFilmCardIndex >= FILM_CARD_COUNT) {
-      siteShowMoreButtonElement.remove();
-    };
+      siteShowMoreElement.remove();
+    }
   });
 };
+
 
 const updateMainPage = (pageState) => {
   switch (pageState) {
     case `All movies`:
       document.querySelector(`.statistic`).remove();
       renderAllMovies();
-      mainPageState = `All movies`;
+      // mainPageState = `All movies`;
       break;
     case `Stats`:
       document.querySelector(`.films`).remove();
       document.querySelector(`.sort`).remove();
       render(siteMainElement, createStatisticsTemplate(userProfile), `beforeend`);
-      mainPageState = `Stats`;
+      // mainPageState = `Stats`;
       break;
   }
 };
@@ -70,19 +77,18 @@ const navigations = generateNavigations();
 
 render(siteHeaderElement, createProfileRatingTemplate(userProfile), `beforeend`);
 render(siteMainElement, createNavigationTemplate(navigations), `beforeend`);
-renderAllMovies();
+const siteMainNavigationElement = document.querySelector(`.main-navigation`);
+
 
 render(siteFooterStatisticsElement, createFooterStatisticsTemplate(filmCards.length), `beforeend`);
-
-const siteFilmsListShowMoreElement = document.querySelector(`.films-list__show-more`);
-const siteFilmsListExtraElement = document.querySelectorAll(`.films-list--extra`);
-const siteMainNavigationElement = document.querySelector(`.main-navigation`);
+renderAllMovies();
+render(siteBodyElement, createFilmsDetailsPopupTemplate(filmCards[0]), `beforeend`);
 
 siteMainNavigationElement.addEventListener(`click`, (evt) => {
   const target = evt.target;
   if (target.tagName !== `A`) {
     return;
-  };
+  }
 
   const text = target.textContent;
   switch (text) {
@@ -95,6 +101,4 @@ siteMainNavigationElement.addEventListener(`click`, (evt) => {
   }
 });
 
-
-// render(siteBodyElement, createFilmsDetailsPopupTemplate(filmCards), `beforeend`);
 
