@@ -1,17 +1,17 @@
-import { MONTH_NAMES, COMMENTS_EMOJIS, POPUP_CONTROLS } from '../const.js';
-import { transformDuration } from '../utils.js';
+import {MONTH_NAMES, COMMENTS_EMOJIS, POPUP_CONTROLS} from '../const.js';
+import {transformDuration} from '../utils.js';
 
 const createGenresMarkup = (genre) => {
-  return `<span class="film-details__genre">${genre}</span>`
-}
+  return `<span class="film-details__genre">${genre}</span>`;
+};
 const createEmojisMarkup = (emoji) => {
   return (`<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
   <label class="film-details__emoji-label" for="emoji-smile">
     <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
-  </label>`)
-}
+  </label>`);
+};
 const createCommentsMarkup = (comment) => {
-  const { text, emoji, date, author } = comment;
+  const {text, emoji, date, author} = comment;
   return (`<li class="film-details__comment">
   <span class="film-details__comment-emoji">
     <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-angry">
@@ -24,30 +24,30 @@ const createCommentsMarkup = (comment) => {
       <button class="film-details__comment-delete">Delete</button>
     </p>
   </div>
-</li>`)
+</li>`);
 };
 const createControlsMarkup = (control) => {
   return (`<input type="checkbox" class="film-details__control-input visually-hidden" id=${control.name} name=${control.name}>
-  <label for=${control.name} class="film-details__control-label film-details__control-label--${control.name}">${control.text}</label>`)
-}
+  <label for=${control.name} class="film-details__control-label film-details__control-label--${control.name}">${control.text}</label>`);
+};
 const createFilmDetailsPopupMarkup = (filmCard) => {
-  const { title, poster, original_title: originalTitle, comments, adult, rating, director, writers, actors, genres, country, duration, release_date: releaseDate, overview } = filmCard;
+  const {title, poster, original_title: originalTitle, comments, adult, rating, director, writers, actors, genres, country, duration, release_date: releaseDate, overview} = filmCard;
 
   const genresMarkup = genres.map((genre) => {
     return createGenresMarkup(genre);
-  }).join('\n');
+  }).join(`\n`);
 
   const emojisMarkup = COMMENTS_EMOJIS.map((emoji) => {
     return createEmojisMarkup(emoji);
-  }).join('\n');
+  }).join(`\n`);
 
   const commentsMarkup = comments.map((comment) => {
     return createCommentsMarkup(comment);
-  }).join('\n');
+  }).join(`\n`);
 
   const controlsMarkup = POPUP_CONTROLS.map((control) => {
     return createControlsMarkup(control);
-  }).join('\n');
+  }).join(`\n`);
 
   return (`<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -81,11 +81,11 @@ const createFilmDetailsPopupMarkup = (filmCard) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">${writers.length > 1 ? `Writers` : `Writer`}</td>
-                <td class="film-details__cell">${writers.join(' ')}</td>
+                <td class="film-details__cell">${writers.join(` `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">${actors.length > 1 ? `Actors` : `Actor`}</td>
-                <td class="film-details__cell">${actors.join(' ')}</td>
+                <td class="film-details__cell">${actors.join(` `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
@@ -139,10 +139,8 @@ const createFilmDetailsPopupMarkup = (filmCard) => {
       </div>
     </form>
   </section>`);
-}
+};
 
 export const createFilmsDetailsPopupTemplate = (filmCards) => {
-  console.log(filmCards[1]);
-  return createFilmDetailsPopupMarkup(filmCards[1])
-
+  return createFilmDetailsPopupMarkup(filmCards[1]);
 };

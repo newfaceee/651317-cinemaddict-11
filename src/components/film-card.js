@@ -1,17 +1,17 @@
-import { transformDuration } from '../utils.js';
-import { CONTROLS } from '../const.js';
+import {transformDuration} from '../utils.js';
+import {CONTROLS} from '../const.js';
 
 const createControlsMarkup = (control, isActive) => {
-  const controlClass = control === 'Mark as favorite' ? `favorite` : control.toLowerCase().split(' ').join('-');
+  const controlClass = control === `Mark as favorite` ? `favorite` : control.toLowerCase().split(` `).join(`-`);
   const activeClass = isActive ? `film-card__controls-item--active` : ``;
-  return (`<button class="film-card__controls-item button film-card__controls-item--${controlClass}">${control} ${isActive}</button>`)
-}
+  return (`<button class="film-card__controls-item button film-card__controls-item--${controlClass} ${activeClass}">${control}</button>`);
+};
 const createFilmCardsMarkup = (filmCard) => {
-  const { title, rating, release_date: date, duration, genres, poster, overview, comments } = filmCard;
+  const {title, rating, release_date: date, duration, genres, poster, overview, comments} = filmCard;
   const [hours, minutes] = transformDuration(duration);
   const controlsMarkup = CONTROLS.map((control) => {
     return createControlsMarkup(control);
-  }).join('\n');
+  }).join(`\n`);
 
   return (`<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
@@ -34,6 +34,6 @@ const createFilmCardsMarkup = (filmCard) => {
 export const createFilmCardTemplate = (filmCards) => {
   const filmCardsMarkup = filmCards.map((film) => {
     return createFilmCardsMarkup(film);
-  }).join('\n');
+  }).join(`\n`);
   return filmCardsMarkup;
 };

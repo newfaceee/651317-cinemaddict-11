@@ -1,3 +1,3 @@
 export const countrys = [
-    `USA`, `UK`, `Russia`, `Ukraine`
+  `USA`, `UK`, `Russia`, `Ukraine`
 ];

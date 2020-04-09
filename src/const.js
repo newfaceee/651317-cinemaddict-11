@@ -1,34 +1,33 @@
 export const MONTH_NAMES = [
-    `January`, `February`, `March`, `April`, `May`, `June`,
-    `July`, `August`, `September`, `October`, `November`, `December`
+  `January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `November`, `December`
 ];
 
 export const COMMENTS_EMOJIS = [
-    `smile`, `sleeping`, `puke`, `angry`
+  `smile`, `sleeping`, `puke`, `angry`
 ];
 
 
 export const COMMENTS = [
-    `Interesting setting and a good cast`, `Booooooooooring`, `Very very old. Meh`, `Almost two hours? Seriously?`, `Nice`
+  `Interesting setting and a good cast`, `Booooooooooring`, `Very very old. Meh`, `Almost two hours? Seriously?`, `Nice`
 ];
 
 export const SORT_BY_TYPES = [
-    `default`, `date`, `rating`
+  `default`, `date`, `rating`
 ];
 
 export const POPUP_CONTROLS = [{
-    name: `watchlist`,
-    text: `Add to watchlist`,
+  name: `watchlist`,
+  text: `Add to watchlist`,
 },
 {
-    name: `watched`,
-    text: `Already watched`,
+  name: `watched`,
+  text: `Already watched`,
 },
 {
-    name: `favorite`,
-    text: `Add to favorites`,
+  name: `favorite`,
+  text: `Add to favorites`,
 }
 ];
 export const CONTROLS = [
-    `Add to watchlist`, `Mark as watched`, `Mark as favorite`
+  `Add to watchlist`, `Mark as watched`, `Mark as favorite`
 ];
