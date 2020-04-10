@@ -23,8 +23,7 @@ const createEmojisMarkup = (emoji) => {
     <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
   </label>`);
 };
-const createCommentsMarkup = (comment) => {
-  const {text, emoji, date, author} = comment;
+const createCommentsMarkup = ({text, emoji, date, author}) => {
   return (`<li class="film-details__comment">
   <span class="film-details__comment-emoji">
     <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-angry">
@@ -39,15 +38,12 @@ const createCommentsMarkup = (comment) => {
   </div>
 </li>`);
 };
-const createControlsMarkup = (control) => {
-  const {name, text} = control;
+const createControlsMarkup = ({name, text}) => {
   return (`<input type="checkbox" class="film-details__control-input visually-hidden" id=${name} name=${name}>
   <label for=${name} class="film-details__control-label film-details__control-label--${name}">${text}</label>`);
 };
 
-const createFilmDetailsPopupMarkup = (filmCard) => {
-  const {title, poster, originalTitle, comments, adult, rating, director, writers, actors, genres, country, duration, releaseDate, overview} = filmCard;
-
+const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, adult, rating, director, writers, actors, genres, country, duration, releaseDate, overview}) => {
   const genresMarkup = genres.map((genre) => {
     return createGenresMarkup(genre);
   }).join(`\n`);

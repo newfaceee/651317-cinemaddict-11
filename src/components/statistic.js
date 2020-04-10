@@ -13,8 +13,7 @@ const createFiltersMarkup = (filter, isChecked) => {
   <label for="statistic-${id}" class="statistic__filters-label">${filter}</label>`);
 };
 
-const createStatisticRankMarkup = (profile) => {
-  const {rank, avatar} = profile;
+const createStatisticRankMarkup = ({rank, avatar}) => {
   const profileRating = capitalizeFirstLetters(rank).join(` `);
   return (`<img class="statistic__img" src="images/${avatar}" alt="Avatar" width="35" height="35">
   <span class="statistic__rank-label">${profileRating}</span>`);

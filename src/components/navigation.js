@@ -1,5 +1,4 @@
-const createNavigationMarkup = (navigation, isActive) => {
-  const {name, count} = navigation;
+const createNavigationMarkup = ({name, count}, isActive) => {
   const activeClass = isActive ? `main-navigation__item--active` : ``;
   return (typeof count === `undefined` ? `<a href="#${name}" class="main-navigation__item ${activeClass}">${name}</a>` : `<a href="#${name}" class="main-navigation__item ${activeClass}">${name} <span class="main-navigation__item-count">${count}</span></a>`);
 };

@@ -8,8 +8,7 @@ const createControlsMarkup = (control, isActive) => {
   const activeClass = isActive ? `film-card__controls-item--active` : ``;
   return (`<button class="film-card__controls-item button film-card__controls-item--${controlClass} ${activeClass}">${control}</button>`);
 };
-const createFilmCardsMarkup = (filmCard) => {
-  const {title, rating, releaseDate, duration, genres, poster, overview, comments} = filmCard;
+const createFilmCardsMarkup = ({title, rating, releaseDate, duration, genres, poster, overview, comments}) => {
   const [hours, minutes] = transformDuration(duration);
   const controlsMarkup = controls.map((control) => {
     return createControlsMarkup(control);
