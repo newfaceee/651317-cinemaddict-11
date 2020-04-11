@@ -7,7 +7,7 @@ export const transformDuration = (minutes) => {
 };
 
 export const capitalizeFirstLetters = (string) => {
-  const words = string.trim().split(` s`);
+  const words = string.trim().split(` `);
   return words.map((word) => {
     return word.charAt(0).toUpperCase() + word.substring(1);
   });
