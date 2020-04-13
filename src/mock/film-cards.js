@@ -1,4 +1,4 @@
-import {getRandomNumber, getFilmOverview, getTitle, getOriginalTitle, getComments, getDirector, getWriters, getActors, getCountry, getPoster, getGenres, getRating} from '../utils.js';
+import {getRandomNumber, getFilmOverview, getComments, getRating, getRandomData, getRandomDataFromRange} from '../utils.js';
 import {actors} from '../data/actors.js';
 import {writers} from '../data/writers.js';
 import {countrys} from '../data/countrys.js';
@@ -11,19 +11,19 @@ const isAdult = Math.random() >= 0.5 ? true : false;
 
 const generateFilmCard = () => {
   return {
-    title: getTitle(titles),
-    originalTitle: getOriginalTitle(originalTitles),
-    poster: getPoster(titles),
+    title: getRandomData(titles),
+    originalTitle: getRandomData(originalTitles),
+    poster: getRandomData(titles),
     overview: getFilmOverview(),
     rating: getRating(1.0, 10.0),
     releaseDate: new Date(),
     duration: getRandomNumber(60, 180),
-    genres: getGenres(genres),
+    genres: getRandomDataFromRange(genres),
     comments: getComments(),
-    director: getDirector(directors),
-    writers: getWriters(writers),
-    actors: getActors(actors),
-    country: getCountry(countrys),
+    director: getRandomData(directors),
+    writers: getRandomDataFromRange(writers),
+    actors: getRandomDataFromRange(actors),
+    country: getRandomData(countrys),
     adult: isAdult,
   };
 };
