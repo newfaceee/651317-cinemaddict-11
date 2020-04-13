@@ -7,9 +7,9 @@ const generateProfileRank = (watchedMoviesCount) => {
   const FAN_MAX = 20;
   const MOVIE_BUFF = 21;
 
-  if (watchedMoviesCount <= NOVICE_MIN && watchedMoviesCount >= NOVICE_MAX) {
+  if (watchedMoviesCount >= NOVICE_MIN && watchedMoviesCount <= NOVICE_MAX) {
     return `novice`;
-  } else if (watchedMoviesCount <= FAN_MIN && watchedMoviesCount >= FAN_MAX) {
+  } else if (watchedMoviesCount >= FAN_MIN && watchedMoviesCount <= FAN_MAX) {
     return `fan`;
   } else if (watchedMoviesCount >= MOVIE_BUFF) {
     return `movie buff`;
@@ -22,7 +22,7 @@ const generateUserProfile = () => {
   const WATCHED_MOVIED_COUNT_MAX = 30;
   const TIME_SPENT_MIN = 60;
   const TIME_SPENT_MAX = 600;
-  
+
   const watchedMoviesCount = getRandomNumber(WATCHED_MOVIES_COUNT_MIN, WATCHED_MOVIED_COUNT_MAX);
 
   return {
