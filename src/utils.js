@@ -19,7 +19,7 @@ export const getRandomNumber = (min, max) => {
 };
 export const getRandomData = (dataItem) => {
   return dataItem[getRandomNumber(0, dataItem.length - 1)];
-}
+};
 export const getRating = (min, max) => {
   return (Math.random() * (max - min + 1) + min).toFixed(1);
 };
