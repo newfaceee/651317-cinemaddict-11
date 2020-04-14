@@ -44,6 +44,7 @@ const createControlsMarkup = ({name, text}) => {
 };
 
 const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, adult, rating, director, writers, actors, genres, country, duration, releaseDate, overview}) => {
+  const posterName = `${poster.split(` `).join(`-`)}.jpg`;
   const genresMarkup = genres.map((genre) => {
     return createGenresMarkup(genre);
   }).join(`\n`);
@@ -68,7 +69,7 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, a
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+            <img class="film-details__poster-img" src="./images/posters/${posterName}" alt="">
   
             <p class="film-details__age">${adult ? `18+` : ``}</p>
           </div>
