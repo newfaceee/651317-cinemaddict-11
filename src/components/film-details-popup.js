@@ -1,5 +1,5 @@
 import {MONTH_NAMES, COMMENTS_EMOJIS} from '../const.js';
-import {transformDuration} from '../utils.js';
+import {transformDuration, createElement} from '../utils.js';
 
 const popupControls = [{
   name: `watchlist`,
@@ -45,6 +45,9 @@ const createControlsMarkup = ({name, text}) => {
 
 const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, adult, rating, director, writers, actors, genres, country, duration, releaseDate, overview}) => {
   const posterName = `${poster.split(` `).join(`-`)}.jpg`;
+  const isAdult = adult ? `18+` : ``;
+  const fullReleaseDate = `${releaseDate.getDate()} ${MONTH_NAMES[releaseDate.getMonth() + 1]} ${releaseDate.getFullYear()}`;
+  const [hours, minutes] = transformDuration(duration);
   const genresMarkup = genres.map((genre) => {
     return createGenresMarkup(genre);
   }).join(`\n`);
@@ -71,7 +74,7 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, a
           <div class="film-details__poster">
             <img class="film-details__poster-img" src="./images/posters/${posterName}" alt="">
   
-            <p class="film-details__age">${adult ? `18+` : ``}</p>
+            <p class="film-details__age">${isAdult}</p>
           </div>
   
           <div class="film-details__info">
@@ -101,11 +104,11 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, a
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${releaseDate.getDate()} ${MONTH_NAMES[releaseDate.getMonth() + 1]} ${releaseDate.getFullYear()}</td>
+                <td class="film-details__cell">${fullReleaseDate}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${transformDuration(duration)}</td>
+                <td class="film-details__cell">${hours}h ${minutes}m</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
@@ -153,6 +156,30 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, a
   </section>`);
 };
 
-export const createFilmsDetailsPopupTemplate = (filmCard) => {
+const createFilmsDetailsPopupTemplate = (filmCard) => {
   return createFilmDetailsPopupMarkup(filmCard);
 };
+
+export default class FilmDetailsPopup {
+  constructor(filmDetailsPopup) {
+    this._filmDetailsPopup = filmDetailsPopup;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmsDetailsPopupTemplate(this._filmDetailsPopup);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createFilmsDetailsPopupTemplate(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

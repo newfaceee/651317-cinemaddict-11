@@ -5,9 +5,17 @@ const createNavigationMarkup = ({name, count}, isActive) => {
 
 
 export const createNavigationTemplate = (navigations) => {
-  const navigationsMarkup = navigations.map((it, i) => {
-    return createNavigationMarkup(it, i === 0);
-  }).join(`\n`);
+  navigations.map((it) => {
+    console.log(it);
+  })
+  // const navigationsMarkup = navigations.map((it, i) => {
+  //   return createNavigationMarkup(it, i === 0);
+  // }).join(`\n`);
+  const navigationsMarkup = navigations.map((it) => {
+    return ``;
+  });
+  console.log(navigationsMarkup);
+
   return (`<nav class="main-navigation">
         <div class="main-navigation__items">
           ${navigationsMarkup}
@@ -15,3 +23,25 @@ export const createNavigationTemplate = (navigations) => {
         <a href="#stats" class="main-navigation__additional">Stats</a>
       </nav>`);
 };
+export default class Navigation {
+  constructor(navigation) {
+    this._navigation = navigation;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createNavigationTemplate(this._navigation);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNavigationTemplate(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

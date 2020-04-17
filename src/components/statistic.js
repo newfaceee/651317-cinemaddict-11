@@ -69,3 +69,26 @@ export const createStatisticsTemplate = (profile) => {
     </div>
   </section>`);
 };
+export default class Sort {
+  constructor(profile) {
+    this._profile = profile;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createStatisticsTemplate(this._profile);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createStatisticsTemplate(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
