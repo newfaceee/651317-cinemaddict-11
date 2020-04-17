@@ -1,3 +1,4 @@
+import {createElement} from '../utils.js';
 const createFooterStatisticsTemplate = (filmsCount) => {
   return `<p>${filmsCount} movies inside</p>`;
 };
@@ -14,7 +15,7 @@ export default class FooterStatistics {
 
   getElement() {
     if (!this._element) {
-      this._element = createFooterStatisticsTemplate(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

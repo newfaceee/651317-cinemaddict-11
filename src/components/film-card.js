@@ -8,7 +8,7 @@ const createControlsMarkup = (control, isActive) => {
   const activeClass = isActive ? `film-card__controls-item--active` : ``;
   return (`<button class="film-card__controls-item button film-card__controls-item--${controlClass} ${activeClass}">${control}</button>`);
 };
-const createFilmCardsMarkup = ({title, rating, releaseDate, duration, genres, poster, overview, comments}) => {
+const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, poster, overview, comments}) => {
   const OVERVIEW_SIZE = 140;
   const posterName = `${poster.split(` `).join(`-`)}.jpg`;
   const [hours, minutes] = transformDuration(duration);
@@ -38,26 +38,26 @@ const createFilmCardsMarkup = ({title, rating, releaseDate, duration, genres, po
 };
 
 
-const createFilmCardTemplate = (filmCards) => {
-  const filmCardsMarkup = filmCards.map((film) => {
-    return createFilmCardsMarkup(film);
-  }).join(`\n`);
-  return filmCardsMarkup;
-};
+// const createFilmCardTemplate = (filmCards) => {
+//   const filmCardsMarkup = filmCards.map((film) => {
+//     return createFilmCardsMarkup(film);
+//   }).join(`\n`);
+//   return filmCardsMarkup;
+// };
 
 export default class FilmCard {
-  constructor(filmCards) {
-    this._filmCards = filmCards;
+  constructor(filmCard) {
+    this._filmCard = filmCard;
 
     this._element = null;
   }
   getTemplate() {
-    return createFilmCardTemplate(this._filmCards);
+    return createFilmCardTemplate(this._filmCard);
   }
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this.getTemplate())
+      this._element = createElement(this.getTemplate());
     }
     return this._element;
   }

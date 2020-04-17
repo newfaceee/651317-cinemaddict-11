@@ -1,4 +1,4 @@
-import {capitalizeFirstLetters, transformDuration} from "../utils";
+import {capitalizeFirstLetters, transformDuration, createElement} from "../utils";
 
 const filterNames = [
   `All time`, `Today`, `Week`, `Month`, `Year`
@@ -82,7 +82,7 @@ export default class Sort {
 
   getElement() {
     if (!this._element) {
-      this._element = createStatisticsTemplate(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

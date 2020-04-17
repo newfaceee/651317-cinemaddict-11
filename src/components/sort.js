@@ -1,3 +1,4 @@
+import {createElement} from '../utils.js';
 const sortByTypes = [
   `default`, `date`, `rating`
 ];
@@ -27,7 +28,7 @@ export default class Sort {
 
   getElement() {
     if (!this._element) {
-      this._element = createSortTemplate(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

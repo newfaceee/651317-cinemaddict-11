@@ -1,3 +1,4 @@
+import {createElement} from '../utils.js';
 const createNavigationMarkup = ({name, count}, isActive) => {
   const activeClass = isActive ? `main-navigation__item--active` : ``;
   return (typeof count === `undefined` ? `<a href="#${name}" class="main-navigation__item ${activeClass}">${name}</a>` : `<a href="#${name}" class="main-navigation__item ${activeClass}">${name} <span class="main-navigation__item-count">${count}</span></a>`);
@@ -5,17 +6,9 @@ const createNavigationMarkup = ({name, count}, isActive) => {
 
 
 export const createNavigationTemplate = (navigations) => {
-  navigations.map((it) => {
-    console.log(it);
-  })
-  // const navigationsMarkup = navigations.map((it, i) => {
-  //   return createNavigationMarkup(it, i === 0);
-  // }).join(`\n`);
-  const navigationsMarkup = navigations.map((it) => {
-    return ``;
-  });
-  console.log(navigationsMarkup);
-
+  const navigationsMarkup = navigations.map((it, i) => {
+    return createNavigationMarkup(it, i === 0);
+  }).join(`\n`);
   return (`<nav class="main-navigation">
         <div class="main-navigation__items">
           ${navigationsMarkup}
@@ -35,7 +28,7 @@ export default class Navigation {
 
   getElement() {
     if (!this._element) {
-      this._element = createNavigationTemplate(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

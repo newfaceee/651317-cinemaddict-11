@@ -1,4 +1,4 @@
-import { COMMENTS_EMOJIS, COMMENTS } from "./const.js";
+import {COMMENTS_EMOJIS, COMMENTS} from "./const.js";
 
 export const transformDuration = (minutes) => {
   const MINUTES_IN_HOUR = 60;
@@ -24,11 +24,7 @@ export const getRating = (min, max) => {
   return (Math.random() * (max - min + 1) + min).toFixed(1);
 };
 
-export const getRandomDataFromRange = (
-  dataItem,
-  minValue = 1,
-  maxValue = 4
-) => {
+export const getRandomDataFromRange = (dataItem, minValue = 1, maxValue = 4) => {
   const rangeSize = getRandomNumber(minValue, maxValue);
   return new Array(rangeSize).fill(``).map(() => {
     return dataItem[getRandomNumber(0, dataItem.length - 1)];
@@ -94,4 +90,4 @@ export const render = (container, element, place) => {
       container.append(element);
       break;
   }
-}
+};

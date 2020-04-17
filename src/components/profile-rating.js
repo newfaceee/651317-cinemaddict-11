@@ -1,4 +1,4 @@
-import {capitalizeFirstLetters} from "../utils";
+import {capitalizeFirstLetters, createElement} from "../utils";
 
 const createProfileRatingMarkup = ({rank, avatar}) => {
   const profileRating = capitalizeFirstLetters(rank).join(` `);
@@ -25,7 +25,7 @@ export default class ProfileRating {
 
   getElement() {
     if (!this._element) {
-      this._element = createProfileRatingTemplate(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;
