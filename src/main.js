@@ -26,7 +26,7 @@ const STEP = 5;
 
 let showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
 // Получение данных из моков
-const filmCards = generateFilmCards(FILM_CARD_COUNT);
+const filmCards = generateFilmCards(0);
 const userProfile = generateUserProfile();
 const navigations = generateNavigations();
 
@@ -35,14 +35,22 @@ const filmCardsCount = filmCards.length;
 render(siteHeaderElement, new ProfileRatingComponent(userProfile).getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new NavigationComponent(navigations).getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new FilmsSectionComponent().getElement(), RenderPosition.BEFOREEND);
+// render(siteMainElement, new FilmsSectionComponent().getElement(), RenderPosition.BEFOREEND);
 render(siteFooterStatisticsElement, new FooterStatisticsComponent(filmCardsCount).getElement(), RenderPosition.BEFOREEND);
 
-const siteFilmsElement = siteMainElement.querySelector(`.films`);
+// const siteFilmsElement = siteMainElement.querySelector(`.films`);
 
 
 // Функция для рендера карточки фильма
 const renderFilmCard = (filmsListElement, film) => {
+  const onEscKeyDown = (evt) => {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+    if (isEscKey) {
+      closeFilmDetailsPopup();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
   const openFilmDetailsPopup = () => {
     siteBodyElement.appendChild(filmDetailsPopupComponent.getElement());
   };
@@ -58,28 +66,45 @@ const renderFilmCard = (filmsListElement, film) => {
   const filmDetailsPopupCloseButton = filmDetailsPopupComponent.getElement().querySelector(`.film-details__close-btn`);
 
   // Обработчики для открытия попапа
-  filmCardPoster.addEventListener(`click`, openFilmDetailsPopup);
-  filmCardTitle.addEventListener(`click`, openFilmDetailsPopup);
-  filmCardCommentsCount.addEventListener(`click`, openFilmDetailsPopup);
+
+  filmCardPoster.addEventListener(`click`, () => {
+    openFilmDetailsPopup();
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
+  filmCardTitle.addEventListener(`click`, () => {
+    openFilmDetailsPopup();
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
+  filmCardCommentsCount.addEventListener(`click`, () => {
+    openFilmDetailsPopup();
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
   // Обработчик для закрытия
   filmDetailsPopupCloseButton.addEventListener(`click`, closeFilmDetailsPopup);
   // Рендер карточки фильма
   render(filmsListElement, filmCardComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
-const renderFilmsList = (filmsListComponent, filmCardsData) => {
+const renderFilmsList = (filmsSectionComponent, filmCardsData) => {
+  // Рендер сообщения о пустой базе данных
+  if (filmCardsCount === 0 || !filmCardsCount || typeof filmCardsCount === `undefined`) {
+    render(filmsSectionComponent.getElement(), new FilmsListComponent(`There are no movies in our database`, true).getElement(), RenderPosition.BEFOREEND);
+    return;
+  }
   // Рендер контейнера куда складываются карточки фильмов
-  render(filmsListComponent.getElement(), new FilmsContainerComponent().getElement(), RenderPosition.BEFOREEND);
-  const filmsListElement = filmsListComponent.getElement().querySelector(`.films-list__container`);
 
-  // Отрисовка начального количества фильмов
+  render(filmsSectionComponent.getElement(), new FilmsListComponent(`All movies. Upcoming`, false).getElement(), RenderPosition.BEFOREEND);
+  render(filmsSectionComponent.getElement(), new FilmsContainerComponent().getElement(), RenderPosition.BEFOREEND);
+  const filmsListElement = filmsSectionComponent.getElement().querySelector(`.films-list__container`);
+
+  // // Отрисовка начального количества фильмов
   filmCardsData.slice(0, showingFilmCardsCount).forEach((film) => {
     renderFilmCard(filmsListElement, film);
   });
 
-  // Отрисовка кнопки Show More
+  // // Отрисовка кнопки Show More
   const showMoreButtonComponent = new ShowMoreButtonComponent();
-  render(filmsListComponent.getElement(), showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+  render(filmsSectionComponent.getElement(), showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
   showMoreButtonComponent.getElement().addEventListener(`click`, () => {
     const prevFilmCardsCount = showingFilmCardsCount;
     showingFilmCardsCount = showingFilmCardsCount + STEP;
@@ -95,8 +120,8 @@ const renderFilmsList = (filmsListComponent, filmCardsData) => {
 
 
 };
-const filmsListComponent = new FilmsListComponent(`All movies. Upcoming`);
-render(siteFilmsElement, filmsListComponent.getElement(), RenderPosition.BEFOREEND);
-renderFilmsList(filmsListComponent, filmCards);
+const filmsSectionComponent = new FilmsSectionComponent();
+render(siteMainElement, filmsSectionComponent.getElement(), RenderPosition.BEFOREEND);
+renderFilmsList(filmsSectionComponent, filmCards);
 
 
