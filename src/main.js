@@ -35,11 +35,7 @@ const filmCardsCount = filmCards.length;
 render(siteHeaderElement, new ProfileRatingComponent(userProfile).getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new NavigationComponent(navigations).getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
-// render(siteMainElement, new FilmsSectionComponent().getElement(), RenderPosition.BEFOREEND);
 render(siteFooterStatisticsElement, new FooterStatisticsComponent(filmCardsCount).getElement(), RenderPosition.BEFOREEND);
-
-// const siteFilmsElement = siteMainElement.querySelector(`.films`);
-
 
 // Функция для рендера карточки фильма
 const renderFilmCard = (filmsListElement, film) => {
