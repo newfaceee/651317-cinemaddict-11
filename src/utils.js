@@ -1,9 +1,9 @@
-import {COMMENTS_EMOJIS, COMMENTS} from './const.js';
+import {COMMENTS_EMOJIS, COMMENTS} from "./const.js";
 
 export const transformDuration = (minutes) => {
   const MINUTES_IN_HOUR = 60;
   const h = Math.floor(minutes / MINUTES_IN_HOUR);
-  const m = minutes - (MINUTES_IN_HOUR * h);
+  const m = minutes - MINUTES_IN_HOUR * h;
   return [h, m];
 };
 
@@ -34,10 +34,23 @@ export const getFilmOverview = () => {
   const OVERVIEW_SIZE_MIN = 1;
   const OVERVIEW_SIZE_MAX = 5;
   let overview = ``;
-  const overviewTemplates = [`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`, `Cras aliquet varius magna, non porta ligula feugiat eget.`, `Fusce tristique felis at fermentum pharetra.`, `Aliquam id orci ut lectus varius viverra.`, `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`, `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`, `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`, `Sed sed nisi sed augue convallis suscipit in sed felis.`, `Aliquam erat volutpat.`, `Nunc fermentum tortor ac porta dapibus.`, `In rutrum ac purus sit amet tempus.`];
+  const overviewTemplates = [
+    `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+    `Cras aliquet varius magna, non porta ligula feugiat eget.`,
+    `Fusce tristique felis at fermentum pharetra.`,
+    `Aliquam id orci ut lectus varius viverra.`,
+    `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
+    `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
+    `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
+    `Sed sed nisi sed augue convallis suscipit in sed felis.`,
+    `Aliquam erat volutpat.`,
+    `Nunc fermentum tortor ac porta dapibus.`,
+    `In rutrum ac purus sit amet tempus.`,
+  ];
   const overviewSize = getRandomNumber(OVERVIEW_SIZE_MIN, OVERVIEW_SIZE_MAX);
   for (let i = 0; i < overviewSize; i++) {
-    overview += overviewTemplates[getRandomNumber(0, overviewTemplates.length - 1)];
+    overview +=
+      overviewTemplates[getRandomNumber(0, overviewTemplates.length - 1)];
   }
   return overview;
 };
@@ -56,3 +69,25 @@ export const getComments = () => {
   return new Array(commentsNumber).fill(``).map(createComment);
 };
 
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+export const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+};
+
+export const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
