@@ -26,7 +26,7 @@ const STEP = 5;
 
 let showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
 // Получение данных из моков
-const filmCards = generateFilmCards(0);
+const filmCards = generateFilmCards(FILM_CARD_COUNT);
 const userProfile = generateUserProfile();
 const navigations = generateNavigations();
 
