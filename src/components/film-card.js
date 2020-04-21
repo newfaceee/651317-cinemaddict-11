@@ -46,5 +46,4 @@ export default class FilmCard extends AbstractComponent {
   getTemplate() {
     return createFilmCardTemplate(this._filmCard);
   }
-
 }
