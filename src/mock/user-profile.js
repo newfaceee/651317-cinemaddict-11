@@ -1,4 +1,4 @@
-import {getRandomNumber, getRandomDataFromRange} from "../utils.js";
+import {getRandomNumber, getRandomDataFromRange} from "../utils/common.js";
 import {genres} from "../data/genres.js";
 const generateProfileRank = (watchedMoviesCount) => {
   const NOVICE_MIN = 1;

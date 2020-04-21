@@ -1,5 +1,7 @@
 import {MONTH_NAMES, COMMENTS_EMOJIS} from '../const.js';
-import {transformDuration, createElement} from '../utils.js';
+import {transformDuration} from '../utils/common.js';
+import AbstractComponent from './abstract-component.js';
+
 
 const popupControls = [{
   name: `watchlist`,
@@ -160,26 +162,13 @@ const createFilmsDetailsPopupTemplate = (filmCard) => {
   return createFilmDetailsPopupMarkup(filmCard);
 };
 
-export default class FilmDetailsPopup {
+export default class FilmDetailsPopup extends AbstractComponent {
   constructor(filmDetailsPopup) {
+    super();
     this._filmDetailsPopup = filmDetailsPopup;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmsDetailsPopupTemplate(this._filmDetailsPopup);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

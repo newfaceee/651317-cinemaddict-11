@@ -1,4 +1,6 @@
-import {capitalizeFirstLetters, transformDuration, createElement} from "../utils";
+import {capitalizeFirstLetters, transformDuration} from "../utils/common.js";
+import AbstractComponent from './abstract-component.js';
+
 
 const filterNames = [
   `All time`, `Today`, `Week`, `Month`, `Year`
@@ -69,26 +71,13 @@ export const createStatisticsTemplate = (profile) => {
     </div>
   </section>`);
 };
-export default class Sort {
+export default class Sort extends AbstractComponent {
   constructor(profile) {
+    super();
     this._profile = profile;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createStatisticsTemplate(this._profile);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

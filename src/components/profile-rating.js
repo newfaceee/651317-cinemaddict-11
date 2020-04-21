@@ -1,4 +1,5 @@
-import {capitalizeFirstLetters, createElement} from "../utils";
+import {capitalizeFirstLetters} from "../utils/common.js";
+import AbstractComponent from './abstract-component.js';
 
 const createProfileRatingMarkup = ({rank, avatar}) => {
   const profileRating = capitalizeFirstLetters(rank).join(` `);
@@ -12,26 +13,14 @@ const createProfileRatingTemplate = (profile) => {
           ${profileMarkup}
         </section>`);
 };
-export default class ProfileRating {
+export default class ProfileRating extends AbstractComponent {
   constructor(profile) {
+    super();
     this._profile = profile;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createProfileRatingTemplate(this._profile);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
