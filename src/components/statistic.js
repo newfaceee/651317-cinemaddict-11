@@ -71,7 +71,7 @@ export const createStatisticsTemplate = (profile) => {
     </div>
   </section>`);
 };
-export default class Sort extends AbstractComponent {
+export default class Statistic extends AbstractComponent {
   constructor(profile) {
     super();
     this._profile = profile;

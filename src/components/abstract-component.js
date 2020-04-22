@@ -18,12 +18,4 @@ export default class AbstractComponent {
   removeElement() {
     this._element = null;
   }
-
-  setClickHandler(handler, element = this.getElement()) {
-    if (this.getElement() === element) {
-      this.getElement().addEventListener(`click`, handler);
-    } else {
-      this.getElement().querySelector(element).addEventListener(`click`, handler);
-    }
-  }
 }

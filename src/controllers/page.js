@@ -42,22 +42,22 @@ const renderFilmCard = (filmsListElement, film) => {
 
   // Обработчики для открытия попапа
 
-  filmCardComponent.setClickHandler(() => {
+  filmCardComponent.setClickHandler(`.film-card__poster`, () => {
     openFilmDetailsPopup();
     document.addEventListener(`keydown`, onEscKeyDown);
-  }, `.film-card__poster`);
-  filmCardComponent.setClickHandler(() => {
+  });
+  filmCardComponent.setClickHandler(`.film-card__title`, () => {
     openFilmDetailsPopup();
     document.addEventListener(`keydown`, onEscKeyDown);
-  }, `.film-card__title`);
-  filmCardComponent.setClickHandler(() => {
+  });
+  filmCardComponent.setClickHandler(`.film-card__comments`, () => {
     openFilmDetailsPopup();
     document.addEventListener(`keydown`, onEscKeyDown);
-  }, `.film-card__comments`);
-  // Обработчик для закрытия
-  filmDetailsPopupComponent.setClickHandler(() => {
+  });
+  // Обработчик для закрытия попапа
+  filmDetailsPopupComponent.setClickHandler(`.film-details__close-btn`, () => {
     closeFilmDetailsPopup();
-  }, `.film-details__close-btn`);
+  });
   // Рендер карточки фильма
   render(filmsListElement, filmCardComponent, RenderPosition.BEFOREEND);
 };
