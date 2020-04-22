@@ -3,7 +3,6 @@ import FilmsSectionComponent from './components/films-section.js';
 import StatisticComponent from './components/statistic.js';
 import NavigationComponent from './components/navigation.js';
 import ProfileRatingComponent from './components/profile-rating.js';
-import SortComponent from './components/sort.js';
 import FooterStatisticsComponent from './components/footerStatistics.js';
 import {generateUserProfile} from './mock/user-profile.js';
 import {generateNavigations} from './mock/navigation.js';
@@ -37,11 +36,11 @@ const renderNavigation = (navigationElements) => {
 };
 renderNavigation(navigations);
 // render(siteMainElement, new NavigationComponent(navigations), RenderPosition.BEFOREEND);
-render(siteMainElement, new SortComponent(), RenderPosition.BEFOREEND);
+// render(siteMainElement, new SortComponent(), RenderPosition.BEFOREEND);
 render(siteFooterStatisticsElement, new FooterStatisticsComponent(filmCardsCount), RenderPosition.BEFOREEND);
 
 
-const pageController = new PageController(filmsSectionComponent);
+const pageController = new PageController(siteMainElement);
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 pageController.render(filmCards);
 
