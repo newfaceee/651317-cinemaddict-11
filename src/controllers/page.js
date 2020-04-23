@@ -140,6 +140,13 @@ export default class PageController {
     this._sortComponent.setSortTypeChangeHandler((sortType) => {
       showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
 
+      // Добавляет активный класс выбранному типу сортировки
+      const prevActiveElement = this._sortComponent.getElement().querySelector(`.sort__button--active`);
+      const currentActiveElement = this._sortComponent.getElement().querySelector(`a[data-sort-type="${sortType}"]`);
+      prevActiveElement.classList.remove(`sort__button--active`);
+      currentActiveElement.classList.add(`sort__button--active`);
+
+
       filmsListContainerElement.innerHTML = ``;
 
       const sortedFilmCards = getSortedFilmCards(filmCardsData, sortType, 0, showingFilmCardsCount);
