@@ -1,7 +1,9 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
+
 const createNavigationMarkup = ({name, count}, isActive) => {
   const activeClass = isActive ? `main-navigation__item--active` : ``;
-  return (typeof count === `undefined` ? `<a href="#${name}" class="main-navigation__item ${activeClass}">${name}</a>` : `<a href="#${name}" class="main-navigation__item ${activeClass}">${name} <span class="main-navigation__item-count">${count}</span></a>`);
+  const countMarkup = typeof count === `number` ? `<span class="main-navigation__item-count">${count}</span>` : ``;
+  return `<a href="#${name}" class="main-navigation__item ${activeClass}">${name} ${countMarkup}</a>`;
 };
 
 
@@ -16,25 +18,17 @@ export const createNavigationTemplate = (navigations) => {
         <a href="#stats" class="main-navigation__additional">Stats</a>
       </nav>`);
 };
-export default class Navigation {
+export default class Navigation extends AbstractComponent {
   constructor(navigation) {
+    super();
+
     this._navigation = navigation;
-    this._element = null;
   }
 
   getTemplate() {
     return createNavigationTemplate(this._navigation);
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setClickHandler(selector, handler) {
+    this.getElement().querySelector(selector).addEventListener(`click`, handler);
   }
 }

@@ -1,4 +1,4 @@
-import {COMMENTS_EMOJIS, COMMENTS} from "./const.js";
+import {COMMENTS_EMOJIS, COMMENTS} from "../const.js";
 
 export const transformDuration = (minutes) => {
   const MINUTES_IN_HOUR = 60;
@@ -67,27 +67,4 @@ export const getComments = () => {
   const COMMENTS_MAX = 5;
   const commentsNumber = getRandomNumber(COMMENTS_MIN, COMMENTS_MAX);
   return new Array(commentsNumber).fill(``).map(createComment);
-};
-
-export const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
-export const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`,
-};
-
-export const render = (container, element, place) => {
-  switch (place) {
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-  }
 };

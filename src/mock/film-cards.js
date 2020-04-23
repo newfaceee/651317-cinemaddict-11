@@ -1,4 +1,4 @@
-import {getRandomNumber, getFilmOverview, getComments, getRating, getRandomData, getRandomDataFromRange} from '../utils.js';
+import {getRandomNumber, getFilmOverview, getComments, getRating, getRandomData, getRandomDataFromRange} from '../utils/common.js';
 import {actors} from '../data/actors.js';
 import {writers} from '../data/writers.js';
 import {countrys} from '../data/countrys.js';

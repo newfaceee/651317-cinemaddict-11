@@ -1,4 +1,5 @@
-import {transformDuration, createElement} from '../utils.js';
+import {transformDuration} from '../utils/common.js';
+import AbstractComponent from './abstract-component.js';
 
 const controls = [
   `Add to watchlist`, `Mark as watched`, `Mark as favorite`
@@ -37,31 +38,15 @@ const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, p
   </article>`);
 };
 
-
-// const createFilmCardTemplate = (filmCards) => {
-//   const filmCardsMarkup = filmCards.map((film) => {
-//     return createFilmCardsMarkup(film);
-//   }).join(`\n`);
-//   return filmCardsMarkup;
-// };
-
-export default class FilmCard {
+export default class FilmCard extends AbstractComponent {
   constructor(filmCard) {
+    super();
     this._filmCard = filmCard;
-
-    this._element = null;
   }
   getTemplate() {
     return createFilmCardTemplate(this._filmCard);
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
+  setClickHandler(selector, handler) {
+    this.getElement().querySelector(selector).addEventListener(`click`, handler);
   }
 }

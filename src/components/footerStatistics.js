@@ -1,27 +1,16 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
+
 const createFooterStatisticsTemplate = (filmsCount) => {
   return `<p>${filmsCount} movies inside</p>`;
 };
-export default class FooterStatistics {
+export default class FooterStatistics extends AbstractComponent {
   constructor(filmsCount) {
-    this._filmsCount = filmsCount;
+    super();
 
-    this._element = null;
+    this._filmsCount = filmsCount;
   }
 
   getTemplate() {
     return createFooterStatisticsTemplate(this._filmsCount);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
