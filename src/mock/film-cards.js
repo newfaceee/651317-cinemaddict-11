@@ -1,4 +1,4 @@
-import {getRandomNumber, getFilmOverview, getComments, getRating, getRandomData, getRandomDataFromRange} from '../utils/common.js';
+import {getRandomNumber, getFilmOverview, getComments, getRating, getRandomData, getRandomDataFromRange, getRandomDate} from '../utils/common.js';
 import {actors} from '../data/actors.js';
 import {writers} from '../data/writers.js';
 import {countrys} from '../data/countrys.js';
@@ -16,7 +16,7 @@ const generateFilmCard = () => {
     poster: getRandomData(titles),
     overview: getFilmOverview(),
     rating: getRating(1.0, 10.0),
-    releaseDate: new Date(),
+    releaseDate: getRandomDate(),
     duration: getRandomNumber(60, 180),
     genres: getRandomDataFromRange(genres),
     comments: getComments(),

@@ -20,6 +20,18 @@ export const getRandomNumber = (min, max) => {
 export const getRandomData = (dataItem) => {
   return dataItem[getRandomNumber(0, dataItem.length - 1)];
 };
+export const getRandomDate = () => {
+  const YEAR_MIN = 1998;
+  const YEAR_MAX = 2020;
+  const MONTH_MIN = 1;
+  const MONTH_MAX = 12;
+  const DAY_MIN = 1;
+  const DAY_MAX = 28;
+  const generatedYear = getRandomNumber(YEAR_MIN, YEAR_MAX);
+  const generatedMonth = getRandomNumber(MONTH_MIN, MONTH_MAX);
+  const generatedDay = getRandomNumber(DAY_MIN, DAY_MAX);
+  return new Date(generatedYear, generatedMonth, generatedDay);
+};
 export const getRating = (min, max) => {
   return (Math.random() * (max - min + 1) + min).toFixed(1);
 };
