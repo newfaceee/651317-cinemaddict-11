@@ -7,8 +7,6 @@ import {directors} from '../data/directors.js';
 import {originalTitles} from '../data/original-titles.js';
 import {titles} from '../data/titles';
 
-// const randomBoolean = 
-
 const generateFilmCard = () => {
   return {
     title: getRandomData(titles),

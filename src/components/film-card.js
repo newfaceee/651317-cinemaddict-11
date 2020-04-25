@@ -4,8 +4,8 @@ import AbstractComponent from './abstract-component.js';
 const CONTROLS = {
   WATCHLIST: `Add to watchlist`,
   ALREADY_WATCHED: `Mark as watched`,
-  FAVORITE: `Mark as favorite`,  
-}
+  FAVORITE: `Mark as favorite`,
+};
 
 const createControlMarkup = (control, isActive) => {
   const controlClass = control === `Mark as favorite` ? `favorite` : control.toLowerCase().split(` `).join(`-`);
@@ -56,7 +56,7 @@ export default class FilmCard extends AbstractComponent {
   }
   setWatchlistButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
-      .addEventListener(`click`, (evt) => { 
+      .addEventListener(`click`, (evt) => {
         evt.preventDefault();
         handler();
       });

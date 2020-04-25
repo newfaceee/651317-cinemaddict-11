@@ -1,7 +1,7 @@
 import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsPopupComponent from '../components/film-details-popup.js';
 
-import {render, RenderPosition, remove, add} from '../utils/render.js';
+import {render, RenderPosition} from '../utils/render.js';
 
 const siteBodyElement = document.querySelector(`body`);
 
@@ -36,44 +36,41 @@ export default class MovieController {
     });
     // Обработчики по клику на controllers [mark-as-favorite, mark-as-watched, add-to-watchlist]
     this._filmCardComponent.setWatchlistButtonClickHandler(() => {
-      console.log(`You clicked watchlist controller`);
       this._onDataChange(filmCard, Object.assign({}, filmCard, {
         isWatchList: !filmCard.isWatchList
       }));
     });
     this._filmCardComponent.setAlreadyWatchedButtonClickHandler(() => {
-      console.log(`You clicked already watched controller`)
+
       this._onDataChange(filmCard, Object.assign({}, filmCard, {
         isAlreadyWatched: !filmCard.isAlreadyWatched
       }));
     });
     this._filmCardComponent.setFavoriteButtonClickHandler(() => {
-      console.log(`You clicked favorite controller`)
       this._onDataChange(filmCard, Object.assign({}, filmCard, {
         isFavorite: !filmCard.isFavorite
       }));
     });
-    
     // Обработчик для закрытия попапа
     this._filmDetailsPopupComponent.setClickHandler(`.film-details__close-btn`, () => {
-      closeFilmDetailsPopup();
+      this._closeFilmDetailsPopup();
     });
 
     // Рендер карточки фильма
-    render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND)
+    render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
   }
 
   _openFilmDetailsPopup() {
-    add(siteBodyElement, this._filmDetailsPopupComponent);
-    // siteBodyElement.appendChild(filmDetailsPopupComponent.getElement());
+    const popupElement = this._filmDetailsPopupComponent.getElement();
+    siteBodyElement.appendChild(popupElement);
   }
   _closeFilmDetailsPopup() {
-    remove(this._filmDetailsPopupComponent);
-    // siteBodyElement.removeChild(filmDetailsPopupComponent.getElement());
+    const popupElement = this._filmDetailsPopupComponent.getElement();
+    siteBodyElement.removeChild(popupElement);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
   _onEscKeyDown(evt) {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
     if (isEscKey) {
       this._closeFilmDetailsPopup();
       document.removeEventListener(`keydown`, this._onEscKeyDown);

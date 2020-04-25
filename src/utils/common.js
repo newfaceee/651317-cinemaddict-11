@@ -22,7 +22,7 @@ export const getRandomData = (dataItem) => {
 };
 export const getRandomBoolean = () => {
   return Math.random() >= 0.5;
-}
+};
 export const getRandomDate = () => {
   const YEAR_MIN = 1998;
   const YEAR_MAX = 2020;
