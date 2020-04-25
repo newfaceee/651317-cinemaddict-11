@@ -18,7 +18,7 @@ let showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
 // Получение данных из моков
 export const filmCards = generateFilmCards(3);
 export const filmCardsCount = filmCards.length;
-
+// Функция для рендера карточек
 const renderFilmCards = (filmCardsData, filmCardsContainer, onDataChange) => {
   filmCardsData.map((film) => {
     // Создаем инстанс filmCardController, для того, чтобы затем вызвать
@@ -150,11 +150,12 @@ export default class PageController {
         renderShowMoreButton();
     }
   }
-  _onDataChange(filmCardController, oldData, newData) {
+  _onDataChange(oldData, newData) {
     const filmsContainerElement = this._filmsContainerComponent.getElement();
     filmsContainerElement.innerHTML = ``;
     // Находит индекс карточки фильма по которому кликнули
     const index = this._filmCards.findIndex((it) => it === oldData);
+    console.log(index);
     if (index === -1) {
       return;
     };

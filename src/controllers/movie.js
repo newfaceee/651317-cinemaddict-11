@@ -37,19 +37,19 @@ export default class MovieController {
     // Обработчики по клику на controllers [mark-as-favorite, mark-as-watched, add-to-watchlist]
     this._filmCardComponent.setWatchlistButtonClickHandler(() => {
       console.log(`You clicked watchlist controller`);
-      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+      this._onDataChange(filmCard, Object.assign({}, filmCard, {
         isWatchList: !filmCard.isWatchList
       }));
     });
     this._filmCardComponent.setAlreadyWatchedButtonClickHandler(() => {
       console.log(`You clicked already watched controller`)
-      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+      this._onDataChange(filmCard, Object.assign({}, filmCard, {
         isAlreadyWatched: !filmCard.isAlreadyWatched
       }));
     });
     this._filmCardComponent.setFavoriteButtonClickHandler(() => {
       console.log(`You clicked favorite controller`)
-      this._onDataChange(this, filmCard, Object.assign({}, filmCard, {
+      this._onDataChange(filmCard, Object.assign({}, filmCard, {
         isFavorite: !filmCard.isFavorite
       }));
     });
