@@ -1,15 +1,19 @@
 import {transformDuration} from '../utils/common.js';
 import AbstractComponent from './abstract-component.js';
 
-const controls = [
-  `Add to watchlist`, `Mark as watched`, `Mark as favorite`
-];
-const createControlsMarkup = (control, isActive) => {
+const CONTROLS = {
+  WATCHLIST: `Add to watchlist`,
+  ALREADY_WATCHED: `Mark as watched`,
+  FAVORITE: `Mark as favorite`,  
+}
+
+const createControlMarkup = (control, isActive) => {
   const controlClass = control === `Mark as favorite` ? `favorite` : control.toLowerCase().split(` `).join(`-`);
   const activeClass = isActive ? `film-card__controls-item--active` : ``;
   return (`<button class="film-card__controls-item button film-card__controls-item--${controlClass} ${activeClass}">${control}</button>`);
 };
-const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, poster, overview, comments}) => {
+
+const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, poster, overview, comments, isWatchList, isAlreadyWatched, isFavorite}) => {
   const OVERVIEW_SIZE = 140;
   const posterName = `${poster.split(` `).join(`-`)}.jpg`;
   const [hours, minutes] = transformDuration(duration);
@@ -17,10 +21,9 @@ const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, p
   const filmOverview = overview.length > OVERVIEW_SIZE ? overview.substring(0, OVERVIEW_SIZE) + `...` : overview;
   const commentsCount = comments.length;
   const genre = genres[0];
-  const controlsMarkup = controls.map((control) => {
-    return createControlsMarkup(control);
-  }).join(`\n`);
-
+  const controlsWatchlistMarkup = createControlMarkup(CONTROLS.WATCHLIST, isWatchList);
+  const controlsAlreadyWatchedMarkup = createControlMarkup(CONTROLS.ALREADY_WATCHED, isAlreadyWatched);
+  const controlsFavoriteMarkup = createControlMarkup(CONTROLS.FAVORITE, isFavorite);
   return (`<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${rating}</p>
@@ -33,7 +36,9 @@ const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, p
     <p class="film-card__description">${filmOverview}</p>
     <a class="film-card__comments">${commentsCount} comments</a>
     <form class="film-card__controls">
-      ${controlsMarkup}
+      ${controlsWatchlistMarkup}
+      ${controlsAlreadyWatchedMarkup}
+      ${controlsFavoriteMarkup}
     </form>
   </article>`);
 };
@@ -48,5 +53,26 @@ export default class FilmCard extends AbstractComponent {
   }
   setClickHandler(selector, handler) {
     this.getElement().querySelector(selector).addEventListener(`click`, handler);
+  }
+  setWatchlistButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, (evt) => { 
+        evt.preventDefault();
+        handler();
+      });
+  }
+  setAlreadyWatchedButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        handler();
+      });
+  }
+  setFavoriteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        handler();
+      });
   }
 }

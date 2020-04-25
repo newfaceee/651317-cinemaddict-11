@@ -20,6 +20,9 @@ export const getRandomNumber = (min, max) => {
 export const getRandomData = (dataItem) => {
   return dataItem[getRandomNumber(0, dataItem.length - 1)];
 };
+export const getRandomBoolean = () => {
+  return Math.random() >= 0.5;
+}
 export const getRandomDate = () => {
   const YEAR_MIN = 1998;
   const YEAR_MAX = 2020;

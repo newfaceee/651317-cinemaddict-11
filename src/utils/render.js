@@ -6,7 +6,6 @@ export const createElement = (template) => {
 };
 
 export const RenderPosition = {
-  BEFOREBEGIN: `beforebegin`,
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`,
 };
@@ -22,6 +21,9 @@ export const render = (container, component, place) => {
   }
 };
 
+export const add = (container, component) => {
+  container.appendChild(component.getElement());
+}
 export const remove = (component) => {
   component.getElement().remove();
   component.removeElement();
