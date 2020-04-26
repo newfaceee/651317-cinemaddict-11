@@ -1,4 +1,6 @@
-import {COMMENTS_EMOJIS, COMMENTS} from "../const.js";
+import {COMMENTS} from '../const.js';
+// import {emojis} from './components/film-details-popup.js';
+import {emojis} from '../components/film-details-popup.js';
 
 export const transformDuration = (minutes) => {
   const MINUTES_IN_HOUR = 60;
@@ -72,7 +74,7 @@ export const getFilmOverview = () => {
 const createComment = () => {
   return {
     text: COMMENTS[getRandomNumber(0, COMMENTS.length - 1)],
-    emoji: COMMENTS_EMOJIS[getRandomNumber(0, COMMENTS_EMOJIS.length - 1)],
+    emoji: emojis[getRandomNumber(0, emojis.length - 1)].name,
     author: `John Doe`,
     date: `2019/12/31/ 23:59`,
   };

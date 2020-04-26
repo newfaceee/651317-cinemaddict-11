@@ -52,7 +52,7 @@ export default class MovieController {
       }));
     });
     // Обработчик для закрытия попапа
-    this._filmDetailsPopupComponent.setClickHandler(`.film-details__close-btn`, () => {
+    this._filmDetailsPopupComponent.setClickClosePopupHandler(() => {
       this._closeFilmDetailsPopup();
     });
 
