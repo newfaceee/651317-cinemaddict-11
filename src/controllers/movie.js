@@ -7,11 +7,12 @@ const siteBodyElement = document.querySelector(`body`);
 
 export default class MovieController {
   // в качестве контейнера должно приходить элемент с классом .films-list__container
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._filmCardComponent = null;
     this._filmDetailsPopupComponent = null;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
   render(filmCard) {
@@ -23,14 +24,17 @@ export default class MovieController {
     // Обработчики для открытия попапа
 
     this._filmCardComponent.setClickHandler(`.film-card__poster`, () => {
+      this._onViewChange();
       this._openFilmDetailsPopup();
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
     this._filmCardComponent.setClickHandler(`.film-card__title`, () => {
+      this._onViewChange();
       this._openFilmDetailsPopup();
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
     this._filmCardComponent.setClickHandler(`.film-card__comments`, () => {
+      this._onViewChange();
       this._openFilmDetailsPopup();
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
@@ -60,11 +64,19 @@ export default class MovieController {
     render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
   }
 
+  setDefaultView() {
+    this._closeFilmDetailsPopup();
+  }
+
   _openFilmDetailsPopup() {
     const popupElement = this._filmDetailsPopupComponent.getElement();
     siteBodyElement.appendChild(popupElement);
   }
   _closeFilmDetailsPopup() {
+    // Если попап до этого открыт не был, выходим из функции
+    if (!siteBodyElement.contains(this._filmDetailsPopupComponent.getElement())) {
+      return;
+    }
     const popupElement = this._filmDetailsPopupComponent.getElement();
     siteBodyElement.removeChild(popupElement);
     document.removeEventListener(`keydown`, this._onEscKeyDown);

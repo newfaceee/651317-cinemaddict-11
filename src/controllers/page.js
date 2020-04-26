@@ -16,16 +16,15 @@ const STEP = 5;
 
 let showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
 // Получение данных из моков
-export const filmCards = generateFilmCards(3);
+export const filmCards = generateFilmCards(FILM_CARD_COUNT);
 export const filmCardsCount = filmCards.length;
 // Функция для рендера карточек
-const renderFilmCards = (filmCardsData, filmCardsContainer, onDataChange) => {
-  filmCardsData.map((film) => {
+const renderFilmCards = (filmCardsData, filmCardsContainer, onDataChange, onViewChange) => {
+  return filmCardsData.map((film) => {
     // Создаем инстанс filmCardController, для того, чтобы затем вызвать
     // у него метод render и вернуть карточку фильма
-    const filmCardController = new MovieController(filmCardsContainer, onDataChange);
+    const filmCardController = new MovieController(filmCardsContainer, onDataChange, onViewChange);
     filmCardController.render(film);
-    // console.log(filmCardController.());
     return filmCardController;
   });
 };
@@ -55,9 +54,10 @@ export default class PageController {
     // Вспомогательная переменная для задания количества отображаемых фильмов при
     // первом рендере
     this._showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
-    // Задаем требуемый контекст для метода _onSortTypeChange()
+    // Задаем требуемые контексты
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
 
     this._showedFilmCardControllers = [];
     this._sortComponent = new SortComponent();
@@ -95,10 +95,9 @@ export default class PageController {
     // рендерит внутри .films-list элемент для хранения карточек фильмов .films-list__container
     render(filmsListElement, this._filmsContainerComponent, RenderPosition.BEFOREEND);
     // Рендер карточек фильмов и кнопку Show-more
-    const newFilmCards = renderFilmCards(this._filmCards.slice(0, this._showingFilmCardsCount), filmsListContainerElement, this._onDataChange);
+    const newFilmCards = renderFilmCards(this._filmCards.slice(0, this._showingFilmCardsCount), filmsListContainerElement, this._onDataChange, this._onViewChange);
     this._showedFilmCardControllers = this._showedFilmCardControllers.concat(newFilmCards);
     this._renderShowMoreButton();
-
   }
 
   _renderShowMoreButton() {
@@ -118,10 +117,10 @@ export default class PageController {
       const filmsContainerElement = this._filmsContainerComponent.getElement();// .films-list__container
       this._showingFilmCardsCount = this._showingFilmCardsCount + STEP;
       const sortedFilmCards = getSortedFilmCards(this._filmCards, this._sortComponent.getSortType(), prevFilmCardsCount, this._showingFilmCardsCount);
-      const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onDataChange);
+      const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onDataChange, this._onViewChange);
       this._showedFilmCardControllers = this._showedFilmCardControllers.concat(newFilmCards);
       // Если текущее количество фильмов равно или больше количества всех карточек, удаляем кнопку
-      if (showingFilmCardsCount >= FILM_CARD_COUNT) {
+      if (this._showingFilmCardsCount >= FILM_CARD_COUNT) {
         remove(this._showMoreButtonComponent);
       }
 
@@ -140,7 +139,7 @@ export default class PageController {
     const sortedFilmCards = getSortedFilmCards(this._filmCards, sortType, 0, this._showingFilmCardsCount);
 
     // Получаем обновленные карточки фильмов
-    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerComponent, this._onDataChange);
+    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerComponent, this._onDataChange, this._onViewChange);
     // Обновляем показываемые карточки фильмов
     this._showedFilmCardControllers = newFilmCards;
     // Если кнопки еще нет, добавляем её
@@ -158,7 +157,11 @@ export default class PageController {
     }
     this._filmCards =
       [].concat(this._filmCards.slice(0, index), newData, this._filmCards.slice(index + 1));
-    const updatedFilmCards = getSortedFilmCards(this._filmCards, this._sortComponent.getSortType(), 0, this._showingFilmCardsCount);
-    renderFilmCards(updatedFilmCards, filmsContainerElement, this._onDataChange);
+    const sortedFilmCards = getSortedFilmCards(this._filmCards, this._sortComponent.getSortType(), 0, this._showingFilmCardsCount);
+    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onDataChange, this._onViewChange);
+    this._showedFilmCardControllers = newFilmCards;
+  }
+  _onViewChange() {
+    this._showedFilmCardControllers.forEach((it) => it.setDefaultView());
   }
 }

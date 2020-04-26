@@ -1,4 +1,4 @@
-import {MONTH_NAMES, COMMENTS_EMOJIS} from '../const.js';
+import {MONTH_NAMES} from '../const.js';
 import {transformDuration} from '../utils/common.js';
 import AbstractSmartComponent from './abstract-smart-component.js';
 
@@ -16,11 +16,12 @@ const popupControls = [{
   text: `Add to favorites`,
 }
 ];
-export const emojis = [ {
+export const emojis = [{
   name: `smile`,
-  isChecked: false, 
+  isChecked: false,
 },
-{ name: `sleeping`,
+{
+  name: `sleeping`,
   isChecked: false,
 },
 {
@@ -61,15 +62,14 @@ const createControlsMarkup = ({name, text}) => {
   return (`<input type="checkbox" class="film-details__control-input visually-hidden" id=${name} name=${name}>
   <label for=${name} class="film-details__control-label film-details__control-label--${name}">${text}</label>`);
 };
-// 
-// 
+
 const createAddEmojiLabelMarkup = (emojiIndex) => {
   const emoji = emojiIndex !== -1 ? emojis[emojiIndex].name : ``;
   const isEmoji = emojiIndex !== -1 ? `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">` : ``;
   return (`<div for="add-emoji" class="film-details__add-emoji-label">
       ${isEmoji}
-    </div>`)
-}
+    </div>`);
+};
 const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, adult, rating, director, writers, actors, genres, country, duration, releaseDate, overview}) => {
   const posterName = `${poster.split(` `).join(`-`)}.jpg`;
   const isAdult = adult ? `18+` : ``;
@@ -214,7 +214,6 @@ export default class FilmDetailsPopup extends AbstractSmartComponent {
     super.rerender();
   }
   _subsribeOnEvents() {
-    const EMOJI_SIZE = 55;
     const popupElement = this.getElement();
     const emojisListElement = popupElement.querySelector(`.film-details__emoji-list`);
     const emojiLabelsElement = Array.from(emojisListElement.querySelectorAll(`.film-details__emoji-label`));
@@ -226,13 +225,15 @@ export default class FilmDetailsPopup extends AbstractSmartComponent {
       // Находим индекс изображения по которому осуществлен клик
       const clickedEmojiIndex = emojiLabelsElement.findIndex((it) => it === evt.target.parentElement);
       // Проходим по всем смайликам, и если индекс смайлика по которому осуществлен клик
-      // совпадает с индексом текущего, меняем его свойство isChecked на !isChecked, 
+      // совпадает с индексом текущего, меняем его свойство isChecked на !isChecked,
       // остальным смайликам задаем свойство isChecked = false
       emojis.map((emoji, index) => {
         if (clickedEmojiIndex === index) {
-          return emoji.isChecked = !emoji.isChecked;
+          emoji.isChecked = !emoji.isChecked;
+          return emoji;
         } else {
-          return emoji.isChecked = false;
+          emoji.isChecked = false;
+          return emoji;
         }
       });
       this.rerender();
