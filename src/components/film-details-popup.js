@@ -1,6 +1,6 @@
-import {MONTH_NAMES, COMMENTS_EMOJIS} from '../const.js';
+import {MONTH_NAMES} from '../const.js';
 import {transformDuration} from '../utils/common.js';
-import AbstractComponent from './abstract-component.js';
+import AbstractSmartComponent from './abstract-smart-component.js';
 
 
 const popupControls = [{
@@ -16,11 +16,29 @@ const popupControls = [{
   text: `Add to favorites`,
 }
 ];
+export const emojis = [{
+  name: `smile`,
+  isChecked: false,
+},
+{
+  name: `sleeping`,
+  isChecked: false,
+},
+{
+  name: `puke`,
+  isChecked: false,
+},
+{
+  name: `angry`,
+  isChecked: false,
+}
+];
 const createGenresMarkup = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
 };
-const createEmojisMarkup = (emoji) => {
-  return (`<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+const createEmojisMarkup = (emoji, isChecked) => {
+  const isCheckedProperty = isChecked ? `checked` : ``;
+  return (`<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${isCheckedProperty}>
   <label class="film-details__emoji-label" for="emoji-smile">
     <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
   </label>`);
@@ -45,17 +63,25 @@ const createControlsMarkup = ({name, text}) => {
   <label for=${name} class="film-details__control-label film-details__control-label--${name}">${text}</label>`);
 };
 
+const createAddEmojiLabelMarkup = (emojiIndex) => {
+  const emoji = emojiIndex !== -1 ? emojis[emojiIndex].name : ``;
+  const isEmoji = emojiIndex !== -1 ? `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">` : ``;
+  return (`<div for="add-emoji" class="film-details__add-emoji-label">
+      ${isEmoji}
+    </div>`);
+};
 const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, adult, rating, director, writers, actors, genres, country, duration, releaseDate, overview}) => {
   const posterName = `${poster.split(` `).join(`-`)}.jpg`;
   const isAdult = adult ? `18+` : ``;
   const fullReleaseDate = `${releaseDate.getDate()} ${MONTH_NAMES[releaseDate.getMonth() + 1]} ${releaseDate.getFullYear()}`;
   const [hours, minutes] = transformDuration(duration);
+  const checkedEmojiIndex = emojis.findIndex((it) => it.isChecked === true);
   const genresMarkup = genres.map((genre) => {
     return createGenresMarkup(genre);
   }).join(`\n`);
 
-  const emojisMarkup = COMMENTS_EMOJIS.map((emoji) => {
-    return createEmojisMarkup(emoji);
+  const emojisMarkup = emojis.map(({name, isChecked}) => {
+    return createEmojisMarkup(name, isChecked);
   }).join(`\n`);
 
   const commentsMarkup = comments.map((comment) => {
@@ -66,6 +92,7 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, a
     return createControlsMarkup(control);
   }).join(`\n`);
 
+  const addEmojiLabelMarkup = createAddEmojiLabelMarkup(checkedEmojiIndex);
   return (`<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
@@ -142,7 +169,7 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, a
           </ul>
   
           <div class="film-details__new-comment">
-            <div for="add-emoji" class="film-details__add-emoji-label"></div>
+            ${addEmojiLabelMarkup} 
   
             <label class="film-details__comment-label">
               <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -162,16 +189,55 @@ const createFilmsDetailsPopupTemplate = (filmCard) => {
   return createFilmDetailsPopupMarkup(filmCard);
 };
 
-export default class FilmDetailsPopup extends AbstractComponent {
+export default class FilmDetailsPopup extends AbstractSmartComponent {
   constructor(filmDetailsPopup) {
     super();
     this._filmDetailsPopup = filmDetailsPopup;
+    this._clickClosePopupHandler = null;
+    // Подписывается на все события происходящие в попапе
+    this._subsribeOnEvents();
+
   }
 
   getTemplate() {
     return createFilmsDetailsPopupTemplate(this._filmDetailsPopup);
   }
-  setClickHandler(selector, handler) {
-    this.getElement().querySelector(selector).addEventListener(`click`, handler);
+  setClickClosePopupHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+    this._clickClosePopupHandler = handler;
+  }
+  recoveryListeners() {
+    this.setClickClosePopupHandler(this._clickClosePopupHandler);
+    this._subsribeOnEvents();
+  }
+  rerender() {
+    super.rerender();
+  }
+  _subsribeOnEvents() {
+    const popupElement = this.getElement();
+    const emojisListElement = popupElement.querySelector(`.film-details__emoji-list`);
+    const emojiLabelsElement = Array.from(emojisListElement.querySelectorAll(`.film-details__emoji-label`));
+    emojisListElement.addEventListener(`click`, (evt) => {
+      // Находим клик только по изображению
+      if (evt.target.tagName !== `IMG`) {
+        return;
+      }
+      // Находим индекс изображения по которому осуществлен клик
+      const clickedEmojiIndex = emojiLabelsElement.findIndex((it) => it === evt.target.parentElement);
+      // Проходим по всем смайликам, и если индекс смайлика по которому осуществлен клик
+      // совпадает с индексом текущего, меняем его свойство isChecked на !isChecked,
+      // остальным смайликам задаем свойство isChecked = false
+      emojis.map((emoji, index) => {
+        if (clickedEmojiIndex === index) {
+          emoji.isChecked = !emoji.isChecked;
+          return emoji;
+        } else {
+          emoji.isChecked = false;
+          return emoji;
+        }
+      });
+      this.rerender();
+    });
+
   }
 }

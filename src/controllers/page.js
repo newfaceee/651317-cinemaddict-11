@@ -1,11 +1,10 @@
-import FilmCardComponent from '../components/film-card.js';
 import FilmsSectionComponent from '../components/films-section.js';
 import SortComponent, {SortType} from '../components/sort.js';
-import FilmDetailsPopupComponent from '../components/film-details-popup.js';
 import ShowMoreButtonComponent from '../components/show-more-button.js';
 import FilmsContainerComponent from '../components/films-container.js';
 import FilmsListComponent from '../components/films-list.js';
 import NoFilmsComponent from '../components/no-films.js';
+import MovieController from './movie.js';
 import {generateFilmCards} from '../mock/film-cards.js';
 
 
@@ -19,54 +18,14 @@ let showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
 // Получение данных из моков
 export const filmCards = generateFilmCards(FILM_CARD_COUNT);
 export const filmCardsCount = filmCards.length;
-
-
-const siteBodyElement = document.querySelector(`body`);
-// Функция для рендера карточки фильма
-const renderFilmCard = (container, film) => {
-  const onEscKeyDown = (evt) => {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-    if (isEscKey) {
-      closeFilmDetailsPopup();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-  const openFilmDetailsPopup = () => {
-    siteBodyElement.appendChild(filmDetailsPopupComponent.getElement());
-  };
-  const closeFilmDetailsPopup = () => {
-    siteBodyElement.removeChild(filmDetailsPopupComponent.getElement());
-  };
-  const filmCardComponent = new FilmCardComponent(film);
-
-  const filmDetailsPopupComponent = new FilmDetailsPopupComponent(film);
-
-  // Обработчики для открытия попапа
-
-  filmCardComponent.setClickHandler(`.film-card__poster`, () => {
-    openFilmDetailsPopup();
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
-  filmCardComponent.setClickHandler(`.film-card__title`, () => {
-    openFilmDetailsPopup();
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
-  filmCardComponent.setClickHandler(`.film-card__comments`, () => {
-    openFilmDetailsPopup();
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
-  // Обработчик для закрытия попапа
-  filmDetailsPopupComponent.setClickHandler(`.film-details__close-btn`, () => {
-    closeFilmDetailsPopup();
-  });
-  // Рендер карточки фильма
-  render(container, filmCardComponent, RenderPosition.BEFOREEND);
-};
-
-const renderFilmCards = (filmCardsData, filmCardsContainer) => {
-  filmCardsData.forEach((filmCardElement) => {
-    renderFilmCard(filmCardsContainer, filmCardElement);
+// Функция для рендера карточек
+const renderFilmCards = (filmCardsData, filmCardsContainer, onDataChange, onViewChange) => {
+  return filmCardsData.map((film) => {
+    // Создаем инстанс filmCardController, для того, чтобы затем вызвать
+    // у него метод render и вернуть карточку фильма
+    const filmCardController = new MovieController(filmCardsContainer, onDataChange, onViewChange);
+    filmCardController.render(film);
+    return filmCardController;
   });
 };
 const getSortedFilmCards = (filmCardsData, sortType, from, to) => {
@@ -89,36 +48,38 @@ const getSortedFilmCards = (filmCardsData, sortType, from, to) => {
 export default class PageController {
   constructor(container) {
     this._container = container;
+    // Массив с карточками фильмов, в дальнейшем там будут храниться
+    // инстансы класса FilmCard
+    this._filmCards = [];
+    // Вспомогательная переменная для задания количества отображаемых фильмов при
+    // первом рендере
+    this._showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
+    // Задаем требуемые контексты
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
+
+    this._showedFilmCardControllers = [];
+    this._sortComponent = new SortComponent();
     this._filmsSectionComponent = new FilmsSectionComponent();
     this._filmsListComponent = new FilmsListComponent();
     this._filmsContainerComponent = new FilmsContainerComponent();
     this._noFilmsComponent = new NoFilmsComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
-    this._sortComponent = new SortComponent();
+    // Передаем колбэком метод класса PageController _onSortTypeChange()
+    // в метод класса Sort _setSortTypeChangeHandler()
+    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
   render(filmCardsData) {
-
+    // Запоминаем в this._filmCards наши моковые данные обо всех фильмах
+    // чтобы в дальнейшем обращатсья к ним в любом из методов.
+    this._filmCards = filmCardsData;
+    // Контейнером является элемент с классом .main поэтому без getElement();
     const container = this._container;
     const filmsSectionElement = this._filmsSectionComponent.getElement(); // .films
     const filmsListElement = this._filmsListComponent.getElement(); // .films-list
     const filmsListContainerElement = this._filmsContainerComponent.getElement(); // .films-list__container
-    const showMoreButtomElement = this._showMoreButtonComponent.getElement(); // show-more-button
-
-
-    const renderShowMoreButton = () => {
-      render(filmsSectionElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
-      this._showMoreButtonComponent.setClickHandler(() => {
-        const prevFilmCardsCount = showingFilmCardsCount;
-        showingFilmCardsCount = showingFilmCardsCount + STEP;
-        const sortedFilmCards = getSortedFilmCards(filmCardsData, this._sortComponent.getSortType(), prevFilmCardsCount, showingFilmCardsCount);
-        renderFilmCards(sortedFilmCards, filmsListContainerElement);
-        if (showingFilmCardsCount >= FILM_CARD_COUNT) {
-          remove(this._showMoreButtonComponent);
-        }
-      });
-    };
-
     // В случае если в БД нету фильмов отображает соответствующее сообщение
     if (filmCardsCount === 0 || !filmCardsCount || typeof filmCardsCount === `undefined`) {
       render(container, this._noFilmsComponent, RenderPosition.BEFOREEND);
@@ -133,28 +94,74 @@ export default class PageController {
     render(filmsSectionElement, this._filmsListComponent, RenderPosition.BEFOREEND);
     // рендерит внутри .films-list элемент для хранения карточек фильмов .films-list__container
     render(filmsListElement, this._filmsContainerComponent, RenderPosition.BEFOREEND);
-    // Отрисовка начального количества фильмов
-    renderFilmCards(filmCardsData.slice(0, FILM_CARD_COUNT_ON_START), filmsListContainerElement);
-    // Отрисовка кнопки Show More
-    renderShowMoreButton();
-    this._sortComponent.setSortTypeChangeHandler((sortType) => {
-      showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
+    // Рендер карточек фильмов и кнопку Show-more
+    const newFilmCards = renderFilmCards(this._filmCards.slice(0, this._showingFilmCardsCount), filmsListContainerElement, this._onDataChange, this._onViewChange);
+    this._showedFilmCardControllers = this._showedFilmCardControllers.concat(newFilmCards);
+    this._renderShowMoreButton();
+  }
 
-      // Добавляет активный класс выбранному типу сортировки
-      const prevActiveElement = this._sortComponent.getElement().querySelector(`.sort__button--active`);
-      const currentActiveElement = this._sortComponent.getElement().querySelector(`a[data-sort-type="${sortType}"]`);
-      prevActiveElement.classList.remove(`sort__button--active`);
-      currentActiveElement.classList.add(`sort__button--active`);
+  _renderShowMoreButton() {
+    const filmsSectionComponent = this._filmsSectionComponent.getElement();
+    // Если количество фильмов в БД менььше количества фильмов
+    // которые находятся на одном экране, кнопка Show-More нам не нужна
+    if (filmCardsCount <= showingFilmCardsCount) {
+      return;
+    }
 
+    // Рендер кнопки
+    render(filmsSectionComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-      filmsListContainerElement.innerHTML = ``;
-
-      const sortedFilmCards = getSortedFilmCards(filmCardsData, sortType, 0, showingFilmCardsCount);
-      renderFilmCards(sortedFilmCards.slice(0, showingFilmCardsCount), filmsListContainerElement);
-
-      if (!filmsSectionElement.contains(showMoreButtomElement)) {
-        renderShowMoreButton();
+    // Обработчки по клику на кнопку Show-more
+    this._showMoreButtonComponent.setClickHandler(() => {
+      const prevFilmCardsCount = this._showingFilmCardsCount;
+      const filmsContainerElement = this._filmsContainerComponent.getElement();// .films-list__container
+      this._showingFilmCardsCount = this._showingFilmCardsCount + STEP;
+      const sortedFilmCards = getSortedFilmCards(this._filmCards, this._sortComponent.getSortType(), prevFilmCardsCount, this._showingFilmCardsCount);
+      const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onDataChange, this._onViewChange);
+      this._showedFilmCardControllers = this._showedFilmCardControllers.concat(newFilmCards);
+      // Если текущее количество фильмов равно или больше количества всех карточек, удаляем кнопку
+      if (this._showingFilmCardsCount >= FILM_CARD_COUNT) {
+        remove(this._showMoreButtonComponent);
       }
+
     });
+  }
+
+  _onSortTypeChange(sortType) {
+    // Обозначим контейнер, для карточек фильмов это .films-card__container
+    const filmsContainerComponent = this._filmsContainerComponent.getElement();
+
+    // Восстанавливаем количество отображаемых карточек до начального количества
+    showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
+    // Очищаем DIV где хранятся карточки фильмов
+    filmsContainerComponent.innerHTML = ``;
+    // Получаем отсортированные карточки фильмов
+    const sortedFilmCards = getSortedFilmCards(this._filmCards, sortType, 0, this._showingFilmCardsCount);
+
+    // Получаем обновленные карточки фильмов
+    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerComponent, this._onDataChange, this._onViewChange);
+    // Обновляем показываемые карточки фильмов
+    this._showedFilmCardControllers = newFilmCards;
+    // Если кнопки еще нет, добавляем её
+    // if (!filmsSectionElement.contains(this._showMoreButtomElement.getElement())) {
+    //     renderShowMoreButton();
+    // }
+  }
+  _onDataChange(oldData, newData) {
+    const filmsContainerElement = this._filmsContainerComponent.getElement();
+    filmsContainerElement.innerHTML = ``;
+    // Находит индекс карточки фильма по которому кликнули
+    const index = this._filmCards.findIndex((it) => it === oldData);
+    if (index === -1) {
+      return;
+    }
+    this._filmCards =
+      [].concat(this._filmCards.slice(0, index), newData, this._filmCards.slice(index + 1));
+    const sortedFilmCards = getSortedFilmCards(this._filmCards, this._sortComponent.getSortType(), 0, this._showingFilmCardsCount);
+    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onDataChange, this._onViewChange);
+    this._showedFilmCardControllers = newFilmCards;
+  }
+  _onViewChange() {
+    this._showedFilmCardControllers.forEach((it) => it.setDefaultView());
   }
 }
