@@ -1,6 +1,6 @@
 import {MONTH_NAMES} from '../const.js';
 import {transformDuration} from '../utils/common.js';
-import AbstractSmartComponent from './abstract-smart-component.js';
+import AbstractComponent from './abstract-component.js';
 
 
 const popupControls = [{
@@ -161,25 +161,6 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, a
       </div>
   
       <div class="form-details__bottom-container">
-        <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
-  
-          <ul class="film-details__comments-list">
-            ${commentsMarkup}
-          </ul>
-  
-          <div class="film-details__new-comment">
-            ${addEmojiLabelMarkup} 
-  
-            <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
-            </label>
-  
-            <div class="film-details__emoji-list">
-              ${emojisMarkup}
-            </div>
-          </div>
-        </section>
       </div>
     </form>
   </section>`);
@@ -189,55 +170,17 @@ const createFilmsDetailsPopupTemplate = (filmCard) => {
   return createFilmDetailsPopupMarkup(filmCard);
 };
 
-export default class FilmDetailsPopup extends AbstractSmartComponent {
+export default class FilmDetailsPopup extends AbstractComponent {
   constructor(filmDetailsPopup) {
     super();
     this._filmDetailsPopup = filmDetailsPopup;
     this._clickClosePopupHandler = null;
-    // Подписывается на все события происходящие в попапе
-    this._subsribeOnEvents();
-
   }
-
   getTemplate() {
     return createFilmsDetailsPopupTemplate(this._filmDetailsPopup);
   }
   setClickClosePopupHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
     this._clickClosePopupHandler = handler;
-  }
-  recoveryListeners() {
-    this.setClickClosePopupHandler(this._clickClosePopupHandler);
-    this._subsribeOnEvents();
-  }
-  rerender() {
-    super.rerender();
-  }
-  _subsribeOnEvents() {
-    const popupElement = this.getElement();
-    const emojisListElement = popupElement.querySelector(`.film-details__emoji-list`);
-    const emojiLabelsElement = Array.from(emojisListElement.querySelectorAll(`.film-details__emoji-label`));
-    emojisListElement.addEventListener(`click`, (evt) => {
-      // Находим клик только по изображению
-      if (evt.target.tagName !== `IMG`) {
-        return;
-      }
-      // Находим индекс изображения по которому осуществлен клик
-      const clickedEmojiIndex = emojiLabelsElement.findIndex((it) => it === evt.target.parentElement);
-      // Проходим по всем смайликам, и если индекс смайлика по которому осуществлен клик
-      // совпадает с индексом текущего, меняем его свойство isChecked на !isChecked,
-      // остальным смайликам задаем свойство isChecked = false
-      emojis.map((emoji, index) => {
-        if (clickedEmojiIndex === index) {
-          emoji.isChecked = !emoji.isChecked;
-          return emoji;
-        } else {
-          emoji.isChecked = false;
-          return emoji;
-        }
-      });
-      this.rerender();
-    });
-
   }
 }

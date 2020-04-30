@@ -24,9 +24,9 @@ const generateFilmCard = () => {
     actors: getRandomDataFromRange(actors),
     country: getRandomData(countrys),
     adult: getRandomBoolean(),
-    isWatchList: false,
-    isAlreadyWatched: false,
-    isFavorite: false,
+    isWatchList: getRandomBoolean(),
+    isAlreadyWatched: getRandomBoolean(),
+    isFavorite: getRandomBoolean(),
   };
 };
 const generateFilmCards = (count) => {

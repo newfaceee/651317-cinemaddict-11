@@ -1,7 +1,7 @@
 import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsPopupComponent from '../components/film-details-popup.js';
-
-import {render, RenderPosition} from '../utils/render.js';
+import FilmDetailsPopupCommentsComponent from '../components/film-details-popup-comments.js';
+import {render, RenderPosition, remove} from '../utils/render.js';
 
 const siteBodyElement = document.querySelector(`body`);
 
@@ -11,6 +11,7 @@ export default class MovieController {
     this._container = container;
     this._filmCardComponent = null;
     this._filmDetailsPopupComponent = null;
+    this._filmDetailsPopupCommentsComponent = null;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
@@ -19,8 +20,8 @@ export default class MovieController {
     // Создаем инстанс для карточки фильма и попапа
     // на вход принимают карточку одного фильма
     this._filmCardComponent = new FilmCardComponent(filmCard);
+    console.log(this._filmCardComponent);
     this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(filmCard);
-
     // Обработчики для открытия попапа
 
     this._filmCardComponent.setClickHandler(`.film-card__poster`, () => {
@@ -45,12 +46,12 @@ export default class MovieController {
       }));
     });
     this._filmCardComponent.setAlreadyWatchedButtonClickHandler(() => {
-
       this._onDataChange(filmCard, Object.assign({}, filmCard, {
         isAlreadyWatched: !filmCard.isAlreadyWatched
       }));
     });
     this._filmCardComponent.setFavoriteButtonClickHandler(() => {
+
       this._onDataChange(filmCard, Object.assign({}, filmCard, {
         isFavorite: !filmCard.isFavorite
       }));
@@ -62,6 +63,12 @@ export default class MovieController {
 
     // Рендер карточки фильма
     render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+  }
+
+  destroy() {
+    remove(this._filmCardComponent);
+    remove(this._filmDetailsPopupComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   setDefaultView() {
