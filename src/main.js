@@ -9,6 +9,7 @@ import FooterStatisticsComponent from './components/footerStatistics.js';
 import {generateUserProfile} from './mock/user-profile.js';
 import {generateNavigations} from './mock/navigation.js';
 import {generateFilmCards} from './mock/film-cards.js';
+import {generateComments} from './mock/comment.js';
 import MoviesModel from './models/movie.js';
 import CommentsModel from './models/comments.js';
 import {render, RenderPosition, replace} from './utils/render.js';
@@ -21,8 +22,9 @@ const FILM_CARD_COUNT = 17;
 // генерация моковых данных
 const userProfile = generateUserProfile();
 const filmCards = generateFilmCards(FILM_CARD_COUNT);
-const comments = getComments();
 const filmCardsCount = filmCards.length;
+const comments = generateComments(filmCards);
+
 // Основные элементы разметки
 
 const siteHeaderElement = document.querySelector(`.header`);
@@ -32,6 +34,10 @@ const filmsSectionComponent = new FilmsSectionComponent();
 // Создаем инстанс модели фильма и комментариев и передаем моковые данные в модель
 const moviesModel = new MoviesModel();
 moviesModel.setMovies(filmCards);
+const commentsModel = new CommentsModel();
+commentsModel.setComments(comments);
+
+
 // const commentsModel = new CommentsModel();
 
 // commentsModel.setComments(comments);
@@ -43,7 +49,7 @@ render(siteHeaderElement, new ProfileRatingComponent(userProfile), RenderPositio
 render(siteFooterStatisticsElement, new FooterStatisticsComponent(filmCardsCount), RenderPosition.BEFOREEND);
 
 const filterController = new FilterController(siteMainElement, moviesModel);
-const pageController = new PageController(siteMainElement, moviesModel);
+const pageController = new PageController(siteMainElement, moviesModel, commentsModel);
 const sortController = new SortController(siteMainElement, moviesModel);
 sortController.render();
 filterController.render();

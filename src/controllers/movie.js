@@ -2,8 +2,18 @@ import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsPopupComponent from '../components/film-details-popup.js';
 import FilmDetailsPopupCommentsComponent from '../components/film-details-popup-comments.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
+import CommentsController from './comments.js';
 
 const siteBodyElement = document.querySelector(`body`);
+
+// const renderComments = (commentsData) => {
+//   return commentsData.map((comment) => {
+//     const commentsController = new CommentsController();
+//     commentsController.render(comment);
+//     return commentsController;
+//   });
+// };
+
 
 export default class MovieController {
   // в качестве контейнера должно приходить элемент с классом .films-list__container
@@ -12,17 +22,18 @@ export default class MovieController {
     this._filmCardComponent = null;
     this._filmDetailsPopupComponent = null;
     this._filmDetailsPopupCommentsComponent = null;
+    this._filmDetailsPopupCommentsComponent = null;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
-  render(filmCard) {
+  render(filmCard, comments) {
     // Создаем инстанс для карточки фильма и попапа
     // на вход принимают карточку одного фильма
-    this._filmCardComponent = new FilmCardComponent(filmCard);
-    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(filmCard);
+    this._filmCardComponent = new FilmCardComponent(filmCard, comments);
+    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(filmCard, comments);
+    // this._filmDetailsPopupCommentsComponent = new FilmDetailsPopupCommentsComponent(comments);
     // Обработчики для открытия попапа
-
     this._filmCardComponent.setClickHandler(`.film-card__poster`, () => {
       this._onViewChange();
       this._openFilmDetailsPopup();

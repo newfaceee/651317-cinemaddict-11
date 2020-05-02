@@ -13,13 +13,12 @@ const createControlMarkup = (control, isActive) => {
   return (`<button class="film-card__controls-item button film-card__controls-item--${controlClass} ${activeClass}">${control}</button>`);
 };
 
-const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, poster, overview, comments, isWatchList, isAlreadyWatched, isFavorite}) => {
+const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, poster, overview, isWatchList, isAlreadyWatched, isFavorite}, commentsCount) => {
   const OVERVIEW_SIZE = 140;
   const posterName = `${poster.split(` `).join(`-`)}.jpg`;
   const [hours, minutes] = transformDuration(duration);
   const releaseDateYear = releaseDate.getFullYear();
-  const filmOverview = overview.length > OVERVIEW_SIZE ? overview.substring(0, OVERVIEW_SIZE) + `...` : overview;
-  const commentsCount = comments.length;
+  const filmOverview = overview.length > OVERVIEW_SIZE ? overview.substring(0, OVERVIEW_SIZE) + `...` : overview;commentsCount
   const genre = genres[0];
   const controlsWatchlistMarkup = createControlMarkup(CONTROLS.WATCHLIST, isWatchList);
   const controlsAlreadyWatchedMarkup = createControlMarkup(CONTROLS.ALREADY_WATCHED, isAlreadyWatched);
@@ -44,12 +43,13 @@ const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, p
 };
 
 export default class FilmCard extends AbstractComponent {
-  constructor(filmCard) {
+  constructor(filmCard, comments) {
     super();
     this._filmCard = filmCard;
+    this._commentsCount = comments.length;
   }
   getTemplate() {
-    return createFilmCardTemplate(this._filmCard);
+    return createFilmCardTemplate(this._filmCard, this._commentsCount);
   }
   setClickHandler(selector, handler) {
     this.getElement().querySelector(selector).addEventListener(`click`, handler);

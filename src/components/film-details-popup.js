@@ -1,6 +1,6 @@
 import {MONTH_NAMES} from '../const.js';
 import {transformDuration} from '../utils/common.js';
-import AbstractComponent from './abstract-component.js';
+import AbstractSmartComponent from './abstract-smart-component.js';
 
 
 const popupControls = [{
@@ -43,7 +43,7 @@ const createEmojisMarkup = (emoji, isChecked) => {
     <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
   </label>`);
 };
-const createCommentsMarkup = ({text, emoji, date, author}) => {
+const createCommentsMarkup = ({author, date, emoji, text}) => {
   return (`<li class="film-details__comment">
   <span class="film-details__comment-emoji">
     <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-angry">
@@ -70,12 +70,13 @@ const createAddEmojiLabelMarkup = (emojiIndex) => {
       ${isEmoji}
     </div>`);
 };
-const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, adult, rating, director, writers, actors, genres, country, duration, releaseDate, overview}) => {
+const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, adult, rating, director, writers, actors, genres, country, duration, releaseDate, overview}, commentsData) => {
   const posterName = `${poster.split(` `).join(`-`)}.jpg`;
   const isAdult = adult ? `18+` : ``;
   const fullReleaseDate = `${releaseDate.getDate()} ${MONTH_NAMES[releaseDate.getMonth() + 1]} ${releaseDate.getFullYear()}`;
   const [hours, minutes] = transformDuration(duration);
   const checkedEmojiIndex = emojis.findIndex((it) => it.isChecked === true);
+
   const genresMarkup = genres.map((genre) => {
     return createGenresMarkup(genre);
   }).join(`\n`);
@@ -84,7 +85,7 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, a
     return createEmojisMarkup(name, isChecked);
   }).join(`\n`);
 
-  const commentsMarkup = comments.map((comment) => {
+  const commentsMarkup = commentsData.map((comment) => {
     return createCommentsMarkup(comment);
   }).join(`\n`);
 
@@ -161,26 +162,83 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, a
       </div>
   
       <div class="form-details__bottom-container">
+        <section class="film-details__comments-wrap">
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+  
+          <ul class="film-details__comments-list">
+            ${commentsMarkup}
+          </ul>
+  
+          <div class="film-details__new-comment">
+            ${addEmojiLabelMarkup} 
+  
+            <label class="film-details__comment-label">
+              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+            </label>
+  
+            <div class="film-details__emoji-list">
+              ${emojisMarkup}
+            </div>
+          </div>
+        </section>
       </div>
     </form>
   </section>`);
 };
 
-const createFilmsDetailsPopupTemplate = (filmCard) => {
-  return createFilmDetailsPopupMarkup(filmCard);
+const createFilmsDetailsPopupTemplate = (filmCard, comments) => {
+  return createFilmDetailsPopupMarkup(filmCard, comments);
 };
 
-export default class FilmDetailsPopup extends AbstractComponent {
-  constructor(filmDetailsPopup) {
+export default class FilmDetailsPopup extends AbstractSmartComponent {
+  constructor(filmCard, comments) {
     super();
-    this._filmDetailsPopup = filmDetailsPopup;
+    this._filmCard = filmCard;
+    this._comments = comments;
     this._clickClosePopupHandler = null;
+    // Подписывается на все события происходящие в попапе
+    this._subsribeOnEvents();
   }
+
   getTemplate() {
-    return createFilmsDetailsPopupTemplate(this._filmDetailsPopup);
+    return createFilmsDetailsPopupTemplate(this._filmCard, this._comments);
   }
   setClickClosePopupHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
     this._clickClosePopupHandler = handler;
+  }
+  recoveryListeners() {
+    this.setClickClosePopupHandler(this._clickClosePopupHandler);
+    this._subsribeOnEvents();
+  }
+  rerender() {
+    super.rerender();
+  }
+  _subsribeOnEvents() {
+    const popupElement = this.getElement();
+    const emojisListElement = popupElement.querySelector(`.film-details__emoji-list`);
+    const emojiLabelsElement = Array.from(emojisListElement.querySelectorAll(`.film-details__emoji-label`));
+    emojisListElement.addEventListener(`click`, (evt) => {
+      // Находим клик только по изображению
+      if (evt.target.tagName !== `IMG`) {
+        return;
+      }
+      // Находим индекс изображения по которому осуществлен клик
+      const clickedEmojiIndex = emojiLabelsElement.findIndex((it) => it === evt.target.parentElement);
+      // Проходим по всем смайликам, и если индекс смайлика по которому осуществлен клик
+      // совпадает с индексом текущего, меняем его свойство isChecked на !isChecked,
+      // остальным смайликам задаем свойство isChecked = false
+      emojis.map((emoji, index) => {
+        if (clickedEmojiIndex === index) {
+          emoji.isChecked = !emoji.isChecked;
+          return emoji;
+        } else {
+          emoji.isChecked = false;
+          return emoji;
+        }
+      });
+      this.rerender();
+    });
+
   }
 }

@@ -18,7 +18,6 @@ const generateFilmCard = () => {
     releaseDate: getRandomDate(),
     duration: getRandomNumber(60, 180),
     genres: getRandomDataFromRange(genres),
-    comments: getComments(),
     director: getRandomData(directors),
     writers: getRandomDataFromRange(writers),
     actors: getRandomDataFromRange(actors),

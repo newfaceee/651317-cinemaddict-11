@@ -1,15 +1,13 @@
 import FilmDetailsPopupCommentsComponent from '../components/film-details-popup-comments.js';
-import {getRandomNumber, getComments} from '../utils/common.js';
 
-
-export default class CommentController {
-  constructor(container, commentsModel) {
+export default class CommentsController {
+  constructor(container) {
     this._container = container;
-    this._commentsModel = commentsModel;
-
+    this._filmDetailsPopupCommentsComponent = null;
   }
 
-  render() {
-    const comment
+  render(comment) {
+    this._filmDetailsPopupCommentsComponent = new FilmDetailsPopupCommentsComponent(comment);
+    console.log(this._filmDetailsPopupCommentsComponent);
   }
 }

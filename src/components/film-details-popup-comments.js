@@ -47,8 +47,8 @@ const createEmojiListMarkup = ({name, isChecked}) => {
   </label>`)
 }
 
-const createCommentsTemplate = ({comments}) => {
-  const commentsMarkup = comments.map((comment) => createCommentsMarkup(comments));
+const createCommentsTemplate = (comments) => {
+  const commentsMarkup = comments.map((comment) => createCommentsMarkup(comment));
   const addEmojiLabelMarkup = createAddEmojiLabelMarkup();
   const emojiListMarkup = emojis.map((emoji) => createEmojiListMarkup(emoji));
   return (`<section class="film-details__comments-wrap">
@@ -72,53 +72,9 @@ export default class Comments extends AbstractSmartComponent {
   constructor(comments) {
     super();
     this._comments = comments;
-
-    // this._subsribeOnEvents();
   }
 
   getTemplate() {
     return createCommentsTemplate(this._comments);
   }
-
-  recoveryListeners() {
-    this._subsribeOnEvents();
-  }
-
-  rerender() {
-    super.rerender();
-  }
-}
-
-// recoveryListeners() {
-//   this.setClickClosePopupHandler(this._clickClosePopupHandler);
-//   this._subsribeOnEvents();
-// }
-// rerender() {
-//   super.rerender();
-// }
-// _subsribeOnEvents() {
-//   const popupElement = this.getElement();
-//   const emojisListElement = popupElement.querySelector(`.film-details__emoji-list`);
-//   const emojiLabelsElement = Array.from(emojisListElement.querySelectorAll(`.film-details__emoji-label`));
-//   emojisListElement.addEventListener(`click`, (evt) => {
-//     // Находим клик только по изображению
-//     if (evt.target.tagName !== `IMG`) {
-//       return;
-//     }
-//     // Находим индекс изображения по которому осуществлен клик
-//     const clickedEmojiIndex = emojiLabelsElement.findIndex((it) => it === evt.target.parentElement);
-//     // Проходим по всем смайликам, и если индекс смайлика по которому осуществлен клик
-//     // совпадает с индексом текущего, меняем его свойство isChecked на !isChecked,
-//     // остальным смайликам задаем свойство isChecked = false
-//     emojis.map((emoji, index) => {
-//       if (clickedEmojiIndex === index) {
-//         emoji.isChecked = !emoji.isChecked;
-//         return emoji;
-//       } else {
-//         emoji.isChecked = false;
-//         return emoji;
-//       }
-//     });
-//     this.rerender();
-//   });
-// }
+};
