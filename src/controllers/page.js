@@ -35,7 +35,7 @@ const getSortedFilmCards = (filmCardsData, sortType, from, to) => {
       sortedFilmCards = showingFilmCards;
       break;
     case SortType.DATE:
-      sortedFilmCards = showingFilmCards.sort((a, b) => a.releaseDate - b.releaseDate);
+      sortedFilmCards = showingFilmCards.sort((a, b) => b.releaseDate - a.releaseDate);
       break;
     case SortType.RATING:
       sortedFilmCards = showingFilmCards.sort((a, b) => b.rating - a.rating);
@@ -50,8 +50,6 @@ export default class PageController {
     // Массив с карточками фильмов, в дальнейшем там будут храниться
     // инстансы класса FilmCard
     this._moviesModel = moviesModel;
-    console.log(this._moviesModel);
-    
     this._commentsModel = commentsModel;
     // Вспомогательная переменная для задания количества отображаемых фильмов при
     // первом рендере
@@ -98,16 +96,14 @@ export default class PageController {
     // рендерит внутри .films-list элемент для хранения карточек фильмов .films-list__container
     render(filmsListElement, this._filmsContainerComponent, RenderPosition.BEFOREEND);
 
-    // Рендер карточек фильмов и кнопки Show-more
-    this._renderMovies(movies);
+    this._renderMovies(movies.slice(0, this._showingFilmCardsCount));
     this._renderShowMoreButton();
   }
 
   _renderMovies(movies) {
     const filmsListContainerElement = this._filmsContainerComponent.getElement(); // .films-list__container
-
-    const newFilmCards = renderFilmCards(movies.slice(0, this._showingFilmCardsCount), filmsListContainerElement, this._onDataChange, this._onViewChange);
-    this._showedFilmCardControllers = this._showedFilmCardControllers.concat(newFilmCards);
+    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onDataChange, this._onViewChange);
+    this._showedFilmCardControllers = [].concat(newfilmCards);
     this._showingFilmCardsCount = this._showedFilmCardControllers.length;
   }
 
@@ -116,17 +112,8 @@ export default class PageController {
     if (this._showingFilmCardsCount >= this._moviesModel.getMovies().length) {
       return;
     }
-    const movies = this._moviesModel.getMovies();
-    const filmCardsCount = movies.length;
     const filmsSectionComponent = this._filmsSectionComponent.getElement();
-    // Если количество фильмов в БД менььше количества фильмов
-    // которые находятся на одном экране, кнопка Show-More нам не нужна
-
-
-    // Рендер кнопки
     render(filmsSectionComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
-
-    // Обработчки по клику на кнопку Show-more
     this._showMoreButtonComponent.setClickHandler(this._onShowMoreButtonClick);
   }
 
@@ -141,22 +128,23 @@ export default class PageController {
     this._renderShowMoreButton();
   }
 
-  _onSortTypeChange(sortType) {
-
+  _onSortTypeChange() {
+    const filmCards = this._moviesModel.getMovies();
+    const sortType = this._moviesModel.getActiveSortType();
+    const sortedFilmCards = getSortedFilmCards(filmCards, sortType, 0, this._showingFilmCardsCount);
+    this._removeMovies();
+    this._renderMovies(sortedFilmCards);
   }
   _onDataChange(oldData, newData) {
     const id = oldData.id;
     const isSuccess = this._moviesModel.updateMovie(id, newData);
-
-    const filmsContainerElement = this._filmsContainerComponent.getElement();
-    this._removeMovies();
-
     const filmCards = this._moviesModel.getMovies();
     const sortedFilmCards = getSortedFilmCards(filmCards, this._moviesModel.getActiveSortType(), 0, this._showingFilmCardsCount);
     
     if (isSuccess) {
-      const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onDataChange, this._onViewChange);
-      this._showedFilmCardControllers = newFilmCards;
+      this._removeMovies();
+      this._renderMovies(sortedFilmCards);
+      this._renderShowMoreButton();
     }
   } 
   _onViewChange() {
@@ -165,6 +153,7 @@ export default class PageController {
 
   _onFilterChange() {
     this._updateMovies(FILM_CARD_COUNT_ON_START);
+    this._moviesModel.setSortType(SortType.DEFAULT);
   }
 
   _onShowMoreButtonClick() {

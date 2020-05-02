@@ -50,7 +50,7 @@ export default class Movies {
   setSortType(sortType) {
     this._activeSortType = sortType;
     this._callHandlers(this._sortTypeChangeHandlers);
-    this._callHandlers(this._dataChangeHandlers);
+    // this._callHandlers(this._dataChangeHandlers);
   }
 
   updateMovie(id, movie) {

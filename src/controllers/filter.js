@@ -35,8 +35,6 @@ export default class FilterController {
     } else {
       render(container, this._filterComponent, RenderPosition.AFTERBEGIN);
     }
-
-    render(container, this._filterComponent, RenderPosition.AFTERBEGIN);
   }
 
   _onFilterChange(filterType) {

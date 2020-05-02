@@ -20,7 +20,6 @@ export default class MovieController {
     // Создаем инстанс для карточки фильма и попапа
     // на вход принимают карточку одного фильма
     this._filmCardComponent = new FilmCardComponent(filmCard);
-    console.log(this._filmCardComponent);
     this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(filmCard);
     // Обработчики для открытия попапа
 

@@ -25,7 +25,6 @@ export default class SortController {
         active: sortType === this._activeSortType,
       };
     });
-    console.log(sortTypes);
     const oldComponent = this._sortComponent;
     this._sortComponent = new SortComponent(sortTypes);
 
@@ -35,8 +34,6 @@ export default class SortController {
     } else {
       render(container, this._sortComponent, RenderPosition.BEFOREEND);
     }
-
-    render(container, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
   _onSortTypeChange(sortType) {

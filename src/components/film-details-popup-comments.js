@@ -34,8 +34,6 @@ const createCommentsMarkup = ({text, emoji, date, author}) => {
 };
 
 const createAddEmojiLabelMarkup = (emojiIndex) => {
-  // const emoji = emojiIndex !== -1 ? emojis[emojiIndex].name : ``;
-  // const isEmoji = emojiIndex !== -1 ? `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">` : ``;
   return (`<div for="add-emoji" class="film-details__add-emoji-label">
      
     </div>`);
