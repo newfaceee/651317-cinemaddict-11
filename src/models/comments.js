@@ -15,19 +15,22 @@ export default class Comments {
     this._comments = comments;
   }
 
-  deleteComment(oldData, id) {
+  deleteComment(oldData, clickedCommentId) {
+    const index = this._comments.findIndex((comment) => {
+      return comment.id === oldData.id;
+    });
+    if (index === -1) {
+      return;
+    }
+    oldData.comments = oldData.comments.filter((comment) => comment.commentId !== clickedCommentId);
+    this._comments = [].concat(this._comments.slice(0, index), oldData, this._comments.slice(index + 1));
 
-    // const commentIndex = oldData.findIndex((it) => it.commentId === id);
-    // if (commentIndex === -1) {
-    //   return;
-    // }
-
-    // console.log(this._comments.slice(commentsIndex));
-
+    this._callHandlers(this._dataChangeHandlers);
+    
   }
 
-  setDataChangeHandlers() {
-
+  setDataChangeHandlers(handler) {
+    this._dataChangeHandlers.push(handler)
   }
 
   _callHandlers(handlers) {

@@ -43,7 +43,7 @@ const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, p
 };
 
 export default class FilmCard extends AbstractComponent {
-  constructor(filmCard, comments) {
+  constructor(filmCard, {comments}) {
     super();
     this._filmCard = filmCard;
     this._commentsCount = comments.length;

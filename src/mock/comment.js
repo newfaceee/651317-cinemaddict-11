@@ -1,9 +1,8 @@
 import {COMMENTS, EMOJIS} from '../const.js';
 import {getRandomNumber} from '../utils/common.js';
 
-export const generateComment = (id) =>{
+export const generateComment = () =>{
   return {
-    id,
     text: COMMENTS[getRandomNumber(0, COMMENTS.length - 1)],
     emoji: EMOJIS[getRandomNumber(0, EMOJIS.length - 1)],
     author: `John Doe`,
@@ -15,15 +14,17 @@ export const generateComment = (id) =>{
 export const generateComments = (filmCards) => {
   let comments = [];
   const COMMENT_COUNT_MAX = 5;
-
   for (let i = 0; i < filmCards.length; i++) {
+    let commentsData = [];
     const commentsCount = getRandomNumber(0, COMMENT_COUNT_MAX);
-    const comment = new Array(commentsCount).fill(``).map(() => {
-      return generateComment(filmCards[i].id);
-    });
+    for (let j = 0; j < commentsCount; j++) {
+      commentsData.push(generateComment());
+    }
+    const comment = {
+      id: filmCards[i].id,
+      comments: commentsData,
+    };
     comments.push(comment);
   }
-
   return comments;
-};
-
+}

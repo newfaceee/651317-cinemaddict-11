@@ -30,10 +30,11 @@ export default class MovieController {
   }
   render(filmCard, comments) {
     this._comments = comments;
+
     // Создаем инстанс для карточки фильма и попапа
     // на вход принимают карточку одного фильма
-    this._filmCardComponent = new FilmCardComponent(filmCard, comments);
-    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(filmCard, comments);
+    this._filmCardComponent = new FilmCardComponent(filmCard, this._comments);
+    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(filmCard, this._comments);
     // this._filmDetailsPopupCommentsComponent = new FilmDetailsPopupCommentsComponent(comments);
     // Обработчики для открытия попапа
     this._filmCardComponent.setClickHandler(`.film-card__poster`, () => {

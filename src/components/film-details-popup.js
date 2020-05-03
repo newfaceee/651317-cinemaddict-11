@@ -76,7 +76,7 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, a
   const fullReleaseDate = `${releaseDate.getDate()} ${MONTH_NAMES[releaseDate.getMonth() + 1]} ${releaseDate.getFullYear()}`;
   const [hours, minutes] = transformDuration(duration);
   const checkedEmojiIndex = emojis.findIndex((it) => it.isChecked === true);
-
+  const commentsCount = commentsData.length;
   const genresMarkup = genres.map((genre) => {
     return createGenresMarkup(genre);
   }).join(`\n`);
@@ -163,7 +163,7 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, comments, a
   
       <div class="form-details__bottom-container">
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsCount}</span></h3>
   
           <ul class="film-details__comments-list">
             ${commentsMarkup}
@@ -191,7 +191,7 @@ const createFilmsDetailsPopupTemplate = (filmCard, comments) => {
 };
 
 export default class FilmDetailsPopup extends AbstractSmartComponent {
-  constructor(filmCard, comments) {
+  constructor(filmCard, {comments}) {
     super();
     this._filmCard = filmCard;
     this._comments = comments;
