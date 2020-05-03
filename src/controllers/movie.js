@@ -17,7 +17,7 @@ const siteBodyElement = document.querySelector(`body`);
 
 export default class MovieController {
   // в качестве контейнера должно приходить элемент с классом .films-list__container
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, onDeleteComment) {
     this._container = container;
     this._filmCardComponent = null;
     this._filmDetailsPopupComponent = null;
@@ -26,8 +26,10 @@ export default class MovieController {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._onDeleteComment = onDeleteComment;
   }
   render(filmCard, comments) {
+    this._comments = comments;
     // Создаем инстанс для карточки фильма и попапа
     // на вход принимают карточку одного фильма
     this._filmCardComponent = new FilmCardComponent(filmCard, comments);
@@ -71,6 +73,10 @@ export default class MovieController {
       this._closeFilmDetailsPopup();
     });
 
+    this._filmDetailsPopupComponent.setDeleteCommentClickHandler((id) => {
+      this._onDeleteComment(comments, id);
+    });
+
     // Рендер карточки фильма
     render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
   }
@@ -105,4 +111,5 @@ export default class MovieController {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
+
 }

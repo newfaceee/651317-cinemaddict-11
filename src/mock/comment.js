@@ -8,6 +8,7 @@ export const generateComment = (id) =>{
     emoji: EMOJIS[getRandomNumber(0, EMOJIS.length - 1)],
     author: `John Doe`,
     date: `2019/12/31/ 23:59`,
+    commentId: String(Math.random()).split(`.`)[1],
   };
 };
 

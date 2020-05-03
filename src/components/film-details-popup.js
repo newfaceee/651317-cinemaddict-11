@@ -43,8 +43,8 @@ const createEmojisMarkup = (emoji, isChecked) => {
     <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
   </label>`);
 };
-const createCommentsMarkup = ({author, date, emoji, text}) => {
-  return (`<li class="film-details__comment">
+const createCommentsMarkup = ({author, date, emoji, text, commentId}) => {
+  return (`<li data-comment-id="${commentId}" class="film-details__comment">
   <span class="film-details__comment-emoji">
     <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-angry">
   </span>
@@ -207,6 +207,22 @@ export default class FilmDetailsPopup extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
     this._clickClosePopupHandler = handler;
   }
+
+  setDeleteCommentClickHandler(handler) {
+    if (this._comments.length !== 0) {
+      const comments = this.getElement().querySelectorAll(`.film-details__comment`);
+      for (const comment of comments) {
+        comment.addEventListener(`click`, (evt) => {
+          if (evt.target.tagName !== `BUTTON`) {
+            return;
+          }
+          evt.preventDefault();
+          handler(comment.dataset.commentId);
+        });
+      }
+    }
+  }
+
   recoveryListeners() {
     this.setClickClosePopupHandler(this._clickClosePopupHandler);
     this._subsribeOnEvents();

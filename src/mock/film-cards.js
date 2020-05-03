@@ -9,7 +9,7 @@ import {titles} from '../data/titles';
 
 const generateFilmCard = () => {
   return {
-    id: String(Math.random()).split('.')[1],
+    id: String(Math.random()).split(`.`)[1],
     title: getRandomData(titles),
     originalTitle: getRandomData(originalTitles),
     poster: getRandomData(titles),

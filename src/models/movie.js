@@ -33,7 +33,7 @@ export default class Movies {
   setDataChangeHandlers(handler) {
     this._dataChangeHandlers.push(handler);
   }
-  
+
   setFilterChangeHandlers(handler) {
     this._filterChangeHandlers.push(handler);
   }
@@ -50,7 +50,7 @@ export default class Movies {
   setSortType(sortType) {
     this._activeSortType = sortType;
     this._callHandlers(this._sortTypeChangeHandlers);
-    // this._callHandlers(this._dataChangeHandlers);
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   updateMovie(id, movie) {

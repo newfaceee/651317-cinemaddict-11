@@ -8,6 +8,5 @@ export default class CommentsController {
 
   render(comment) {
     this._filmDetailsPopupCommentsComponent = new FilmDetailsPopupCommentsComponent(comment);
-    console.log(this._filmDetailsPopupCommentsComponent);
   }
 }
