@@ -75,4 +75,5 @@ export default class FilmCard extends AbstractComponent {
         handler();
       });
   }
+
 }

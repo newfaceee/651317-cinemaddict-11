@@ -19,12 +19,12 @@ let showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
 // Получение данных из моков
 
 // Функция для рендера карточек
-const renderFilmCards = (filmCardsData, filmCardsContainer, onDataChange, onViewChange, commentsData, onDeleteComment) => {
+const renderFilmCards = (filmCardsData, filmCardsContainer, onDataChange, onViewChange, commentsData, onDeleteComment, commentsModel) => {
   return filmCardsData.map((film, index) => {
     // const currentComments = commentsData.findIndex((comment) => console.log(comment));
     // Создаем инстанс filmCardController, для того, чтобы затем вызвать
     // у него метод render и вернуть карточку фильма
-    const filmCardController = new MovieController(filmCardsContainer, onDataChange, onViewChange, onDeleteComment);
+    const filmCardController = new MovieController(filmCardsContainer, onDataChange, onViewChange, onDeleteComment, commentsModel);
     filmCardController.render(film, commentsData[index]);
     return filmCardController;
   });
@@ -109,7 +109,7 @@ export default class PageController {
 
   _renderMovies(movies) {
     const filmsListContainerElement = this._filmsContainerComponent.getElement(); // .films-list__container
-    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onDataChange, this._onViewChange, this._commentsModel.getComments(), this._onDeleteComment);
+    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onDataChange, this._onViewChange, this._commentsModel.getComments(), this._onDeleteComment, this._commentsModel);
     this._showedFilmCardControllers = [].concat(newfilmCards);
     this._showingFilmCardsCount = this._showedFilmCardControllers.length;
   }
@@ -171,7 +171,7 @@ export default class PageController {
     this._showingFilmCardsCount = this._showingFilmCardsCount + STEP;
     const comments = this._commentsModel.getComments().slice(prevFilmCardsCount, this._showingFilmCardsCount);
     const sortedFilmCards = getSortedFilmCards(movies, this._moviesModel.getActiveSortType(), prevFilmCardsCount, this._showingFilmCardsCount);
-    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onDataChange, this._onViewChange, comments, this._onDeleteComment);
+    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onDataChange, this._onViewChange, comments, this._onDeleteComment, this._commentsModel);
     
     this._showedFilmCardControllers = this._showedFilmCardControllers.concat(newFilmCards);
 
@@ -183,7 +183,7 @@ export default class PageController {
     this._commentsModel.deleteComment(oldData, id);
   }
   _onCommentChange() {
-    
+
   }
 
 }

@@ -17,7 +17,7 @@ const siteBodyElement = document.querySelector(`body`);
 
 export default class MovieController {
   // в качестве контейнера должно приходить элемент с классом .films-list__container
-  constructor(container, onDataChange, onViewChange, onDeleteComment) {
+  constructor(container, onDataChange, onViewChange, onDeleteComment, commentsModel) {
     this._container = container;
     this._filmCardComponent = null;
     this._filmDetailsPopupComponent = null;
@@ -27,6 +27,7 @@ export default class MovieController {
     this._onViewChange = onViewChange;
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._onDeleteComment = onDeleteComment;
+    this._commentsModel = commentsModel;
   }
   render(filmCard, comments) {
     this._comments = comments;
@@ -34,8 +35,7 @@ export default class MovieController {
     // Создаем инстанс для карточки фильма и попапа
     // на вход принимают карточку одного фильма
     this._filmCardComponent = new FilmCardComponent(filmCard, this._comments);
-    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(filmCard, this._comments);
-    // this._filmDetailsPopupCommentsComponent = new FilmDetailsPopupCommentsComponent(comments);
+    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(filmCard, this._comments, this._commentsModel);
     // Обработчики для открытия попапа
     this._filmCardComponent.setClickHandler(`.film-card__poster`, () => {
       this._onViewChange();
@@ -77,7 +77,6 @@ export default class MovieController {
     this._filmDetailsPopupComponent.setDeleteCommentClickHandler((id) => {
       this._onDeleteComment(comments, id);
     });
-
     // Рендер карточки фильма
     render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
   }

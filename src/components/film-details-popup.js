@@ -191,13 +191,15 @@ const createFilmsDetailsPopupTemplate = (filmCard, comments) => {
 };
 
 export default class FilmDetailsPopup extends AbstractSmartComponent {
-  constructor(filmCard, {comments}) {
+  constructor(filmCard, {comments}, commentsModel) {
     super();
     this._filmCard = filmCard;
     this._comments = comments;
     this._clickClosePopupHandler = null;
     // Подписывается на все события происходящие в попапе
     this._subsribeOnEvents();
+    this.rerender = this.rerender.bind(this);
+    this._commentsModel = commentsModel;
   }
 
   getTemplate() {
@@ -217,6 +219,8 @@ export default class FilmDetailsPopup extends AbstractSmartComponent {
             return;
           }
           evt.preventDefault();
+          const commentElement = evt.target.closest(`.film-details__comment`);
+          commentElement.remove();
           handler(comment.dataset.commentId);
         });
       }

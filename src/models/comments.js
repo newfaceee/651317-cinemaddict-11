@@ -30,7 +30,7 @@ export default class Comments {
   }
 
   setDataChangeHandlers(handler) {
-    this._dataChangeHandlers.push(handler)
+    this._dataChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {
