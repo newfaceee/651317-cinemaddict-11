@@ -16,17 +16,19 @@ export default class Comments {
   }
 
   deleteComment(oldData, clickedCommentId) {
+    
     const index = this._comments.findIndex((comment) => {
       return comment.id === oldData.id;
     });
     if (index === -1) {
       return;
     }
+    console.log(`da`);
     oldData.comments = oldData.comments.filter((comment) => comment.commentId !== clickedCommentId);
     this._comments = [].concat(this._comments.slice(0, index), oldData, this._comments.slice(index + 1));
-
-    this._callHandlers(this._dataChangeHandlers);
     
+    this._callHandlers(this._dataChangeHandlers);
+
   }
 
   setDataChangeHandlers(handler) {

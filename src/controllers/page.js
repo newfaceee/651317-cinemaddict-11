@@ -65,7 +65,6 @@ export default class PageController {
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
     this._onDeleteComment = this._onDeleteComment.bind(this);
-    this._onCommentChange = this._onCommentChange.bind(this);
 
     this._showedFilmCardControllers = [];
 
@@ -78,7 +77,6 @@ export default class PageController {
     // в метод класса Sort _setSortTypeChangeHandler()
     this._moviesModel.setFilterChangeHandlers(this._onFilterChange);
     this._moviesModel.setSortTypeChangeHandlers(this._onSortTypeChange);
-    this._commentsModel.setDataChangeHandlers(this._onCommentChange);
   }
 
   render() {
@@ -182,8 +180,4 @@ export default class PageController {
   _onDeleteComment(oldData, id) {
     this._commentsModel.deleteComment(oldData, id);
   }
-  _onCommentChange() {
-
-  }
-
 }
