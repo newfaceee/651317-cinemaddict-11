@@ -41,6 +41,22 @@ export default class Comments {
     return true;
   }
 
+  addNewComment(oldData, emotion, commentValue) {
+    const index = this._comments.findIndex((comment) => comment.id === oldData.id);
+    if (index === -1) {
+      return false;
+    }
+    oldData.comments.push({
+      text: commentValue.trim(),
+      commentId: String(Math.random()).split(`.`)[1],
+      emoji: emotion,
+      data: new Date,
+      author: `Johnn Carter`
+    });
+    this._comments = [].concat(this._comments.slice(0, index), oldData, this._comments.slice(index + 1));
+    return true;
+  }
+
   setDataChangeHandlers(handler) {
     this._dataChangeHandlers.push(handler);
   }

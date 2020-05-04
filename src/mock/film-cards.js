@@ -26,6 +26,11 @@ const generateFilmCard = () => {
     isWatchList: getRandomBoolean(),
     isAlreadyWatched: getRandomBoolean(),
     isFavorite: getRandomBoolean(),
+    controls: {
+        isWatchList: getRandomBoolean(),
+        isAlreadyWatched: getRandomBoolean(),
+        isFavorite: getRandomBoolean(),
+    },
   };
 };
 const generateFilmCards = (count) => {

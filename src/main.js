@@ -16,6 +16,8 @@ import {render, RenderPosition, replace} from './utils/render.js';
 import {getComments} from './utils/common.js';
 import CommentsController from './controllers/comments.js';
 
+import Component from './components/component.js';
+
 
 const FILM_CARD_COUNT = 17;
 
@@ -30,6 +32,8 @@ const comments = generateComments(filmCards);
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const siteFooterStatisticsElement = document.querySelector(`.footer__statistics`);
+
+
 const filmsSectionComponent = new FilmsSectionComponent();
 // Создаем инстанс модели фильма и комментариев и передаем моковые данные в модель
 const moviesModel = new MoviesModel();

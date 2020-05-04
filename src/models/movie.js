@@ -30,6 +30,18 @@ export default class Movies {
     this._callHandlers(this._dataChangeHandlers);
   }
 
+  setFavoriteHandler() {
+
+  }
+
+  setHistoryHandler() {
+
+  }
+
+  setWatchlistHandler() {
+
+  }
+
   setDataChangeHandlers(handler) {
     this._dataChangeHandlers.push(handler);
   }

@@ -1,4 +1,6 @@
 import FilmDetailsCommentsComponent from '../components/film-details-comments.js';
+import FilmDetailsCommentsListComponent from '../components/film-details-comments-list.js';
+import FilmDetailsCommentsTitleComponent from '../components/film-details-comments-title.js';
 import NewCommentController from './new-comment.js';
 import {render, replace, RenderPosition, remove} from '../utils/render.js';
 
@@ -17,32 +19,34 @@ export default class CommentsController {
 
     this._onDataChange = this._onDataChange.bind(this);
 
-    this._filmDetailsCommentsComponent = null;
+    // this._filmDetailsCommentsComponent = null;
     this._newCommentComponent = null;
     this._newCommentController = null;
-    this._commentsModel.setDataChangeHandlers(this._onDataChange);
 
   }
 
   render() {
     const container = this._container;
-    const oldComponent = this._filmDetailsCommentsComponent;
-    this._filmDetailsCommentsComponent = new FilmDetailsCommentsComponent(this._comments.comments);
-    console.log(this._filmDetailsCommentsComponent.getElement());
+    const commentsCount = this._comments.comments.length;
+    this._filmDetailsCommentsListComponent = new FilmDetailsCommentsListComponent();
+    this._filmDetailsCommentsTitleComponent = new FilmDetailsCommentsTitleComponent(commentsCount);
 
-    this._filmDetailsCommentsComponent.setDeleteButtonClickHandler((commentId) => {
-      this._onDeleteComment(this._comments, commentId);
+    const commentsListElement = this._filmDetailsCommentsListComponent.getElement();
+    
+    this._comments.comments.forEach((it) => {
+      this._filmDetailsCommentsComponent = new FilmDetailsCommentsComponent(it);
+      this._filmDetailsCommentsComponent.setDeleteButtonClickHandler((commentId) => {
+        this._onDeleteComment(this._comments, commentId);
+      });
+      render(commentsListElement, this._filmDetailsCommentsComponent, RenderPosition.BEFOREEND);
     });
-
-    if (oldComponent) {
-      replace(oldComponent, this._filmDetailsCommentsComponent);
-    } else {
-      render(container, this._filmDetailsCommentsComponent, RenderPosition.BEFOREEND);
-    }
+    render(container, this._filmDetailsCommentsListComponent, RenderPosition.AFTERBEGIN);
+    render(container, this._filmDetailsCommentsTitleComponent, RenderPosition.AFTERBEGIN);
   }
 
   destroy() {
-    remove(this._filmDetailsCommentsComponent);
+    remove(this._filmDetailsCommentsListComponent);
+    remove(this._filmDetailsCommentsTitleComponent);
   }
   
   _onDataChange() {

@@ -1,12 +1,5 @@
-import AbstractComponent from "./abstract-component";
+import AbstractComponent from "./abstract-component.js";
 import {EMOJIS} from '../const.js';
-
-const createAddEmojiMarkup = (checkedEmojiIndex) => {
-  const isActiveEmoji = checkedEmojiIndex === -1 ? `` : `<img src="images/emoji/${EMOJIS[checkedEmojiIndex]}.png" width="55" height="55" alt="emoji-${EMOJIS[checkedEmojiIndex]}">`;
-  return (`<div for="add-emoji" class="film-details__add-emoji-label">
-  ${isActiveEmoji}
-</div>`);
-};
 
 const createEmojiListMarkup = ({name, checked}) => {
   const isChecked = checked ? `checked` : ``;
@@ -17,14 +10,11 @@ const createEmojiListMarkup = ({name, checked}) => {
 };
 
 const createNewCommentTemplate = (emojis) => {
-  console.log(emojis);
   const emojiListMarkup = emojis.map((emoji) => {
     return createEmojiListMarkup(emoji);
   }).join(`\n`);
   const checkedEmojiIndex = emojis.findIndex((emoji) => emoji.active === true);
-  const addEmojiMarkup = createAddEmojiMarkup(checkedEmojiIndex);
   return (`<div class="film-details__new-comment">
-  ${addEmojiMarkup}
   <label class="film-details__comment-label">
     <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
   </label>
@@ -52,5 +42,27 @@ export default class NewComment extends AbstractComponent {
       const activeEmoji = evt.target.value;
       handler(activeEmoji);
     });
+  }
+
+  setSubmitFormHandler(handler) {
+
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, (evt) => {
+      if (evt.ctrlKey && evt.keyCode === 13) {
+        const commentEmotionElement = this.getElement().querySelector(`.film-details__add-emoji-label img`);
+        const commentText = this.getElement().querySelector(`.film-details__comment-input`).value;
+        if (commentEmotionElement && commentText  .length !== 0) {
+          const emotion = commentEmotionElement.alt.split(`-`)[1];
+          handler(emotion, commentText);
+        } else {
+          return;
+        }
+
+        // if ()
+       
+      } else {
+        return;
+      }
+    })
+
   }
 }

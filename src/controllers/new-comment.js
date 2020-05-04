@@ -1,16 +1,20 @@
 import NewCommentComponent from '../components/film-details-new-comment.js';
+import CommentAddEmotionLabelComponent from '../components/comment-add-emoji-label.js';
 import {EMOJIS} from '../const.js';
 import {render, replace, RenderPosition, remove} from '../utils/render.js';
 
 export default class NewCommentController {
-  constructor(container, commentsModel, onEmotionChange, activeEmotion) {
+  constructor(container, commentsModel, activeEmotion, onAddComment, comments) {
     this._container = container;
     this._commentsModel = commentsModel;
     this._activeEmotion = activeEmotion;
+    this._comments = comments;
 
     this._newCommentComponent = null;
+    this._commentAddEmotionLabelComponent = null;
 
-    this._onEmotionChange = onEmotionChange;
+    this._onAddComment = onAddComment;
+
     this._onDataChange = this._onDataChange.bind(this);
 
   }
@@ -25,17 +29,19 @@ export default class NewCommentController {
       };
     });
 
-    const oldComponent = this._newCommentComponent;
     this._newCommentComponent = new NewCommentComponent(emojis);
+    this._commentAddEmotionLabelComponent = new CommentAddEmotionLabelComponent(this._activeEmotion);
+    const newCommentElement = this._newCommentComponent.getElement();
+    render(newCommentElement, this._commentAddEmotionLabelComponent, RenderPosition.AFTERBEGIN);
+
     this._newCommentComponent.setEmojiChangeHandler((emotion) => {
       this._onEmotionChange(emotion);
     });
+    this._newCommentComponent.setSubmitFormHandler((emotion, commentValue) => {
+      this._onAddComment(this._comments, emotion, commentValue);
+    })
 
-    if (oldComponent) {
-      replace(oldComponent, this._newCommentComponent);
-    } else {
-      render(container, this._newCommentComponent, RenderPosition.BEFOREEND);
-    }
+    render(container, this._newCommentComponent, RenderPosition.BEFOREEND);
   }
 
   destroy() {
@@ -45,4 +51,14 @@ export default class NewCommentController {
   _onDataChange() {
     this.render();
   }
+
+  _onEmotionChange(emotion) {
+    const newCommentElement = this._newCommentComponent.getElement(); 
+    this._commentAddEmotionLabelComponent.getElement().remove();
+    this._commentAddEmotionLabelComponent = null;
+    this._commentAddEmotionLabelComponent = new CommentAddEmotionLabelComponent(emotion);
+    render(newCommentElement, this._commentAddEmotionLabelComponent, RenderPosition.AFTERBEGIN);
+  }
+
+
 }

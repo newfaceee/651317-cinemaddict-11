@@ -20,9 +20,6 @@ const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, p
   const releaseDateYear = releaseDate.getFullYear();
   const filmOverview = overview.length > OVERVIEW_SIZE ? overview.substring(0, OVERVIEW_SIZE) + `...` : overview;commentsCount
   const genre = genres[0];
-  const controlsWatchlistMarkup = createControlMarkup(CONTROLS.WATCHLIST, isWatchList);
-  const controlsAlreadyWatchedMarkup = createControlMarkup(CONTROLS.ALREADY_WATCHED, isAlreadyWatched);
-  const controlsFavoriteMarkup = createControlMarkup(CONTROLS.FAVORITE, isFavorite);
   return (`<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${rating}</p>
@@ -34,11 +31,6 @@ const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, p
     <img src="./images/posters/${posterName}" alt="" class="film-card__poster">
     <p class="film-card__description">${filmOverview}</p>
     <a class="film-card__comments">${commentsCount} comments</a>
-    <form class="film-card__controls">
-      ${controlsWatchlistMarkup}
-      ${controlsAlreadyWatchedMarkup}
-      ${controlsFavoriteMarkup}
-    </form>
   </article>`);
 };
 
@@ -54,26 +46,26 @@ export default class FilmCard extends AbstractComponent {
   setClickHandler(selector, handler) {
     this.getElement().querySelector(selector).addEventListener(`click`, handler);
   }
-  setWatchlistButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
-      .addEventListener(`click`, (evt) => {
-        evt.preventDefault();
-        handler();
-      });
-  }
-  setAlreadyWatchedButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
-      .addEventListener(`click`, (evt) => {
-        evt.preventDefault();
-        handler();
-      });
-  }
-  setFavoriteButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--favorite`)
-      .addEventListener(`click`, (evt) => {
-        evt.preventDefault();
-        handler();
-      });
-  }
+  // setWatchlistButtonClickHandler(handler) {
+  //   this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+  //     .addEventListener(`click`, (evt) => {
+  //       evt.preventDefault();
+  //       handler();
+  //     });
+  // }
+  // setAlreadyWatchedButtonClickHandler(handler) {
+  //   this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+  //     .addEventListener(`click`, (evt) => {
+  //       evt.preventDefault();
+  //       handler();
+  //     });
+  // }
+  // setFavoriteButtonClickHandler(handler) {
+  //   this.getElement().querySelector(`.film-card__controls-item--favorite`)
+  //     .addEventListener(`click`, (evt) => {
+  //       evt.preventDefault();
+  //       handler();
+  //     });
+  // }
 
 }

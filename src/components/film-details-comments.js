@@ -17,7 +17,7 @@ export const emojis = [{
   isChecked: false,
 }
 ];
-const createCommentsMarkup = ({text, emoji, date, author, commentId}) => {
+const createCommentsListMarkup = ({text, emoji, date, author, commentId}) => {
   return (`<li data-comment-id=${commentId} class="film-details__comment">
   <span class="film-details__comment-emoji">
     <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
@@ -33,12 +33,9 @@ const createCommentsMarkup = ({text, emoji, date, author, commentId}) => {
 </li>`);
 };
 
-const createCommentsTemplate = (comments) => {
-  const commentsMarkup = comments.map((comment) => createCommentsMarkup(comment)).join(`\n`);
-  return (`<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-  <ul class="film-details__comments-list">
-    ${commentsMarkup}
-  </ul>`);
+const createCommentsTemplate = (comment) => {
+  const commentsListMarkup = createCommentsListMarkup(comment);
+  return (`${commentsListMarkup}`);
 };
 
 export default class Comments extends AbstractSmartComponent {
