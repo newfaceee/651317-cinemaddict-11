@@ -1,25 +1,10 @@
 import AbstractComponent from "./abstract-component";
+import {EMOJIS} from '../const.js';
 
-export const emojis = [{
-  name: `smile`,
-  isChecked: false,
-},
-{
-  name: `sleeping`,
-  isChecked: false,
-},
-{
-  name: `puke`,
-  isChecked: false,
-},
-{
-  name: `angry`,
-  isChecked: false,
-}
-];
-const createAddEmojiMarkup = () => {
+const createAddEmojiMarkup = (checkedEmojiIndex) => {
+  const isActiveEmoji = checkedEmojiIndex === -1 ? `` : `<img src="images/emoji/${EMOJIS[checkedEmojiIndex]}.png" width="55" height="55" alt="emoji-${EMOJIS[checkedEmojiIndex]}">`;
   return (`<div for="add-emoji" class="film-details__add-emoji-label">
-  <img src="images/emoji/smile.png" width="55" height="55" alt="emoji-smile">
+  ${isActiveEmoji}
 </div>`);
 };
 
@@ -31,15 +16,17 @@ const createEmojiListMarkup = ({name, checked}) => {
   </label>`);
 };
 
-const createNewCommentTemplate = () => {
+const createNewCommentTemplate = (emojis) => {
+  console.log(emojis);
   const emojiListMarkup = emojis.map((emoji) => {
     return createEmojiListMarkup(emoji);
   }).join(`\n`);
-  const addEmojiMarkup = createAddEmojiMarkup();
+  const checkedEmojiIndex = emojis.findIndex((emoji) => emoji.active === true);
+  const addEmojiMarkup = createAddEmojiMarkup(checkedEmojiIndex);
   return (`<div class="film-details__new-comment">
   ${addEmojiMarkup}
   <label class="film-details__comment-label">
-    <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">Great movie!</textarea>
+    <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
   </label>
 
   <div class="film-details__emoji-list"> 
@@ -49,14 +36,21 @@ const createNewCommentTemplate = () => {
 };
 
 export default class NewComment extends AbstractComponent {
+  constructor(emojis) {
+    super();
+    this._emojis = emojis;
+  }
   getTemplate() {
-    return createNewCommentTemplate();
+    return createNewCommentTemplate(this._emojis);
   }
 
   setEmojiChangeHandler(handler) {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
-      console.log(evt.target);
-      handler();
+      if (evt.target.tagName !== `INPUT`) {
+        return;
+      }
+      const activeEmoji = evt.target.value;
+      handler(activeEmoji);
     });
   }
 }

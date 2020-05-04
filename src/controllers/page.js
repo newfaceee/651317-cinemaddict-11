@@ -19,12 +19,12 @@ let showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
 // Получение данных из моков
 
 // Функция для рендера карточек
-const renderFilmCards = (filmCardsData, filmCardsContainer, onDataChange, onViewChange, commentsData, onDeleteComment, commentsModel) => {
+const renderFilmCards = (filmCardsData, filmCardsContainer, onDataChange, onViewChange, commentsData, commentsModel) => {
   return filmCardsData.map((film, index) => {
     // const currentComments = commentsData.findIndex((comment) => console.log(comment));
     // Создаем инстанс filmCardController, для того, чтобы затем вызвать
     // у него метод render и вернуть карточку фильма
-    const filmCardController = new MovieController(filmCardsContainer, onDataChange, onViewChange, onDeleteComment, commentsModel);
+    const filmCardController = new MovieController(filmCardsContainer, onDataChange, onViewChange, commentsModel);
     filmCardController.render(film, commentsData[index]);
     return filmCardController;
   });
@@ -64,8 +64,6 @@ export default class PageController {
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
-    this._onDeleteComment = this._onDeleteComment.bind(this);
-
     this._showedFilmCardControllers = [];
 
     this._filmsSectionComponent = new FilmsSectionComponent();
@@ -107,7 +105,7 @@ export default class PageController {
 
   _renderMovies(movies) {
     const filmsListContainerElement = this._filmsContainerComponent.getElement(); // .films-list__container
-    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onDataChange, this._onViewChange, this._commentsModel.getComments(), this._onDeleteComment, this._commentsModel);
+    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onDataChange, this._onViewChange, this._commentsModel.getComments(), this._commentsModel);
     this._showedFilmCardControllers = [].concat(newfilmCards);
     this._showingFilmCardsCount = this._showedFilmCardControllers.length;
   }
@@ -169,15 +167,12 @@ export default class PageController {
     this._showingFilmCardsCount = this._showingFilmCardsCount + STEP;
     const comments = this._commentsModel.getComments().slice(prevFilmCardsCount, this._showingFilmCardsCount);
     const sortedFilmCards = getSortedFilmCards(movies, this._moviesModel.getActiveSortType(), prevFilmCardsCount, this._showingFilmCardsCount);
-    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onDataChange, this._onViewChange, comments, this._onDeleteComment, this._commentsModel);
+    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onDataChange, this._onViewChange, comments, this._commentsModel);
     
     this._showedFilmCardControllers = this._showedFilmCardControllers.concat(newFilmCards);
 
     if (this._showingFilmCardsCount >= movies.length) {
       remove(this._showMoreButtonComponent);
     }
-  }
-  _onDeleteComment(oldData, id) {
-    this._commentsModel.deleteComment(oldData, id);
   }
 }

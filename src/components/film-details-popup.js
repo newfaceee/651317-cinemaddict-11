@@ -16,23 +16,7 @@ const popupControls = [{
   text: `Add to favorites`,
 }
 ];
-export const emojis = [{
-  name: `smile`,
-  isChecked: false,
-},
-{
-  name: `sleeping`,
-  isChecked: false,
-},
-{
-  name: `puke`,
-  isChecked: false,
-},
-{
-  name: `angry`,
-  isChecked: false,
-}
-];
+
 const createGenresMarkup = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
 };
@@ -123,7 +107,7 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, adult, rati
       </div>
   
       <div class="form-details__bottom-container">
-
+        
       </div>
     </form>
   </section>`);

@@ -1,46 +1,50 @@
 import FilmDetailsCommentsComponent from '../components/film-details-comments.js';
-import NewCommentComponent from '../components/film-details-new-comment.js';
-import {render, replace, RenderPosition} from '../utils/render.js';
+import NewCommentController from './new-comment.js';
+import {render, replace, RenderPosition, remove} from '../utils/render.js';
+
+const renderAddNewComment = (container, commentsModel) => {
+  const addNewComment = new NewCommentController(container, commentsModel);
+  addNewComment.render();
+}
 
 export default class CommentsController {
-  constructor(container, comments, commentsModel) {
+  constructor(container, comments, commentsModel, onDeleteComment) {
     this._container = container;
     this._comments = comments;
     this._commentsModel = commentsModel;
+
+    this._onDeleteComment = onDeleteComment;
 
     this._onDataChange = this._onDataChange.bind(this);
 
     this._filmDetailsCommentsComponent = null;
     this._newCommentComponent = null;
-
+    this._newCommentController = null;
     this._commentsModel.setDataChangeHandlers(this._onDataChange);
+
   }
 
   render() {
     const container = this._container;
     const oldComponent = this._filmDetailsCommentsComponent;
     this._filmDetailsCommentsComponent = new FilmDetailsCommentsComponent(this._comments.comments);
-    const newCommentContainerElement = this._filmDetailsCommentsComponent.getElement();
+    console.log(this._filmDetailsCommentsComponent.getElement());
 
-    this._newCommentComponent = new NewCommentComponent();
     this._filmDetailsCommentsComponent.setDeleteButtonClickHandler((commentId) => {
-      this._onDeleteButtonClickHandler(commentId);
+      this._onDeleteComment(this._comments, commentId);
     });
-    this._newCommentComponent.setEmojiChangeHandler(() => {
-      console.log(`you clicked emoji`)
-    })
+
     if (oldComponent) {
       replace(oldComponent, this._filmDetailsCommentsComponent);
     } else {
       render(container, this._filmDetailsCommentsComponent, RenderPosition.BEFOREEND);
     }
-    render(newCommentContainerElement, this._newCommentComponent, RenderPosition.BEFOREEND);
-
-  }
-  _onDeleteButtonClickHandler(commentId) {
-    this._commentsModel.deleteComment(this._comments, commentId);
   }
 
+  destroy() {
+    remove(this._filmDetailsCommentsComponent);
+  }
+  
   _onDataChange() {
     this.render();
   }
