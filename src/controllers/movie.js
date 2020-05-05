@@ -150,6 +150,7 @@ export default class MovieController {
     this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(this._filmCard);
     this._filmDetailsPopupComponent.setClickClosePopupHandler(() => {
       this._closeFilmDetailsPopup();
+      document.removeEventListener(`keydon`, this._onEscKeyDown);
     });
 
     this._filmDetailsPopupComponent.setWatchlistControlClickHandler(() => {
@@ -177,9 +178,7 @@ export default class MovieController {
     this._renderAddNewComment(null);
     render(container, this._filmDetailsPopupComponent, RenderPosition.BEFOREEND);
   }
-  _removePopup() {
-    // remove(this._filmDetailsPopupComponent);
-  }
+
   _renderComments(comments) {
     const commentsWrapElement = this._filmDetailsCommentsWrapComponent.getElement();
     const commentsController = renderComments(commentsWrapElement, comments, this._commentsModel, this._onDeleteComment);
@@ -220,6 +219,7 @@ export default class MovieController {
       this._onEscKeyDown(evt);
     });
   }
+
   _closeFilmDetailsPopup() {
     if (this._filmDetailsPopupComponent) {
       remove(this._filmDetailsPopupComponent);
