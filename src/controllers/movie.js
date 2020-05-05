@@ -10,6 +10,7 @@ import {render, RenderPosition, remove, replace} from '../utils/render.js';
 import CommentsController from './comments.js';
 import NewCommentController from './new-comment.js';
 
+import {CONTROLS} from '../const.js';
 const siteBodyElement = document.querySelector(`body`);
 
 
@@ -31,14 +32,17 @@ const renderAddNewComment = (container, commentsModel, activeEmotion, onAddComme
 
 export default class MovieController {
   // в качестве контейнера должно приходить элемент с классом .films-list__container
-  constructor(container, onDataChange, onViewChange, commentsModel) {
+  constructor(container, onDataChange, onViewChange, commentsModel, moviesModel) {
     this._container = container;
     this._filmCardComponent = null;
     this._filmDetailsPopupComponent = null;
     this._filmDetailsCommentsComponent = null;
     this._filmDetailsCommentsWrapComponent = null;
     this._filmDetailsCommentsListComponent = null;
-    this._filmDetailsCommentTitleComponent = null;
+
+    this._filmCardControlsWatchlistComponent = null;
+    this._filmCardControlsHistoryComponent = null;
+    this._filmCardControlsFavoriteComponent = null;
 
     this._commentsController = null;
     this._newCommentController = null;
@@ -51,11 +55,12 @@ export default class MovieController {
     this._onDeleteComment = this._onDeleteComment.bind(this);
     this._onAddComment = this._onAddComment.bind(this);
     this._renderComments = this._renderComments.bind(this);
+    this._onControlClickHandler = this._onControlClickHandler.bind(this);
 
     this._commentsModel = commentsModel;
-    this._updateWatchlistButton = this._updateWatchlistButton.bind(this);
-
+    this._moviesModel = moviesModel;
   }
+
   render(filmCard) {
     this._filmCard = filmCard;
     this._comments = this._commentsModel.getCommentsByFilmId(this._filmCard.id);
@@ -90,37 +95,70 @@ export default class MovieController {
       this._openFilmDetailsPopup();
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
-    // Обработчики по клику на controllers [mark-as-favorite, mark-as-watched, add-to-watchlist]
-    // this._filmCardComponent.setWatchlistButtonClickHandler(() => {
-    //   this._onDataChange(filmCard, Object.assign({}, filmCard, {
-    //     isWatchList: !filmCard.isWatchList
-    //   }));
-    // });
-    // this._filmCardComponent.setAlreadyWatchedButtonClickHandler(() => {
-    //   this._onDataChange(filmCard, Object.assign({}, filmCard, {
-    //     isAlreadyWatched: !filmCard.isAlreadyWatched
-    //   }));
-    // });
-    // this._filmCardComponent.setFavoriteButtonClickHandler(() => {
-    //   this._onDataChange(filmCard, Object.assign({}, filmCard, {
-    //     isFavorite: !filmCard.isFavorite
-    //   }));
-    // });
-    // Обработчик для закрытия попапа
+    
     this._filmDetailsPopupComponent.setClickClosePopupHandler(() => {
       this._closeFilmDetailsPopup();
     });
     // Рендер карточки фильма
+    this._renderFavoriteControl();
+    this._renderHistoryControl();
+    this._renderWathListControl();
     render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderWathListButton() {
+  _renderWathListControl() {
+    const oldComponent = this._filmCardControlsWatchlistComponent;
+    this._filmCardControlsWatchlistComponent = new FilmCardControlsWatchlistComponent(this._filmCard.isWatchList);
+    this._filmCardControlsWatchlistComponent.setClickHandler((control) => {
+      const newMovie = Object.assign({}, this._filmCard, {
+        isWatchList: !this._filmCard.isWatchList
+      });
+      this._onControlClickHandler(this._filmCard.id, newMovie, control);
+    });
     const filmCardControlsElement = this._filmCardControlsComponent.getElement();
+    if (oldComponent) {
+      replace(oldComponent, this._filmCardControlsWatchlistComponent);
+    } else {
+      render(filmCardControlsElement, this._filmCardControlsWatchlistComponent, RenderPosition.AFTERBEGIN);
+    }
+  }
+  
+  _renderHistoryControl() {
+    const oldComponent = this._filmCardControlsHistoryComponent;
+    this._filmCardControlsHistoryComponent = new FilmCardControlsHistoryComponent(this._filmCard.isAlreadyWatched);
+    this._filmCardControlsHistoryComponent.setClickHandler((control) => {
+      const newMovie = Object.assign({}, this._filmCard, {
+        isAlreadyWatched: !this._filmCard.isAlreadyWatched
+      });
+      this._onControlClickHandler(this._filmCard.id, newMovie, control);
+    });
+    const filmCardControlsElement = this._filmCardControlsComponent.getElement();
+    if (oldComponent) {
+      replace(oldComponent, this._filmCardControlsHistoryComponent);
+    } else {
+      render(filmCardControlsElement, this._filmCardControlsHistoryComponent, RenderPosition.AFTERBEGIN);
+    }
+  }
+
+  _renderFavoriteControl() {
+    const oldComponent = this._filmCardControlsFavoriteComponent;
+    this._filmCardControlsFavoriteComponent = new FilmCardControlsFavoriteComponent(this._filmCard.isFavorite);
+    this._filmCardControlsFavoriteComponent.setClickHandler((control) => {
+      const newMovie = Object.assign({}, this._filmCard, {
+        isFavorite: !this._filmCard.isFavorite
+      });
+      this._onControlClickHandler(this._filmCard.id, newMovie, control);
+    });    
+    const filmCardControlsElement = this._filmCardControlsComponent.getElement();
+    if (oldComponent) {
+      replace(oldComponent, this._filmCardControlsFavoriteComponent);
+    } else {
+      render(filmCardControlsElement, this._filmCardControlsFavoriteComponent, RenderPosition.AFTERBEGIN);
+    }
   }
 
   _renderComments(comments) {
     const commentsWrapElement = this._filmDetailsCommentsWrapComponent.getElement();
-    console.log(commentsWrapElement);
     const commentsController = renderComments(commentsWrapElement, comments, this._commentsModel, this._onDeleteComment);
     this._commentsController = commentsController;
   }
@@ -190,6 +228,24 @@ export default class MovieController {
       const newComments = this._commentsModel.getCommentsByFilmId(this._filmCard.id);;
       this._removeComments();
       this._renderComments(newComments);
+    }
+  }
+
+  _onControlClickHandler(id, movie, control) {
+    const isSuccess = this._moviesModel.updateMovie(id, movie);
+    if (isSuccess) {
+      this._filmCard = movie;
+      switch (control) {
+        case CONTROLS.WATCHLIST: 
+          this._renderWathListControl();
+          break;
+        case CONTROLS.ALREADY_WATCHED: 
+          this._renderHistoryControl();
+          break;
+        case CONTROLS.FAVORITE:
+          this._renderFavoriteControl();
+          break;    
+      }
     }
   }
 

@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import CONTROLS from '../consts.js';
+import {CONTROLS} from '../const.js';
 
 const createFavoriteTemplate = (name, isActive) => {
   const controlClass = `favorite`;
@@ -15,5 +15,13 @@ export default class FilmCardWatchlist extends AbstractComponent {
 
   getTemplate() {
     return createFavoriteTemplate(CONTROLS.FAVORITE, this._isActive);
+  }
+
+  setClickHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      const controlName = evt.target.textContent;
+      evt.preventDefault();
+      handler(controlName);
+    });
   }
 }

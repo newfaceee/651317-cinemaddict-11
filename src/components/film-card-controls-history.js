@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import CONTROLS from '../consts.js';
+import {CONTROLS} from '../const.js';
 
 const createHistoryTemplate = (name, isActive) => {
   const controlClass = name.toLowerCase().split(` `).join(`-`);
@@ -15,5 +15,12 @@ export default class FilmCardWatchlist extends AbstractComponent {
 
   getTemplate() {
     return createHistoryTemplate(CONTROLS.ALREADY_WATCHED, this._isActive);
+  }
+  setClickHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      const controlName = evt.target.textContent;
+      evt.preventDefault();
+      handler(controlName);
+    });
   }
 }

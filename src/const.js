@@ -13,6 +13,12 @@ export const CONTROLS = {
   FAVORITE: `Mark as favorite`,
 };
 
+export const CONTROL_NAME = {
+  WATCHLIST: `add-to-watchlist`,
+  ALREADY_WATCHED: `mark-as-watched`,
+  FAVORITE: `favorite`,
+}
+
 export const FilterType = {
   ALL: `All movies`,
   WATCHLIST: `Watchlist`,
