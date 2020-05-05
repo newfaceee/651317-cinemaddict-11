@@ -1,44 +1,44 @@
 import PageController from './controllers/page.js';
-import FilmsSectionComponent from './components/films-section.js';
-import StatisticComponent from './components/statistic.js';
-import NavigationComponent from './components/navigation.js';
+import FilterController from './controllers/filter.js';
+import SortController from './controllers/sort.js';
 import ProfileRatingComponent from './components/profile-rating.js';
 import FooterStatisticsComponent from './components/footerStatistics.js';
 import {generateUserProfile} from './mock/user-profile.js';
-import {generateNavigations} from './mock/navigation.js';
-import {render, RenderPosition, replace} from './utils/render.js';
-import {filmCards, filmCardsCount} from './controllers/page.js';
+import {generateFilmCards} from './mock/film-cards.js';
+import {generateComments} from './mock/comment.js';
+import MoviesModel from './models/movie.js';
+import CommentsModel from './models/comments.js';
+import {render, RenderPosition} from './utils/render.js';
+
+const FILM_CARD_COUNT = 17;
 
 // генерация моковых данных
 const userProfile = generateUserProfile();
-const navigations = generateNavigations();
+const filmCards = generateFilmCards(FILM_CARD_COUNT);
+const filmCardsCount = filmCards.length;
+const comments = generateComments(filmCards);
+
 // Основные элементы разметки
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const siteFooterStatisticsElement = document.querySelector(`.footer__statistics`);
-const filmsSectionComponent = new FilmsSectionComponent();
-// Рендер рейтинга, меню навигации и меню сортировки
+
+// Создаем инстанс модели фильма и комментариев и передаем моковые данные в модель
+const moviesModel = new MoviesModel();
+moviesModel.setMovies(filmCards);
+const commentsModel = new CommentsModel();
+commentsModel.setComments(comments);
+
 render(siteHeaderElement, new ProfileRatingComponent(userProfile), RenderPosition.BEFOREEND);
-const renderNavigation = (navigationElements) => {
-  const navigationComponent = new NavigationComponent(navigationElements);
-  const statisticComponent = new StatisticComponent(userProfile);
-  navigationComponent.setClickHandler(`.main-navigation__additional`, () => {
-    replace(filmsSectionComponent, statisticComponent);
-  });
-
-  navigationComponent.setClickHandler(`[href="#All movies"]`, () => {
-    replace(statisticComponent, filmsSectionComponent);
-  });
 
 
-  render(siteMainElement, navigationComponent, RenderPosition.BEFOREEND);
-};
-renderNavigation(navigations);
 render(siteFooterStatisticsElement, new FooterStatisticsComponent(filmCardsCount), RenderPosition.BEFOREEND);
 
-
-const pageController = new PageController(siteMainElement);
+const filterController = new FilterController(siteMainElement, moviesModel);
+const pageController = new PageController(siteMainElement, moviesModel, commentsModel);
+const sortController = new SortController(siteMainElement, moviesModel);
+sortController.render();
+filterController.render();
 
 pageController.render(filmCards);
-
