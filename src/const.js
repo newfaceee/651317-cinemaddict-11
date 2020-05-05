@@ -7,6 +7,12 @@ export const COMMENTS = [
 
 export const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
 
+export const CONTROLS = {
+  WATCHLIST: `Add to watchlist`,
+  ALREADY_WATCHED: `Mark as watched`,
+  FAVORITE: `Mark as favorite`,
+};
+
 export const FilterType = {
   ALL: `All movies`,
   WATCHLIST: `Watchlist`,
