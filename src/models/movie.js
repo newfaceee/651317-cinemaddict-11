@@ -21,6 +21,10 @@ export default class Movies {
     return this._movies;
   }
 
+  getMovieById(id) {
+    return this._movies.filter((movie) => movie.id === id)[0];
+  }
+
   getActiveSortType() {
     return this._activeSortType;
   }
@@ -28,18 +32,6 @@ export default class Movies {
   setMovies(movies) {
     this._movies = Array.from(movies);
     this._callHandlers(this._dataChangeHandlers);
-  }
-
-  setFavoriteHandler() {
-
-  }
-
-  setHistoryHandler() {
-
-  }
-
-  setWatchlistHandler() {
-
   }
 
   setDataChangeHandlers(handler) {
@@ -66,16 +58,18 @@ export default class Movies {
   }
 
   updateMovie(id, movie) {
-    const index = this._movies.findIndex((movie) => movie.id === id);
+    const index = this._movies.findIndex((it) => it.id === id);
     if (index === -1) {
       return false;
     }
 
     this._movies = [].concat(this._movies.slice(0, index), movie, this._movies.slice(index + 1));
-    console.log(this._movies[index]);
     return true;
   }
 
+  updateFilters() {
+    this._callHandlers(this._dataChangeHandlers);
+  }
 
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());

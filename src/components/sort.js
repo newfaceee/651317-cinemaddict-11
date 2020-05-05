@@ -3,15 +3,14 @@ import AbstractComponent from './abstract-component.js';
 
 const createSortTypeMarkup = ({name, active}) => {
   const activeClass = active ? `sort__button--active` : ``;
-  return (`<li><a href="#${name}" data-sort-type="${name}" class="sort__button ${activeClass}">Sort by ${name}</a></li>`)
-}
+  return (`<li><a href="#${name}" data-sort-type="${name}" class="sort__button ${activeClass}">Sort by ${name}</a></li>`);
+};
 
 
 const createSortTemplate = (sortTypes) => {
   const sortTypeMarkup = sortTypes.map((sortType) => {
-    return createSortTypeMarkup(sortType)
+    return createSortTypeMarkup(sortType);
   }).join(`\n`);
-  console.l
   return (`<ul class="sort">
     ${sortTypeMarkup}
   </ul>`);

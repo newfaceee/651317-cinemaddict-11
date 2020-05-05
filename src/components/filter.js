@@ -5,7 +5,7 @@ const getFilterFromHref = (href) => {
   const hrefValue = String(href).split(`#`)[1];
   const filterType = hrefValue.split(`%20`).join(` `);
   return filterType;
-}
+};
 
 const createFilterMarkup = ({name, count}, isActive) => {
   const activeClass = isActive ? `main-navigation__item--active` : ``;

@@ -11,11 +11,11 @@ const createControlMarkup = (name, isActive) => {
   const activeClass = isActive ? `film-card__controls-item--active` : ``;
   return (`<button class="film-card__controls-item button film-card__controls-item--${controlClass} ${activeClass}">${name}</button>`);
 
-}
+};
 
 const createComponentTemplate = (controls) => {
   const watchlistControlMarkup = createControlMarkup(CONTROLS.WATCHLIST, controls.isWatchlist);
-   const controlsAlreadyWatchedMarkup = createControlMarkup(CONTROLS.ALREADY_WATCHED, controls.isAlreadyWatched);
+  const controlsAlreadyWatchedMarkup = createControlMarkup(CONTROLS.ALREADY_WATCHED, controls.isAlreadyWatched);
   const controlsFavoriteMarkup = createControlMarkup(CONTROLS.FAVORITE, controls.isFavorite);
 
   return (`<form class="film-card__controls">
@@ -23,7 +23,7 @@ const createComponentTemplate = (controls) => {
       ${controlsAlreadyWatchedMarkup}
       ${controlsFavoriteMarkup}
     </form>`);
-}
+};
 
 export default class Component extends AbstractComponent {
   constructor(controls) {

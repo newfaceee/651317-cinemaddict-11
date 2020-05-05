@@ -50,7 +50,7 @@ export default class Comments {
       text: commentValue.trim(),
       commentId: String(Math.random()).split(`.`)[1],
       emoji: emotion,
-      data: new Date,
+      data: new Date(),
       author: `Johnn Carter`
     });
     this._comments = [].concat(this._comments.slice(0, index), oldData, this._comments.slice(index + 1));

@@ -2,31 +2,30 @@ import {MONTH_NAMES} from '../const.js';
 import {transformDuration} from '../utils/common.js';
 import AbstractSmartComponent from './abstract-smart-component.js';
 
+const POPUP_CONTROLS = {
+  WATCHLIST: `Add to watchlist`,
+  ALREADY_WATCHED: `Already watched`,
+  FAVORITE: `Add to favorites`,
+};
 
-const popupControls = [{
-  name: `watchlist`,
-  text: `Add to watchlist`,
-},
-{
-  name: `watched`,
-  text: `Already watched`,
-},
-{
-  name: `favorite`,
-  text: `Add to favorites`,
-}
-];
+const POPUP_CONTROLS_TEXT = {
+  WATCHLIST: `watchlist`,
+  ALREADY_WATCHED: `watched`,
+  FAVORITE: `favorite`,
+};
 
 const createGenresMarkup = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
 };
 
-const createControlsMarkup = ({name, text}) => {
-  return (`<input type="checkbox" class="film-details__control-input visually-hidden" id=${name} name=${name}>
-  <label for=${name} class="film-details__control-label film-details__control-label--${name}">${text}</label>`);
+const createControlMarkup = (text, className, checked) => {
+  const isChecked = checked ? `checked` : ``;
+  return (`<input type="checkbox" class="film-details__control-input visually-hidden" id="${className}" name="${className}" ${isChecked}>
+  <label for="${className}" class="film-details__control-label film-details__control-label--${className}">${text}</label>
+`);
 };
 
-const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, adult, rating, director, writers, actors, genres, country, duration, releaseDate, overview}) => {
+const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, adult, rating, director, writers, actors, genres, country, duration, releaseDate, overview, isWatchList, isFavorite, isAlreadyWatched}) => {
   const posterName = `${poster.split(` `).join(`-`)}.jpg`;
   const isAdult = adult ? `18+` : ``;
   const fullReleaseDate = `${releaseDate.getDate()} ${MONTH_NAMES[releaseDate.getMonth() + 1]} ${releaseDate.getFullYear()}`;
@@ -34,11 +33,9 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, adult, rati
   const genresMarkup = genres.map((genre) => {
     return createGenresMarkup(genre);
   }).join(`\n`);
-
-  const controlsMarkup = popupControls.map((control) => {
-    return createControlsMarkup(control);
-  }).join(`\n`);
-
+  const popupWatchlistControlMarkup = createControlMarkup(POPUP_CONTROLS.WATCHLIST, POPUP_CONTROLS_TEXT.WATCHLIST, isWatchList);
+  const popupFavoriteControlMarkup = createControlMarkup(POPUP_CONTROLS.FAVORITE, POPUP_CONTROLS_TEXT.FAVORITE, isFavorite);
+  const popupHistoryControlMarkup = createControlMarkup(POPUP_CONTROLS.ALREADY_WATCHED, POPUP_CONTROLS_TEXT.ALREADY_WATCHED, isAlreadyWatched);
   return (`<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
@@ -102,7 +99,9 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, adult, rati
         </div>
   
         <section class="film-details__controls">
-          ${controlsMarkup}
+          ${popupWatchlistControlMarkup}
+          ${popupFavoriteControlMarkup}
+          ${popupHistoryControlMarkup}
         </section>
       </div>
   
@@ -130,9 +129,28 @@ export default class FilmDetailsPopup extends AbstractSmartComponent {
   getTemplate() {
     return createFilmsDetailsPopupTemplate(this._filmCard, this._comments);
   }
+
   setClickClosePopupHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
     this._clickClosePopupHandler = handler;
+  }
+
+  setWatchlistControlClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, (evt) => {
+      handler(evt.target);
+    });
+  }
+
+  setFavoriteControlClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, (evt) => {
+      handler(evt.target);
+    });
+  }
+
+  setHistoryControlClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, (evt) => {
+      handler(evt.target);
+    });
   }
 
   recoveryListeners() {

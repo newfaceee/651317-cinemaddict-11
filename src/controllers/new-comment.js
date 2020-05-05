@@ -1,7 +1,7 @@
 import NewCommentComponent from '../components/film-details-new-comment.js';
 import CommentAddEmotionLabelComponent from '../components/comment-add-emoji-label.js';
 import {EMOJIS} from '../const.js';
-import {render, replace, RenderPosition, remove} from '../utils/render.js';
+import {render, RenderPosition, remove} from '../utils/render.js';
 
 export default class NewCommentController {
   constructor(container, commentsModel, activeEmotion, onAddComment, comments) {
@@ -39,7 +39,7 @@ export default class NewCommentController {
     });
     this._newCommentComponent.setSubmitFormHandler((emotion, commentValue) => {
       this._onAddComment(this._comments, emotion, commentValue);
-    })
+    });
 
     render(container, this._newCommentComponent, RenderPosition.BEFOREEND);
   }
@@ -53,12 +53,10 @@ export default class NewCommentController {
   }
 
   _onEmotionChange(emotion) {
-    const newCommentElement = this._newCommentComponent.getElement(); 
+    const newCommentElement = this._newCommentComponent.getElement();
     this._commentAddEmotionLabelComponent.getElement().remove();
     this._commentAddEmotionLabelComponent = null;
     this._commentAddEmotionLabelComponent = new CommentAddEmotionLabelComponent(emotion);
     render(newCommentElement, this._commentAddEmotionLabelComponent, RenderPosition.AFTERBEGIN);
   }
-
-
 }

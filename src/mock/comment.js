@@ -27,4 +27,4 @@ export const generateComments = (filmCards) => {
     comments.push(comment);
   }
   return comments;
-}
+};

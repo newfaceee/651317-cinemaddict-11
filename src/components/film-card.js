@@ -1,24 +1,12 @@
 import {transformDuration} from '../utils/common.js';
 import AbstractComponent from './abstract-component.js';
 
-const CONTROLS = {
-  WATCHLIST: `Add to watchlist`,
-  ALREADY_WATCHED: `Mark as watched`,
-  FAVORITE: `Mark as favorite`,
-};
-
-const createControlMarkup = (control, isActive) => {
-  const controlClass = control === `Mark as favorite` ? `favorite` : control.toLowerCase().split(` `).join(`-`);
-  const activeClass = isActive ? `film-card__controls-item--active` : ``;
-  return (`<button class="film-card__controls-item button film-card__controls-item--${controlClass} ${activeClass}">${control}</button>`);
-};
-
-const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, poster, overview, isWatchList, isAlreadyWatched, isFavorite}, commentsCount) => {
+const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, poster, overview}) => {
   const OVERVIEW_SIZE = 140;
   const posterName = `${poster.split(` `).join(`-`)}.jpg`;
   const [hours, minutes] = transformDuration(duration);
   const releaseDateYear = releaseDate.getFullYear();
-  const filmOverview = overview.length > OVERVIEW_SIZE ? overview.substring(0, OVERVIEW_SIZE) + `...` : overview;commentsCount
+  const filmOverview = overview.length > OVERVIEW_SIZE ? overview.substring(0, OVERVIEW_SIZE) + `...` : overview;
   const genre = genres[0];
   return (`<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
@@ -30,7 +18,6 @@ const createFilmCardTemplate = ({title, rating, releaseDate, duration, genres, p
     </p>
     <img src="./images/posters/${posterName}" alt="" class="film-card__poster">
     <p class="film-card__description">${filmOverview}</p>
-    <a class="film-card__comments">${commentsCount} comments</a>
   </article>`);
 };
 

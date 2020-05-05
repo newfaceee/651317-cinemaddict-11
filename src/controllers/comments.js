@@ -1,13 +1,7 @@
 import FilmDetailsCommentsComponent from '../components/film-details-comments.js';
 import FilmDetailsCommentsListComponent from '../components/film-details-comments-list.js';
 import FilmDetailsCommentsTitleComponent from '../components/film-details-comments-title.js';
-import NewCommentController from './new-comment.js';
-import {render, replace, RenderPosition, remove} from '../utils/render.js';
-
-const renderAddNewComment = (container, commentsModel) => {
-  const addNewComment = new NewCommentController(container, commentsModel);
-  addNewComment.render();
-}
+import {render, RenderPosition, remove} from '../utils/render.js';
 
 export default class CommentsController {
   constructor(container, comments, commentsModel, onDeleteComment) {
@@ -32,7 +26,7 @@ export default class CommentsController {
     this._filmDetailsCommentsTitleComponent = new FilmDetailsCommentsTitleComponent(commentsCount);
 
     const commentsListElement = this._filmDetailsCommentsListComponent.getElement();
-    
+
     this._comments.comments.forEach((it) => {
       this._filmDetailsCommentsComponent = new FilmDetailsCommentsComponent(it);
       this._filmDetailsCommentsComponent.setDeleteButtonClickHandler((commentId) => {
@@ -48,7 +42,7 @@ export default class CommentsController {
     remove(this._filmDetailsCommentsListComponent);
     remove(this._filmDetailsCommentsTitleComponent);
   }
-  
+
   _onDataChange() {
     this.render();
   }

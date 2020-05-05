@@ -1,5 +1,5 @@
 import {SortType} from '../const.js';
-import {render, replace, RenderPosition, remove} from '../utils/render.js';
+import {render, replace, RenderPosition} from '../utils/render.js';
 import SortComponent from '../components/sort.js';
 
 export default class SortController {
@@ -18,7 +18,6 @@ export default class SortController {
   render() {
     this._activeSortType = this._moviesModel.getActiveSortType();
     const container = this._container;
-    const movies = this._moviesModel.getMoviesAll();
     const sortTypes = Object.values(SortType).map((sortType) => {
       return {
         name: sortType,

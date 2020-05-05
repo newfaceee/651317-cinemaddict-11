@@ -1,5 +1,4 @@
 import AbstractComponent from "./abstract-component.js";
-import {EMOJIS} from '../const.js';
 
 const createEmojiListMarkup = ({name, checked}) => {
   const isChecked = checked ? `checked` : ``;
@@ -13,7 +12,6 @@ const createNewCommentTemplate = (emojis) => {
   const emojiListMarkup = emojis.map((emoji) => {
     return createEmojiListMarkup(emoji);
   }).join(`\n`);
-  const checkedEmojiIndex = emojis.findIndex((emoji) => emoji.active === true);
   return (`<div class="film-details__new-comment">
   <label class="film-details__comment-label">
     <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -22,7 +20,7 @@ const createNewCommentTemplate = (emojis) => {
   <div class="film-details__emoji-list"> 
     ${emojiListMarkup}
   </div>
-</div>`)
+</div>`);
 };
 
 export default class NewComment extends AbstractComponent {
@@ -50,19 +48,15 @@ export default class NewComment extends AbstractComponent {
       if (evt.ctrlKey && evt.keyCode === 13) {
         const commentEmotionElement = this.getElement().querySelector(`.film-details__add-emoji-label img`);
         const commentText = this.getElement().querySelector(`.film-details__comment-input`).value;
-        if (commentEmotionElement && commentText  .length !== 0) {
+        if (commentEmotionElement && commentText.length !== 0) {
           const emotion = commentEmotionElement.alt.split(`-`)[1];
           handler(emotion, commentText);
         } else {
           return;
         }
-
-        // if ()
-       
       } else {
         return;
       }
-    })
-
+    });
   }
 }

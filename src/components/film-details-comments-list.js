@@ -8,4 +8,4 @@ export default class CommentsList extends AbstractComponent {
   getTemplate() {
     return createCommentsListTemplate();
   }
-};
+}

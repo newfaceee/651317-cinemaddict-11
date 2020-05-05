@@ -5,7 +5,7 @@ const createFavoriteTemplate = (name, isActive) => {
   const controlClass = `favorite`;
   const activeClass = isActive ? `film-card__controls-item--active` : ``;
   return (`<button class="film-card__controls-item button film-card__controls-item--${controlClass} ${activeClass}">${name}</button>`);
-}
+};
 
 export default class FilmCardWatchlist extends AbstractComponent {
   constructor(isActive) {

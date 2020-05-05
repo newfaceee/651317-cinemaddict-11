@@ -5,7 +5,6 @@ import FilmsContainerComponent from '../components/films-container.js';
 import FilmsListComponent from '../components/films-list.js';
 import NoFilmsComponent from '../components/no-films.js';
 import MovieController from './movie.js';
-import CommentController from './comments.js';
 
 
 import {SortType} from '../const.js';
@@ -15,16 +14,16 @@ import {render, remove, RenderPosition} from '../utils/render.js';
 const FILM_CARD_COUNT_ON_START = 5;
 const STEP = 5;
 
-let showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
+// let showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
 // Получение данных из моков
 
 // Функция для рендера карточек
-const renderFilmCards = (filmCardsData, filmCardsContainer, onDataChange, onViewChange, commentsData, commentsModel, moviesModel) => {
+const renderFilmCards = (filmCardsData, filmCardsContainer, onViewChange, commentsData, commentsModel, moviesModel) => {
   return filmCardsData.map((film, index) => {
     // const currentComments = commentsData.findIndex((comment) => console.log(comment));
     // Создаем инстанс filmCardController, для того, чтобы затем вызвать
     // у него метод render и вернуть карточку фильма
-    const filmCardController = new MovieController(filmCardsContainer, onDataChange, onViewChange, commentsModel, moviesModel);
+    const filmCardController = new MovieController(filmCardsContainer, onViewChange, commentsModel, moviesModel);
     filmCardController.render(film, commentsData[index]);
     return filmCardController;
   });
@@ -60,7 +59,6 @@ export default class PageController {
     this._showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
     // Задаем требуемые контексты
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
-    this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
@@ -105,7 +103,7 @@ export default class PageController {
 
   _renderMovies(movies) {
     const filmsListContainerElement = this._filmsContainerComponent.getElement(); // .films-list__container
-    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onDataChange, this._onViewChange, this._commentsModel.getComments(), this._commentsModel, this._moviesModel);
+    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onViewChange, this._commentsModel.getComments(), this._commentsModel, this._moviesModel);
     this._showedFilmCardControllers = [].concat(newfilmCards);
     this._showingFilmCardsCount = this._showedFilmCardControllers.length;
   }
@@ -138,18 +136,6 @@ export default class PageController {
     this._removeMovies();
     this._renderMovies(sortedFilmCards);
   }
-  _onDataChange(oldData, newData) {
-    const id = oldData.id;
-    const isSuccess = this._moviesModel.updateMovie(id, newData);
-    const filmCards = this._moviesModel.getMovies();
-    const sortedFilmCards = getSortedFilmCards(filmCards, this._moviesModel.getActiveSortType(), 0, this._showingFilmCardsCount);
-
-    if (isSuccess) {
-      this._removeMovies();
-      this._renderMovies(sortedFilmCards);
-      this._renderShowMoreButton();
-    }
-  }
 
   _onViewChange() {
     this._showedFilmCardControllers.forEach((it) => it.setDefaultView());
@@ -167,8 +153,8 @@ export default class PageController {
     this._showingFilmCardsCount = this._showingFilmCardsCount + STEP;
     const comments = this._commentsModel.getComments().slice(prevFilmCardsCount, this._showingFilmCardsCount);
     const sortedFilmCards = getSortedFilmCards(movies, this._moviesModel.getActiveSortType(), prevFilmCardsCount, this._showingFilmCardsCount);
-    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onDataChange, this._onViewChange, comments, this._commentsModel, this._moviesModel);
-    
+    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onViewChange, comments, this._commentsModel, this._moviesModel);
+
     this._showedFilmCardControllers = this._showedFilmCardControllers.concat(newFilmCards);
 
     if (this._showingFilmCardsCount >= movies.length) {

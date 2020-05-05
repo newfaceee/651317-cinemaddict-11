@@ -1,4 +1,4 @@
-import {getRandomNumber, getFilmOverview, getComments, getRating, getRandomData, getRandomDataFromRange, getRandomDate, getRandomBoolean} from '../utils/common.js';
+import {getRandomNumber, getFilmOverview, getRating, getRandomData, getRandomDataFromRange, getRandomDate, getRandomBoolean} from '../utils/common.js';
 import {actors} from '../data/actors.js';
 import {writers} from '../data/writers.js';
 import {countrys} from '../data/countrys.js';
@@ -26,11 +26,6 @@ const generateFilmCard = () => {
     isWatchList: getRandomBoolean(),
     isAlreadyWatched: getRandomBoolean(),
     isFavorite: getRandomBoolean(),
-    controls: {
-        isWatchList: getRandomBoolean(),
-        isAlreadyWatched: getRandomBoolean(),
-        isFavorite: getRandomBoolean(),
-    },
   };
 };
 const generateFilmCards = (count) => {

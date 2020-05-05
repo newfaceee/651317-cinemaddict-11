@@ -1,9 +1,9 @@
 import AbstractComponent from './abstract-component.js';
 
-const createComponentTemplate = (controls) => {
+const createComponentTemplate = () => {
   return (`<form class="film-card__controls">
     </form>`);
-}
+};
 
 export default class Component extends AbstractComponent {
   constructor() {
