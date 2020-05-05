@@ -2,6 +2,10 @@ import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsPopupComponent from '../components/film-details-popup.js';
 import FilmDetailsCommentsWrapComponent from '../components/film-details-comments-wrap.js';
 import FilmCardControlsComponent from '../components/film-card-controls.js';
+import FilmCardControlsWatchlistComponent from '../components/film-card-controls-watchlist.js';
+import FilmCardControlsFavoriteComponent from '../components/film-card-controls-favorite.js';
+import FilmCardControlsHistoryComponent from '../components/film-card-controls-history.js';
+
 import {render, RenderPosition, remove, replace} from '../utils/render.js';
 import CommentsController from './comments.js';
 import NewCommentController from './new-comment.js';
@@ -61,20 +65,8 @@ export default class MovieController {
     // на вход принимают карточку одного фильма
     this._filmCardComponent = new FilmCardComponent(filmCard, commentsCount);
     const filmCardElement = this._filmCardComponent.getElement();
-    console.log(filmCardElement);
+
     render(filmCardElement, this._filmCardControlsComponent, RenderPosition.BEFOREEND);
-
-    
-    this._filmCardControlsComponent.setWatchlistClickHandler(() => {
-      this._updateWatchlistButton();
-    })
-
-
-
-
-
-
-
 
     this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(filmCard);
     this._filmDetailsCommentsWrapComponent = new FilmDetailsCommentsWrapComponent();
@@ -122,18 +114,9 @@ export default class MovieController {
     render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
   }
 
-  _updateWatchlistButton() {
-    console.log(`da`);
-    const filmCardElement = this._filmCardComponent.getElement();
-    this._filmCardControlsComponent.getElement().remove();
-    this._filmCardControlsComponent = new FilmCardControlsComponent(this._filmCard);
-    this._filmCardControlsComponent.setWatchlistClickHandler(() => {
-      this._updateWatchlistButton();
-    })
-    console.log(this._filmCardControlsComponent.getElement());
-    render(filmCardElement, this._filmCardControlsComponent, RenderPosition.BEFOREEND);
+  _renderWathListButton() {
+    const filmCardControlsElement = this._filmCardControlsComponent.getElement();
   }
-
 
   _renderComments(comments) {
     const commentsWrapElement = this._filmDetailsCommentsWrapComponent.getElement();
