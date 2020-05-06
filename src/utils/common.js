@@ -85,3 +85,9 @@ export const getComments = () => {
   const commentsNumber = getRandomNumber(COMMENTS_MIN, COMMENTS_MAX);
   return new Array(commentsNumber).fill(``).map(createComment);
 };
+
+export const getGenres = (watchedMovies) => {
+  return [].concat(...watchedMovies.map((movie) => {
+    return movie.genres;
+  }));
+};

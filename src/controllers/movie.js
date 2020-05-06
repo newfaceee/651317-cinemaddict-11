@@ -36,7 +36,6 @@ export default class MovieController {
     this._filmDetailsPopupComponent = null;
     this._filmDetailsCommentsComponent = null;
     this._filmDetailsCommentsWrapComponent = null;
-    this._filmDetailsCommentsListComponent = null;
 
     this._filmCardControlsWatchlistComponent = null;
     this._filmCardControlsHistoryComponent = null;
@@ -224,6 +223,7 @@ export default class MovieController {
     if (this._filmDetailsPopupComponent) {
       remove(this._filmDetailsPopupComponent);
     }
+
   }
 
   _renderCommentsCount(commentsCount) {

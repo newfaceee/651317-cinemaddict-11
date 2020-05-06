@@ -33,6 +33,15 @@ export default class Movies {
     return this._activeSortType;
   }
 
+  getUniqueGenresByFilterType(filterType) {
+    const filteredMovies = this._movies.filter((movie) => movie.filterType);
+    const genres =  [].concat(...filteredMovies.map((movie) => movie.genres));
+    const uniqueGenres = Array.from(new Set(genres));
+
+    return uniqueGenres;
+  }
+
+
   setMovies(movies) {
     this._movies = Array.from(movies);
     this._callHandlers(this._dataChangeHandlers);

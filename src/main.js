@@ -11,7 +11,7 @@ import MoviesModel from './models/movie.js';
 import CommentsModel from './models/comments.js';
 import {render, RenderPosition} from './utils/render.js';
 import User from './models/user.js';
-import StatController from './controllers/stat.js';
+
 
 const FILM_CARD_COUNT = 17;
 
@@ -40,9 +40,10 @@ render(siteFooterStatisticsElement, new FooterStatisticsComponent(filmCardsCount
 const filterController = new FilterController(siteMainElement, moviesModel);
 const sortController = new SortController(siteMainElement, moviesModel);
 const pageController = new PageController(siteMainElement, moviesModel, commentsModel);
-const statsController = new StatController(siteMainElement, userModel);
+const statsComponent = new StatisticComponent(userModel, moviesModel);
 
 sortController.render();
 filterController.render();
 pageController.render(filmCards);
-statsController.render();
+render(siteMainElement, statsComponent, RenderPosition.BEFOREEND);
+statsComponent.hide();

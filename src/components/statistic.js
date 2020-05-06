@@ -1,5 +1,5 @@
-import {capitalizeFirstLetters, transformDuration} from "../utils/common.js";
-import AbstractComponent from './abstract-component.js';
+import {capitalizeFirstLetters, transformDuration, getGenres} from "../utils/common.js";
+import AbstractSmartComponent from './abstract-smart-component.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
@@ -12,6 +12,25 @@ const StatisticTitle = {
   DURATION: `Total duration`,
   TOP_GENRE: `Top genre`,
 };
+
+const getUniqueGenres = (genres) => {
+  const uniqueGenres = Array.from(new Set(genres));
+  const uniqueGenresMovieQty = uniqueGenres.map((genre) => {
+    let qty = 0;
+    genres.forEach((it) => {
+      if (it === genre) {
+        qty++
+      };
+    });
+    return {
+      name: genre,
+      qty
+    }
+  });
+  const sortedUniqueGenres = uniqueGenresMovieQty.sort((a, b) => b.qty - a.qty);
+  return sortedUniqueGenres;
+}
+
 
 const createFiltersMarkup = (filter, isChecked) => {
   const id = filter.toLowerCase().split(` `).join(`-`);
@@ -49,20 +68,21 @@ const createTopGenreMarkup = (topGenre, title) => {
 </li>`);
 };
 
+// const statisticCtx = document.querySelector(`.statistic__chart`);
 
-const BAR_HEIGHT = 50;
-const statisticCtx = document.querySelector(`.statistic__chart`);
+const renderChart = (statCtx, genres) => {
+  const BAR_HEIGHT = 50;
+  
+  const genreNames = genres.map((genre) => genre.name);
+  const genreQty = genres.map((genre) => genre.qty);
 
-// Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
-statisticCtx.height = BAR_HEIGHT * 5;
-
-const myChart = new Chart(statisticCtx, {
+  return new Chart(statCtx, {
   plugins: [ChartDataLabels],
   type: `horizontalBar`,
   data: {
-    labels: [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`],
+    labels: genreNames,
     datasets: [{
-      data: [11, 8, 7, 4, 3],
+      data: genreQty,
       backgroundColor: `#ffe800`,
       hoverBackgroundColor: `#ffe800`,
       anchor: `start`
@@ -112,6 +132,10 @@ const myChart = new Chart(statisticCtx, {
     }
   }
 });
+}
+
+// Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
+
 export const createStatisticsTemplate = ({rank, avatar, timeSpent, topGenre, watchedMoviesCount}) => {
   const filtersMarkup = filterNames.map((filter, i) => {
     return createFiltersMarkup(filter, i === 0);
@@ -142,13 +166,31 @@ export const createStatisticsTemplate = ({rank, avatar, timeSpent, topGenre, wat
     </div>
   </section>`);
 };
-export default class Statistic extends AbstractComponent {
-  constructor(profile) {
+export default class Statistic extends AbstractSmartComponent {
+  constructor(userModel, moviesModel) {
     super();
-    this._profile = profile;
+    this._userModel = userModel;
+    this._moviesModel = moviesModel;
+
+    this._statChart = null;
+    this._renderChart();
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._profile);
+    const userProfile = this._userModel.getUser();
+    return createStatisticsTemplate(userProfile);
   }
+
+  _renderChart() {
+    const element = this.getElement();
+    const statCtx = element.querySelector(`.statistic__chart`);
+
+    const watchedMovies = this._moviesModel.getWatchedMovies()
+    const genres = getGenres(watchedMovies);
+    const uniqueGenres = getUniqueGenres(genres);
+
+    
+    this._statChart = renderChart(statCtx, uniqueGenres);
+  }
+
 }

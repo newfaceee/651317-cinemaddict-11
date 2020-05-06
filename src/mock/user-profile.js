@@ -1,3 +1,4 @@
+import {getGenres} from '../utils/common.js';
 const generateProfileRank = (watchedMoviesCount) => {
   const NOVICE_MIN = 1;
   const NOVICE_MAX = 10;
@@ -33,12 +34,6 @@ const getTopGenre = (genres) => {
   const topGenreIndex = uniqueGenresQty.indexOf(topGenreQty);
   const topGenre = uniqueGenres[topGenreIndex];
   return topGenre;
-};
-
-const getGenres = (watchedMovies) => {
-  return [].concat(...watchedMovies.map((movie) => {
-    return movie.genres;
-  }));
 };
 
 const getTimeSpent = (watchedMovies) => {
