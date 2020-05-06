@@ -271,7 +271,7 @@ export default class MovieController {
     const isSuccess = this._moviesModel.updateMovie(id, movie);
 
     if (isSuccess) {
-      this._filmCard = movie;
+      this._filmCard = this._moviesModel.getMovieById(this._filmCard.id);
       switch (control) {
         case CONTROLS.WATCHLIST:
           this._renderWathListControl();

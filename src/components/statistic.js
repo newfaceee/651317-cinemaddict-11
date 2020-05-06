@@ -19,17 +19,17 @@ const getUniqueGenres = (genres) => {
     let qty = 0;
     genres.forEach((it) => {
       if (it === genre) {
-        qty++
-      };
+        qty++;
+      }
     });
     return {
       name: genre,
       qty
-    }
+    };
   });
   const sortedUniqueGenres = uniqueGenresMovieQty.sort((a, b) => b.qty - a.qty);
   return sortedUniqueGenres;
-}
+};
 
 
 const createFiltersMarkup = (filter, isChecked) => {
@@ -72,69 +72,70 @@ const createTopGenreMarkup = (topGenre, title) => {
 
 const renderChart = (statCtx, genres) => {
   const BAR_HEIGHT = 50;
-  
+
   const genreNames = genres.map((genre) => genre.name);
-  const genreQty = genres.map((genre) => genre.qty);
+  const genreMovieQty = genres.map((genre) => genre.qty);
+  const genresCount = genres.length;
+
+  statCtx.height = BAR_HEIGHT * genresCount;
 
   return new Chart(statCtx, {
-  plugins: [ChartDataLabels],
-  type: `horizontalBar`,
-  data: {
-    labels: genreNames,
-    datasets: [{
-      data: genreQty,
-      backgroundColor: `#ffe800`,
-      hoverBackgroundColor: `#ffe800`,
-      anchor: `start`
-    }]
-  },
-  options: {
-    plugins: {
-      datalabels: {
-        font: {
-          size: 20
-        },
-        color: `#ffffff`,
-        anchor: 'start',
-        align: 'start',
-        offset: 40,
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: genreNames,
+      datasets: [{
+        data: genreMovieQty,
+        backgroundColor: `#ffe800`,
+        hoverBackgroundColor: `#ffe800`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 20
+          },
+          color: `#ffffff`,
+          anchor: `start`,
+          align: `start`,
+          offset: 40,
+        }
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#ffffff`,
+            padding: 100,
+            fontSize: 20
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          barThickness: 24
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false
       }
-    },
-    scales: {
-      yAxes: [{
-        ticks: {
-          fontColor: `#ffffff`,
-          padding: 100,
-          fontSize: 20
-        },
-        gridLines: {
-          display: false,
-          drawBorder: false
-        },
-        barThickness: 24
-      }],
-      xAxes: [{
-        ticks: {
-          display: false,
-          beginAtZero: true
-        },
-        gridLines: {
-          display: false,
-          drawBorder: false
-        },
-      }],
-    },
-    legend: {
-      display: false
-    },
-    tooltips: {
-      enabled: false
     }
-  }
-});
-}
-
-// Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
+  });
+};
 
 export const createStatisticsTemplate = ({rank, avatar, timeSpent, topGenre, watchedMoviesCount}) => {
   const filtersMarkup = filterNames.map((filter, i) => {
@@ -185,11 +186,10 @@ export default class Statistic extends AbstractSmartComponent {
     const element = this.getElement();
     const statCtx = element.querySelector(`.statistic__chart`);
 
-    const watchedMovies = this._moviesModel.getWatchedMovies()
+    const watchedMovies = this._moviesModel.getWatchedMovies();
     const genres = getGenres(watchedMovies);
     const uniqueGenres = getUniqueGenres(genres);
 
-    
     this._statChart = renderChart(statCtx, uniqueGenres);
   }
 

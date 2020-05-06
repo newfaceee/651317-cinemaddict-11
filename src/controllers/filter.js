@@ -30,9 +30,7 @@ export default class FilterController {
     this._filterComponent = new FilterComponent(filters);
 
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
-    this._filterComponent.setOnChange((navi) => {
-      console.log(`you clicked `)
-    })
+
     if (oldComponent) {
       replace(oldComponent, this._filterComponent);
     } else {
@@ -43,7 +41,6 @@ export default class FilterController {
   _onFilterChange(filterType) {
     this._activeFilterType = filterType;
     this._moviesModel.setFilter(filterType);
-    this.render();
   }
 
   _onDataChange() {

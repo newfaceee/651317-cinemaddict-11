@@ -10,8 +10,8 @@ import {generateComments} from './mock/comment.js';
 import MoviesModel from './models/movie.js';
 import CommentsModel from './models/comments.js';
 import {render, RenderPosition} from './utils/render.js';
+import {SortType, FilterType} from './const.js';
 import User from './models/user.js';
-
 
 const FILM_CARD_COUNT = 17;
 
@@ -33,17 +33,34 @@ userModel.setUser(userProfile);
 const commentsModel = new CommentsModel();
 commentsModel.setComments(comments);
 
-render(siteHeaderElement, new ProfileRatingComponent(userProfile), RenderPosition.BEFOREEND);
-
-render(siteFooterStatisticsElement, new FooterStatisticsComponent(filmCardsCount), RenderPosition.BEFOREEND);
+const profileRatingComponent = new ProfileRatingComponent(userProfile);
+const footerStatisticsComponent = new FooterStatisticsComponent(filmCardsCount);
 
 const filterController = new FilterController(siteMainElement, moviesModel);
 const sortController = new SortController(siteMainElement, moviesModel);
 const pageController = new PageController(siteMainElement, moviesModel, commentsModel);
 const statsComponent = new StatisticComponent(userModel, moviesModel);
 
+
+render(siteHeaderElement, profileRatingComponent, RenderPosition.BEFOREEND);
+render(siteFooterStatisticsElement, footerStatisticsComponent, RenderPosition.BEFOREEND);
 sortController.render();
 filterController.render();
 pageController.render(filmCards);
 render(siteMainElement, statsComponent, RenderPosition.BEFOREEND);
 statsComponent.hide();
+
+moviesModel.setFilterChangeHandlers(() => {
+  if (moviesModel.getActiveFilterType() === `Stats`) {
+    moviesModel.setSortType(SortType.DEFAULT);
+    moviesModel.setFilter(FilterType.ALL);
+    sortController.hide();
+    pageController.hide();
+    statsComponent.show();
+  } else {
+    statsComponent.hide();
+    sortController.show();
+    pageController.show();
+  }
+});
+

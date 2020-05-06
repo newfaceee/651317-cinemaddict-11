@@ -1,12 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 import {FilterType} from '../const.js';
 
-const getFilterFromHref = (href) => {
-  const hrefValue = String(href).split(`#`)[1];
-  const filterType = hrefValue.split(`%20`).join(` `);
-  return filterType;
-};
-
 const createFilterMarkup = ({name, count}, isActive) => {
   const activeClass = isActive ? `main-navigation__item--active` : ``;
   const countMarkup = name !== FilterType.ALL ? `<span class="main-navigation__item-count">${count}</span>` : ``;
@@ -22,7 +16,7 @@ export const createFilterTemplate = (filters) => {
         <div class="main-navigation__items">
           ${filtersMarkup}
         </div>
-        <a href="#stats" class="main-navigation__additional">Stats</a>
+        <a data-id="Stats" href="#stats" class="main-navigation__additional">Stats</a>
       </nav>`);
 };
 export default class Filter extends AbstractComponent {
@@ -37,25 +31,27 @@ export default class Filter extends AbstractComponent {
   }
 
   setFilterChangeHandler(handler) {
-    this.getElement().querySelector(`.main-navigation__items`).addEventListener(`click`, (evt) => {
+
+    this.getElement().addEventListener(`click`, (evt) => {
       if (!evt.target.closest(`a`)) {
         return;
       }
-      if (!this.getElement().querySelector(`.main-navigation__items`).contains(evt.target)) {
+      if (!this.getElement().contains(evt.target)) {
         return;
       }
-      const filterType = getFilterFromHref(evt.target.closest(`a`));
+      const filterType = evt.target.closest(`a`).dataset.id;
       handler(filterType);
     });
   }
   setOnChange(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      if (evt.target.tagName !== `a`) {
+
+      if (!evt.target.closest(`a`)) {
         return;
       }
-      const navigationItem = evt.target.dataset.id;
-      handler(navigationItem);
-    })
+      const navigationItem = evt.target.closest(`a`).dataset.id;
 
+      handler(navigationItem);
+    });
   }
 }

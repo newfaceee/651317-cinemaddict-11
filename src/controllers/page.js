@@ -37,7 +37,7 @@ const getSortedFilmCards = (filmCardsData, sortType, from, to) => {
 
 export default class PageController {
   constructor(container, moviesModel, commentsModel) {
-    console.log(container);
+
     this._container = container;
     this._moviesModel = moviesModel;
     this._commentsModel = commentsModel;
@@ -61,11 +61,11 @@ export default class PageController {
   }
 
   hide() {
-    this._container.hide();
+    this._filmsSectionComponent.hide();
   }
 
   show() {
-    this._container.show();
+    this._filmsSectionComponent.show();
   }
 
   render() {
