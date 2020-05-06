@@ -21,6 +21,10 @@ export default class Movies {
     return this._movies;
   }
 
+  getWatchedMovies() {
+    return this._movies.filter((movie) => movie.isAlreadyWatched);
+  }
+
   getMovieById(id) {
     return this._movies.filter((movie) => movie.id === id)[0];
   }
