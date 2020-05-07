@@ -29,7 +29,6 @@ const renderAddNewComment = (container, commentsModel, activeEmotion, onAddComme
 
 
 export default class MovieController {
-  // в качестве контейнера должно приходить элемент с классом .films-list__container
   constructor(container, onViewChange, commentsModel, moviesModel) {
     this._container = container;
     this._filmCardComponent = null;
@@ -210,6 +209,7 @@ export default class MovieController {
 
   setDefaultView() {
     this._closeFilmDetailsPopup();
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _openFilmDetailsPopup() {
@@ -222,8 +222,10 @@ export default class MovieController {
   _closeFilmDetailsPopup() {
     if (this._filmDetailsPopupComponent) {
       remove(this._filmDetailsPopupComponent);
+      this._filmDetailsPopupComponent = null;
+      this._removeComments();
+      this._removeAddNewComment();
     }
-
   }
 
   _renderCommentsCount(commentsCount) {

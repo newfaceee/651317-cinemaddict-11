@@ -66,12 +66,12 @@ export default class Movies {
   setFilter(filterType) {
     this._activeFilterType = filterType;
     this._callHandlers(this._filterChangeHandlers);
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   setSortType(sortType) {
     this._activeSortType = sortType;
     this._callHandlers(this._sortTypeChangeHandlers);
-    this._callHandlers(this._dataChangeHandlers);
   }
 
   updateMovie(id, movie) {

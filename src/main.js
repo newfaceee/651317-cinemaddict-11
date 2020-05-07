@@ -1,17 +1,21 @@
-import PageController from './controllers/page.js';
-import FilterController from './controllers/filter.js';
-import SortController from './controllers/sort.js';
 import ProfileRatingComponent from './components/profile-rating.js';
 import StatisticComponent from './components/statistic.js';
 import FooterStatisticsComponent from './components/footerStatistics.js';
+
+import PageController from './controllers/page.js';
+import FilterController from './controllers/filter.js';
+import SortController from './controllers/sort.js';
+
 import {generateUserProfile} from './mock/user-profile.js';
 import {generateFilmCards} from './mock/film-cards.js';
 import {generateComments} from './mock/comment.js';
+
 import MoviesModel from './models/movie.js';
 import CommentsModel from './models/comments.js';
-import {render, RenderPosition} from './utils/render.js';
-import {SortType, FilterType} from './const.js';
 import User from './models/user.js';
+
+import {render, RenderPosition} from './utils/render.js';
+
 
 const FILM_CARD_COUNT = 17;
 
@@ -52,15 +56,11 @@ statsComponent.hide();
 
 moviesModel.setFilterChangeHandlers(() => {
   if (moviesModel.getActiveFilterType() === `Stats`) {
-    moviesModel.setSortType(SortType.DEFAULT);
-    moviesModel.setFilter(FilterType.ALL);
     sortController.hide();
     pageController.hide();
     statsComponent.show();
   } else {
-    statsComponent.hide();
-    sortController.show();
-    pageController.show();
+    return;
   }
 });
 
