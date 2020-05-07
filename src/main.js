@@ -37,7 +37,7 @@ const changeScreenMovieHandler = () => {
   pageController.show();
   sortController.show();
   statsComponent.hide();
-}
+};
 
 const moviesModel = new MoviesModel();
 moviesModel.setMovies(filmCards);

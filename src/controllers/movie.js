@@ -102,10 +102,6 @@ export default class MovieController {
         isWatchList: !this._filmCard.isWatchList
       });
       this._onControlClickHandler(this._filmCard.id, newMovie, control);
-
-      if (!this._filmCard.isWatchList && this._moviesModel.getActiveFilterType() === FilterType.WATCHLIST) {
-        console.log(`movie has been removed`)
-      }
     });
     const filmCardControlsElement = this._filmCardControlsComponent.getElement();
     if (oldComponent) {

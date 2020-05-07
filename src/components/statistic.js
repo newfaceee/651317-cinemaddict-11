@@ -188,7 +188,6 @@ export default class Statistic extends AbstractSmartComponent {
   }
 
   rerender(userModel, moviesModel) {
-    console.log(this._userModel);
     this._userModel = userModel;
     this._moviesModel = moviesModel;
 
