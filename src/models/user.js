@@ -1,3 +1,5 @@
+import {generateUserProfile} from '../mock/user-profile.js';
+
 export default class User {
   constructor() {
     this._user = null;
@@ -7,6 +9,11 @@ export default class User {
 
   setUser(user) {
     this._user = user;
+  }
+
+  updateUser(watchedMovies) {
+    const newUser = generateUserProfile(watchedMovies);
+    this._user = newUser;
   }
 
   getUser() {

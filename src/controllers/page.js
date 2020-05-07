@@ -10,9 +10,9 @@ import {render, remove, RenderPosition} from '../utils/render.js';
 const FILM_CARD_COUNT_ON_START = 5;
 const STEP = 5;
 
-const renderFilmCards = (filmCardsData, filmCardsContainer, onViewChange, commentsData, commentsModel, moviesModel) => {
+const renderFilmCards = (filmCardsData, filmCardsContainer, onViewChange, commentsData, commentsModel, moviesModel, userModel) => {
   return filmCardsData.map((film, index) => {
-    const filmCardController = new MovieController(filmCardsContainer, onViewChange, commentsModel, moviesModel);
+    const filmCardController = new MovieController(filmCardsContainer, onViewChange, commentsModel, moviesModel, userModel);
     filmCardController.render(film, commentsData[index]);
     return filmCardController;
   });
@@ -36,11 +36,12 @@ const getSortedFilmCards = (filmCardsData, sortType, from, to) => {
 };
 
 export default class PageController {
-  constructor(container, moviesModel, commentsModel) {
+  constructor(container, moviesModel, commentsModel, userModel) {
 
     this._container = container;
     this._moviesModel = moviesModel;
     this._commentsModel = commentsModel;
+    this._userModel = userModel;
     this._showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
@@ -90,7 +91,7 @@ export default class PageController {
 
   _renderMovies(movies) {
     const filmsListContainerElement = this._filmsContainerComponent.getElement(); // .films-list__container
-    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onViewChange, this._commentsModel.getComments(), this._commentsModel, this._moviesModel);
+    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onViewChange, this._commentsModel.getComments(), this._commentsModel, this._moviesModel, this._userModel);
     this._showedFilmCardControllers = [].concat(newfilmCards);
     this._showingFilmCardsCount = this._showedFilmCardControllers.length;
   }
@@ -140,7 +141,7 @@ export default class PageController {
     this._showingFilmCardsCount = this._showingFilmCardsCount + STEP;
     const comments = this._commentsModel.getComments().slice(prevFilmCardsCount, this._showingFilmCardsCount);
     const sortedFilmCards = getSortedFilmCards(movies, this._moviesModel.getActiveSortType(), prevFilmCardsCount, this._showingFilmCardsCount);
-    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onViewChange, comments, this._commentsModel, this._moviesModel);
+    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onViewChange, comments, this._commentsModel, this._moviesModel, this._userModel);
 
     this._showedFilmCardControllers = this._showedFilmCardControllers.concat(newFilmCards);
 

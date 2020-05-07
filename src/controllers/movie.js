@@ -29,7 +29,7 @@ const renderAddNewComment = (container, commentsModel, activeEmotion, onAddComme
 
 
 export default class MovieController {
-  constructor(container, onViewChange, commentsModel, moviesModel) {
+  constructor(container, onViewChange, commentsModel, moviesModel, userModel) {
     this._container = container;
     this._filmCardComponent = null;
     this._filmDetailsPopupComponent = null;
@@ -55,6 +55,7 @@ export default class MovieController {
 
     this._commentsModel = commentsModel;
     this._moviesModel = moviesModel;
+    this._userModel = userModel;
   }
 
   render(filmCard) {
@@ -280,6 +281,7 @@ export default class MovieController {
           break;
         case CONTROLS.ALREADY_WATCHED:
           this._renderHistoryControl();
+          this._userModel.updateUser(this._moviesModel.getWatchedMovies());
           break;
         case CONTROLS.FAVORITE:
           this._renderFavoriteControl();

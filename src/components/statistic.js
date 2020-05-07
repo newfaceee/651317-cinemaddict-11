@@ -68,7 +68,6 @@ const createTopGenreMarkup = (topGenre, title) => {
 </li>`);
 };
 
-// const statisticCtx = document.querySelector(`.statistic__chart`);
 
 const renderChart = (statCtx, genres) => {
   const BAR_HEIGHT = 50;
@@ -174,12 +173,34 @@ export default class Statistic extends AbstractSmartComponent {
     this._moviesModel = moviesModel;
 
     this._statChart = null;
+
+
     this._renderChart();
   }
 
   getTemplate() {
     const userProfile = this._userModel.getUser();
     return createStatisticsTemplate(userProfile);
+  }
+
+  recoveryListeners() {
+
+  }
+
+  rerender(userModel, moviesModel) {
+    console.log(this._userModel);
+    this._userModel = userModel;
+    this._moviesModel = moviesModel;
+
+    super.rerender();
+    this._renderChart();
+
+  }
+
+  show() {
+    super.show();
+
+    this.rerender(this._userModel, this._moviesModel);
   }
 
   _renderChart() {

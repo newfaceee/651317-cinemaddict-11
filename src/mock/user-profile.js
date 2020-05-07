@@ -21,6 +21,12 @@ const generateProfileRank = (watchedMoviesCount) => {
 
 const getTopGenre = (genres) => {
   const uniqueGenres = Array.from(new Set(genres));
+  if (uniqueGenres.length > 0) {
+    return uniqueGenres[0];
+  }
+  if (uniqueGenres.length === 0) {
+    return ``;
+  }
   const uniqueGenresQty = uniqueGenres.map((genre) => {
     let qty = 0;
     genres.forEach((it) => {
