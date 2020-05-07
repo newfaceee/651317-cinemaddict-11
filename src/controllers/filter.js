@@ -4,7 +4,7 @@ import {render, replace, RenderPosition} from '../utils/render.js';
 import FilterComponent from '../components/filter.js';
 
 export default class FilterController {
-  constructor(container, moviesModel) {
+  constructor(container, moviesModel, changeScreenStatHandler, changeScreenMovieHandler) {
     this._container = container;
     this._moviesModel = moviesModel;
     this._activeFilterType = FilterType.ALL;
@@ -13,6 +13,10 @@ export default class FilterController {
 
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
+
+    this._changeScreenStatHandler = changeScreenStatHandler;
+    this._changeScreenMovieHandler = changeScreenMovieHandler;
+
     this._moviesModel.setDataChangeHandlers(this._onDataChange);
   }
 
@@ -30,6 +34,7 @@ export default class FilterController {
     this._filterComponent = new FilterComponent(filters);
 
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
+
     if (oldComponent) {
       replace(oldComponent, this._filterComponent);
     } else {
@@ -38,9 +43,13 @@ export default class FilterController {
   }
 
   _onFilterChange(filterType) {
-    this._activeFilterType = filterType;
-    this._moviesModel.setFilter(filterType);
-    this.render();
+    if (filterType === `Stats`) {
+      this._changeScreenStatHandler();
+    } else {
+      this._changeScreenMovieHandler();
+      this._activeFilterType = filterType;
+      this._moviesModel.setFilter(filterType);
+    }
   }
 
   _onDataChange() {

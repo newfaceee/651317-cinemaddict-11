@@ -13,7 +13,7 @@ import {render, RenderPosition, remove, replace} from '../utils/render.js';
 import CommentsController from './comments.js';
 import NewCommentController from './new-comment.js';
 
-import {CONTROLS} from '../const.js';
+import {CONTROLS, FilterType} from '../const.js';
 
 const renderComments = (container, comments, commentsModel, onDeleteComment) => {
   const commentsController = new CommentsController(container, comments, commentsModel, onDeleteComment);
@@ -29,14 +29,12 @@ const renderAddNewComment = (container, commentsModel, activeEmotion, onAddComme
 
 
 export default class MovieController {
-  // в качестве контейнера должно приходить элемент с классом .films-list__container
-  constructor(container, onViewChange, commentsModel, moviesModel) {
+  constructor(container, onViewChange, commentsModel, moviesModel, userModel, onMovieDelete) {
     this._container = container;
     this._filmCardComponent = null;
     this._filmDetailsPopupComponent = null;
     this._filmDetailsCommentsComponent = null;
     this._filmDetailsCommentsWrapComponent = null;
-    this._filmDetailsCommentsListComponent = null;
 
     this._filmCardControlsWatchlistComponent = null;
     this._filmCardControlsHistoryComponent = null;
@@ -48,6 +46,7 @@ export default class MovieController {
     this._addNewCommentContainerElement = null;
 
     this._onViewChange = onViewChange;
+    this._onMovieDelete = onMovieDelete;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._onDeleteComment = this._onDeleteComment.bind(this);
@@ -57,6 +56,7 @@ export default class MovieController {
 
     this._commentsModel = commentsModel;
     this._moviesModel = moviesModel;
+    this._userModel = userModel;
   }
 
   render(filmCard) {
@@ -211,6 +211,7 @@ export default class MovieController {
 
   setDefaultView() {
     this._closeFilmDetailsPopup();
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _openFilmDetailsPopup() {
@@ -223,6 +224,9 @@ export default class MovieController {
   _closeFilmDetailsPopup() {
     if (this._filmDetailsPopupComponent) {
       remove(this._filmDetailsPopupComponent);
+      this._filmDetailsPopupComponent = null;
+      this._removeComments();
+      this._removeAddNewComment();
     }
   }
 
@@ -271,16 +275,30 @@ export default class MovieController {
     const isSuccess = this._moviesModel.updateMovie(id, movie);
 
     if (isSuccess) {
-      this._filmCard = movie;
+      this._filmCard = this._moviesModel.getMovieById(this._filmCard.id);
+
       switch (control) {
         case CONTROLS.WATCHLIST:
           this._renderWathListControl();
+
+          if (!this._filmCard.isWatchList && this._moviesModel.getActiveFilterType() === FilterType.WATCHLIST) {
+            this._onMovieDelete();
+          }
           break;
         case CONTROLS.ALREADY_WATCHED:
           this._renderHistoryControl();
+
+          this._userModel.updateUser(this._moviesModel.getWatchedMovies());
+          if (!this._filmCard.isAlreadyWatched && this._moviesModel.getActiveFilterType() === FilterType.HISTORY) {
+            this._onMovieDelete();
+          }
           break;
         case CONTROLS.FAVORITE:
           this._renderFavoriteControl();
+
+          if (!this._filmCard.isFavorite && this._moviesModel.getActiveFilterType() === FilterType.FAVORITE) {
+            this._onMovieDelete();
+          }
           break;
       }
       this._moviesModel.updateFilters();
