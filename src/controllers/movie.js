@@ -13,7 +13,7 @@ import {render, RenderPosition, remove, replace} from '../utils/render.js';
 import CommentsController from './comments.js';
 import NewCommentController from './new-comment.js';
 
-import {CONTROLS} from '../const.js';
+import {CONTROLS, FilterType} from '../const.js';
 
 const renderComments = (container, comments, commentsModel, onDeleteComment) => {
   const commentsController = new CommentsController(container, comments, commentsModel, onDeleteComment);
@@ -29,7 +29,7 @@ const renderAddNewComment = (container, commentsModel, activeEmotion, onAddComme
 
 
 export default class MovieController {
-  constructor(container, onViewChange, commentsModel, moviesModel, userModel) {
+  constructor(container, onViewChange, commentsModel, moviesModel, userModel, onMovieDelete) {
     this._container = container;
     this._filmCardComponent = null;
     this._filmDetailsPopupComponent = null;
@@ -46,6 +46,7 @@ export default class MovieController {
     this._addNewCommentContainerElement = null;
 
     this._onViewChange = onViewChange;
+    this._onMovieDelete = onMovieDelete;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._onDeleteComment = this._onDeleteComment.bind(this);
@@ -101,6 +102,10 @@ export default class MovieController {
         isWatchList: !this._filmCard.isWatchList
       });
       this._onControlClickHandler(this._filmCard.id, newMovie, control);
+
+      if (!this._filmCard.isWatchList && this._moviesModel.getActiveFilterType() === FilterType.WATCHLIST) {
+        console.log(`movie has been removed`)
+      }
     });
     const filmCardControlsElement = this._filmCardControlsComponent.getElement();
     if (oldComponent) {
@@ -275,16 +280,29 @@ export default class MovieController {
 
     if (isSuccess) {
       this._filmCard = this._moviesModel.getMovieById(this._filmCard.id);
+
       switch (control) {
         case CONTROLS.WATCHLIST:
           this._renderWathListControl();
+
+          if (!this._filmCard.isWatchList && this._moviesModel.getActiveFilterType() === FilterType.WATCHLIST) {
+            this._onMovieDelete();
+          }
           break;
         case CONTROLS.ALREADY_WATCHED:
           this._renderHistoryControl();
+
           this._userModel.updateUser(this._moviesModel.getWatchedMovies());
+          if (!this._filmCard.isAlreadyWatched && this._moviesModel.getActiveFilterType() === FilterType.HISTORY) {
+            this._onMovieDelete();
+          }
           break;
         case CONTROLS.FAVORITE:
           this._renderFavoriteControl();
+
+          if (!this._filmCard.isFavorite && this._moviesModel.getActiveFilterType() === FilterType.FAVORITE) {
+            this._onMovieDelete();
+          }
           break;
       }
       this._moviesModel.updateFilters();
