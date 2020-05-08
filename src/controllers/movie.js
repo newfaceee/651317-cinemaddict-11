@@ -61,9 +61,10 @@ export default class MovieController {
 
   render(filmCard) {
     this._filmCard = filmCard;
-    this._comments = this._commentsModel.getCommentsByFilmId(this._filmCard.id);
-    const commentsCount = this._comments.comments.length;
-    this._filmCardControlsComponent = new FilmCardControlsComponent(filmCard);
+    console.log(this._filmCard);
+    const commentsCount = this._filmCard.comments.length;
+
+    this._filmCardControlsComponent = new FilmCardControlsComponent();
 
     this._filmCardComponent = new FilmCardComponent(filmCard, commentsCount);
     const filmCardElement = this._filmCardComponent.getElement();
@@ -95,15 +96,16 @@ export default class MovieController {
   }
 
   _renderWathListControl() {
+    const filmCardControlsElement = this._filmCardControlsComponent.getElement();
     const oldComponent = this._filmCardControlsWatchlistComponent;
-    this._filmCardControlsWatchlistComponent = new FilmCardControlsWatchlistComponent(this._filmCard.isWatchList);
+    this._filmCardControlsWatchlistComponent = new FilmCardControlsWatchlistComponent(this._filmCard.watchlist);
     this._filmCardControlsWatchlistComponent.setClickHandler((control) => {
       const newMovie = Object.assign({}, this._filmCard, {
-        isWatchList: !this._filmCard.isWatchList
+        watchlist: !this._filmCard.watchlist
       });
       this._onControlClickHandler(this._filmCard.id, newMovie, control);
     });
-    const filmCardControlsElement = this._filmCardControlsComponent.getElement();
+
     if (oldComponent) {
       replace(oldComponent, this._filmCardControlsWatchlistComponent);
     } else {
@@ -112,6 +114,7 @@ export default class MovieController {
   }
 
   _renderHistoryControl() {
+    const filmCardControlsElement = this._filmCardControlsComponent.getElement();
     const oldComponent = this._filmCardControlsHistoryComponent;
     this._filmCardControlsHistoryComponent = new FilmCardControlsHistoryComponent(this._filmCard.isAlreadyWatched);
     this._filmCardControlsHistoryComponent.setClickHandler((control) => {
@@ -120,7 +123,7 @@ export default class MovieController {
       });
       this._onControlClickHandler(this._filmCard.id, newMovie, control);
     });
-    const filmCardControlsElement = this._filmCardControlsComponent.getElement();
+
     if (oldComponent) {
       replace(oldComponent, this._filmCardControlsHistoryComponent);
     } else {
@@ -129,15 +132,16 @@ export default class MovieController {
   }
 
   _renderFavoriteControl() {
+    const filmCardControlsElement = this._filmCardControlsComponent.getElement();
     const oldComponent = this._filmCardControlsFavoriteComponent;
-    this._filmCardControlsFavoriteComponent = new FilmCardControlsFavoriteComponent(this._filmCard.isFavorite);
+    this._filmCardControlsFavoriteComponent = new FilmCardControlsFavoriteComponent(this._filmCard.favorite);
     this._filmCardControlsFavoriteComponent.setClickHandler((control) => {
       const newMovie = Object.assign({}, this._filmCard, {
-        isFavorite: !this._filmCard.isFavorite
+        favorite: !this._filmCard.favorite
       });
       this._onControlClickHandler(this._filmCard.id, newMovie, control);
     });
-    const filmCardControlsElement = this._filmCardControlsComponent.getElement();
+
     if (oldComponent) {
       replace(oldComponent, this._filmCardControlsFavoriteComponent);
     } else {

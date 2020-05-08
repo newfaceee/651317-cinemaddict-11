@@ -10,10 +10,10 @@ import {render, remove, RenderPosition} from '../utils/render.js';
 const FILM_CARD_COUNT_ON_START = 5;
 const STEP = 5;
 
-const renderFilmCards = (filmCardsData, filmCardsContainer, onViewChange, commentsData, commentsModel, moviesModel, userModel, onMovieDelete) => {
+const renderFilmCards = (filmCardsData, filmCardsContainer, onViewChange, commentsModel, moviesModel, userModel, onMovieDelete) => {
   return filmCardsData.map((film, index) => {
     const filmCardController = new MovieController(filmCardsContainer, onViewChange, commentsModel, moviesModel, userModel, onMovieDelete);
-    filmCardController.render(film, commentsData[index]);
+    filmCardController.render(film);
     return filmCardController;
   });
 };
@@ -92,7 +92,7 @@ export default class PageController {
 
   _renderMovies(movies) {
     const filmsListContainerElement = this._filmsContainerComponent.getElement(); // .films-list__container
-    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onViewChange, this._commentsModel.getComments(), this._commentsModel, this._moviesModel, this._userModel, this._onMovieDelete);
+    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onViewChange, this._commentsModel, this._moviesModel, this._userModel, this._onMovieDelete);
     this._showedFilmCardControllers = [].concat(newfilmCards);
     this._showingFilmCardsCount = this._showedFilmCardControllers.length;
   }
@@ -140,9 +140,8 @@ export default class PageController {
     const prevFilmCardsCount = this._showingFilmCardsCount;
     const filmsContainerElement = this._filmsContainerComponent.getElement();// .films-list__container
     this._showingFilmCardsCount = this._showingFilmCardsCount + STEP;
-    const comments = this._commentsModel.getComments().slice(prevFilmCardsCount, this._showingFilmCardsCount);
     const sortedFilmCards = getSortedFilmCards(movies, this._moviesModel.getActiveSortType(), prevFilmCardsCount, this._showingFilmCardsCount);
-    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onViewChange, comments, this._commentsModel, this._moviesModel, this._userModel, this._onMovieDelete);
+    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onViewChange, this._commentsModel, this._moviesModel, this._userModel, this._onMovieDelete);
 
     this._showedFilmCardControllers = this._showedFilmCardControllers.concat(newFilmCards);
 

@@ -41,9 +41,13 @@ const changeScreenMovieHandler = () => {
   statsComponent.hide();
 };
 const moviesModel = new MoviesModel();
+const pageController = new PageController(siteMainElement, moviesModel);
+
+
 const api = new API(AUTHORIZATION);
 api.getMovies().then((data) => {
   moviesModel.setMovies(data);
+  pageController.render();
 });
 
 

@@ -6,7 +6,7 @@ export default class Movie {
     this.poster = data.film_info[`poster`];
     this.description = data.film_info[`description`];
     this.rating = data.film_info[`total_rating`];
-    this.releaseData = new Date(data.film_info.release[`date`]);
+    this.releaseDate = new Date(data.film_info.release[`date`]);
     this.duration = data.film_info[`runtime`];
     this.genre = data.film_info[`genre`];
     this.director = data.film_info[`director`];
