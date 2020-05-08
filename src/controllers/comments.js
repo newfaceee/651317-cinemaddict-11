@@ -13,7 +13,6 @@ export default class CommentsController {
 
     this._onDataChange = this._onDataChange.bind(this);
 
-    // this._filmDetailsCommentsComponent = null;
     this._newCommentComponent = null;
     this._newCommentController = null;
 
@@ -21,13 +20,13 @@ export default class CommentsController {
 
   render() {
     const container = this._container;
-    const commentsCount = this._comments.comments.length;
+    const commentsCount = this._comments.length;
     this._filmDetailsCommentsListComponent = new FilmDetailsCommentsListComponent();
     this._filmDetailsCommentsTitleComponent = new FilmDetailsCommentsTitleComponent(commentsCount);
 
     const commentsListElement = this._filmDetailsCommentsListComponent.getElement();
 
-    this._comments.comments.forEach((it) => {
+    this._comments.forEach((it) => {
       this._filmDetailsCommentsComponent = new FilmDetailsCommentsComponent(it);
       this._filmDetailsCommentsComponent.setDeleteButtonClickHandler((commentId) => {
         this._onDeleteComment(this._comments, commentId);

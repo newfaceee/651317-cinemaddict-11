@@ -14,11 +14,12 @@ import {generateComments} from './mock/comment.js';
 
 import MoviesModel from './models/movies.js';
 import CommentsModel from './models/comments.js';
-import User from './models/user.js';
+import UserModel from './models/user.js';
 
 import {render, RenderPosition} from './utils/render.js';
+import {formatTime, formatDate} from './utils/common.js';
 
-const AUTHORIZATION = `Basic adkljgfjsdgkl`;
+export const AUTHORIZATION = `Basic adkljgfjsdgkl`;
 const FILM_CARD_COUNT = 17;
 
 const filmCards = generateFilmCards(FILM_CARD_COUNT);
@@ -40,11 +41,12 @@ const changeScreenMovieHandler = () => {
   sortController.show();
   statsComponent.hide();
 };
-const moviesModel = new MoviesModel();
-const pageController = new PageController(siteMainElement, moviesModel);
-
-
 const api = new API(AUTHORIZATION);
+const moviesModel = new MoviesModel();
+const userModel = new UserModel();
+const commentsModel = new CommentsModel();
+const pageController = new PageController(siteMainElement, moviesModel, api);
+
 api.getMovies().then((data) => {
   moviesModel.setMovies(data);
   pageController.render();

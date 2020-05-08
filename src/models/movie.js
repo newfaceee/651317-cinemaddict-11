@@ -18,6 +18,7 @@ export default class Movie {
     this.alreadyWatched = Boolean(data.user_details[`already_watched`]);
     this.favorite = Boolean(data.user_details[`favorite`]);
     this.comments = data[`comments`];
+    this.watchingDate = data.user_details[`watching_date`];
   }
 
   static parseMovie(data) {

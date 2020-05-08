@@ -18,7 +18,6 @@ export default class Movies {
   }
 
   getMoviesAll() {
-    console.log(this._movies);
     return this._movies;
   }
 

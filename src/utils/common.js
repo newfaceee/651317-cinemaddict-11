@@ -1,6 +1,6 @@
 import {COMMENTS} from '../const.js';
-// import {emojis} from './components/film-details-popup.js';
 import {emojis} from '../components/film-details-popup.js';
+import moment from 'moment';
 
 export const transformDuration = (minutes) => {
   const MINUTES_IN_HOUR = 60;
@@ -19,12 +19,15 @@ export const capitalizeFirstLetters = (string) => {
 export const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
+
 export const getRandomData = (dataItem) => {
   return dataItem[getRandomNumber(0, dataItem.length - 1)];
 };
+
 export const getRandomBoolean = () => {
   return Math.random() >= 0.5;
 };
+
 export const getRandomDate = () => {
   const YEAR_MIN = 1998;
   const YEAR_MAX = 2020;
@@ -37,6 +40,7 @@ export const getRandomDate = () => {
   const generatedDay = getRandomNumber(DAY_MIN, DAY_MAX);
   return new Date(generatedYear, generatedMonth, generatedDay);
 };
+
 export const getRating = (min, max) => {
   return (Math.random() * (max - min + 1) + min).toFixed(1);
 };
@@ -47,6 +51,7 @@ export const getRandomDataFromRange = (dataItem, minValue = 1, maxValue = 4) => 
     return dataItem[getRandomNumber(0, dataItem.length - 1)];
   });
 };
+
 export const getFilmOverview = () => {
   const OVERVIEW_SIZE_MIN = 1;
   const OVERVIEW_SIZE_MAX = 5;
@@ -71,6 +76,7 @@ export const getFilmOverview = () => {
   }
   return overview;
 };
+
 const createComment = () => {
   return {
     text: COMMENTS[getRandomNumber(0, COMMENTS.length - 1)],
@@ -79,6 +85,7 @@ const createComment = () => {
     date: `2019/12/31/ 23:59`,
   };
 };
+
 export const getComments = () => {
   const COMMENTS_MIN = 0;
   const COMMENTS_MAX = 5;
@@ -91,3 +98,18 @@ export const getGenres = (watchedMovies) => {
     return movie.genres;
   }));
 };
+
+export const formatTime = (duration) => {
+  const hours = moment(duration).format(`h`);
+  const minutes = moment(duration).format(`h`);
+  return `${hours}h ${minutes}m`;
+
+};
+
+export const formatDate = (date) => {
+  return moment(date).format(`DD MMMM YYYY`);
+};
+
+export const formatCommentDate = (date) => {
+  return moment(date).format(`YYYY/MM/DD/ hh:mm`);
+}

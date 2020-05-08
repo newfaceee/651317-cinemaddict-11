@@ -1,6 +1,7 @@
 import {MONTH_NAMES} from '../const.js';
-import {transformDuration} from '../utils/common.js';
+import {formatDate, formatTime} from '../utils/common.js';
 import AbstractSmartComponent from './abstract-smart-component.js';
+import AbstractComponent from './abstract-component.js';
 
 const POPUP_CONTROLS = {
   WATCHLIST: `Add to watchlist`,
@@ -25,17 +26,15 @@ const createControlMarkup = (text, className, checked) => {
 `);
 };
 
-const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, adult, rating, director, writers, actors, genres, country, duration, releaseDate, overview, isWatchList, isFavorite, isAlreadyWatched}) => {
-  const posterName = `${poster.split(` `).join(`-`)}.jpg`;
-  const isAdult = adult ? `18+` : ``;
-  const fullReleaseDate = `${releaseDate.getDate()} ${MONTH_NAMES[releaseDate.getMonth() + 1]} ${releaseDate.getFullYear()}`;
-  const [hours, minutes] = transformDuration(duration);
-  const genresMarkup = genres.map((genre) => {
-    return createGenresMarkup(genre);
+const createFilmDetailsPopupMarkup = ({ageRating, actors, alreadyWatched, country, description, director, duration, favorite, genre, originalTitle, poster, rating, releaseDate, title, watchlist, writers}) => {
+  const formattedReleaseDate = formatDate(releaseDate);
+  const formattedDuration = formatTime(duration);
+  const genresMarkup = genre.map((it) => {
+    return createGenresMarkup(it);
   }).join(`\n`);
-  const popupWatchlistControlMarkup = createControlMarkup(POPUP_CONTROLS.WATCHLIST, POPUP_CONTROLS_TEXT.WATCHLIST, isWatchList);
-  const popupFavoriteControlMarkup = createControlMarkup(POPUP_CONTROLS.FAVORITE, POPUP_CONTROLS_TEXT.FAVORITE, isFavorite);
-  const popupHistoryControlMarkup = createControlMarkup(POPUP_CONTROLS.ALREADY_WATCHED, POPUP_CONTROLS_TEXT.ALREADY_WATCHED, isAlreadyWatched);
+  const popupWatchlistControlMarkup = createControlMarkup(POPUP_CONTROLS.WATCHLIST, POPUP_CONTROLS_TEXT.WATCHLIST, watchlist);
+  const popupFavoriteControlMarkup = createControlMarkup(POPUP_CONTROLS.FAVORITE, POPUP_CONTROLS_TEXT.FAVORITE, favorite);
+  const popupHistoryControlMarkup = createControlMarkup(POPUP_CONTROLS.ALREADY_WATCHED, POPUP_CONTROLS_TEXT.ALREADY_WATCHED, alreadyWatched);
   return (`<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
@@ -44,9 +43,9 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, adult, rati
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/${posterName}" alt="">
+            <img class="film-details__poster-img" src="${poster}" alt="">
   
-            <p class="film-details__age">${isAdult}</p>
+            <p class="film-details__age">${ageRating}+</p>
           </div>
   
           <div class="film-details__info">
@@ -76,25 +75,25 @@ const createFilmDetailsPopupMarkup = ({title, poster, originalTitle, adult, rati
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${fullReleaseDate}</td>
+                <td class="film-details__cell">${formattedReleaseDate}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${hours}h ${minutes}m</td>
+                <td class="film-details__cell">${formattedDuration}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
                 <td class="film-details__cell">${country}</td>
               </tr>
               <tr class="film-details__row">
-                <td class="film-details__term">${genres.length > 1 ? `Genres` : `Genre`}</td>
+                <td class="film-details__term">${genre.length > 1 ? `Genres` : `Genre`}</td>
                 <td class="film-details__cell">
                   ${genresMarkup}
                 </td>
               </tr>
             </table>
   
-            <p class="film-details__film-description">${overview}</p>
+            <p class="film-details__film-description">${description}</p>
           </div>
         </div>
   
@@ -116,14 +115,10 @@ const createFilmsDetailsPopupTemplate = (filmCard) => {
   return createFilmDetailsPopupMarkup(filmCard);
 };
 
-export default class FilmDetailsPopup extends AbstractSmartComponent {
+export default class FilmDetailsPopup extends AbstractComponent {
   constructor(filmCard) {
     super();
     this._filmCard = filmCard;
-    this._clickClosePopupHandler = null;
-    // Подписывается на все события происходящие в попапе
-    this._subsribeOnEvents();
-    this.rerender = this.rerender.bind(this);
   }
 
   getTemplate() {
@@ -151,40 +146,5 @@ export default class FilmDetailsPopup extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, (evt) => {
       handler(evt.target);
     });
-  }
-
-  recoveryListeners() {
-    this.setClickClosePopupHandler(this._clickClosePopupHandler);
-    this._subsribeOnEvents();
-  }
-  rerender() {
-    super.rerender();
-  }
-
-  _subsribeOnEvents() {
-    // const popupElement = this.getElement();
-    // const emojisListElement = popupElement.querySelector(`.film-details__emoji-list`);
-    // const emojiLabelsElement = Array.from(emojisListElement.querySelectorAll(`.film-details__emoji-label`));
-    // emojisListElement.addEventListener(`click`, (evt) => {
-    //   // Находим клик только по изображению
-    //   if (evt.target.tagName !== `IMG`) {
-    //     return;
-    //   }
-    //   // Находим индекс изображения по которому осуществлен клик
-    //   const clickedEmojiIndex = emojiLabelsElement.findIndex((it) => it === evt.target.parentElement);
-    //   // Проходим по всем смайликам, и если индекс смайлика по которому осуществлен клик
-    //   // совпадает с индексом текущего, меняем его свойство isChecked на !isChecked,
-    //   // остальным смайликам задаем свойство isChecked = false
-    //   emojis.map((emoji, index) => {
-    //     if (clickedEmojiIndex === index) {
-    //       emoji.isChecked = !emoji.isChecked;
-    //       return emoji;
-    //     } else {
-    //       emoji.isChecked = false;
-    //       return emoji;
-    //     }
-    //   });
-    //   this.rerender();
-    // });
   }
 }

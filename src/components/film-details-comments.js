@@ -1,5 +1,5 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
-
+import {formatCommentDate} from '../utils/common.js';
 export const emojis = [{
   name: `smile`,
   isChecked: false,
@@ -17,35 +17,37 @@ export const emojis = [{
   isChecked: false,
 }
 ];
-const createCommentsListMarkup = ({text, emoji, date, author, commentId}) => {
-  return (`<li data-comment-id=${commentId} class="film-details__comment">
+const createCommentMarkup = ({comment, emotion, date, author, id}) => {
+  const formattedDate = formatCommentDate(date);
+
+  return (`<li data-comment-id=${id} class="film-details__comment">
   <span class="film-details__comment-emoji">
-    <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
+    <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
   </span>
   <div>
-    <p class="film-details__comment-text">${text}</p>
+    <p class="film-details__comment-text">${comment}</p>
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
-      <span class="film-details__comment-day">${date}</span>
+      <span class="film-details__comment-day">${formattedDate}</span>
       <button class="film-details__comment-delete">Delete</button>
     </p>
   </div>
 </li>`);
 };
 
-const createCommentsTemplate = (comment) => {
-  const commentsListMarkup = createCommentsListMarkup(comment);
+const createCommentTemplate = (comment) => {
+  const commentsListMarkup = createCommentMarkup(comment);
   return (`${commentsListMarkup}`);
 };
 
 export default class Comments extends AbstractSmartComponent {
-  constructor(comments) {
+  constructor(comment) {
     super();
-    this._comments = comments;
+    this._comment = comment;
   }
 
   getTemplate() {
-    return createCommentsTemplate(this._comments);
+    return createCommentTemplate(this._comment);
   }
 
   setDeleteButtonClickHandler(handler) {

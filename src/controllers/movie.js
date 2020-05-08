@@ -1,3 +1,5 @@
+import {AUTHORIZATION} from '../main.js';
+import API from '../api.js';
 import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsPopupComponent from '../components/film-details-popup.js';
 import FilmDetailsCommentsWrapComponent from '../components/film-details-comments-wrap.js';
@@ -20,6 +22,7 @@ const renderComments = (container, comments, commentsModel, onDeleteComment) => 
   commentsController.render();
   return commentsController;
 };
+
 
 const renderAddNewComment = (container, commentsModel, activeEmotion, onAddComment, comments) => {
   const newCommentController = new NewCommentController(container, commentsModel, activeEmotion, onAddComment, comments);
@@ -61,7 +64,11 @@ export default class MovieController {
 
   render(filmCard) {
     this._filmCard = filmCard;
-    console.log(this._filmCard);
+    this._comments = [];
+    const api = new API(AUTHORIZATION);
+    api.getComments(this._filmCard.id).then((comments) => {
+      this._comments = [].concat(comments);
+    });
     const commentsCount = this._filmCard.comments.length;
 
     this._filmCardControlsComponent = new FilmCardControlsComponent();
@@ -116,10 +123,10 @@ export default class MovieController {
   _renderHistoryControl() {
     const filmCardControlsElement = this._filmCardControlsComponent.getElement();
     const oldComponent = this._filmCardControlsHistoryComponent;
-    this._filmCardControlsHistoryComponent = new FilmCardControlsHistoryComponent(this._filmCard.isAlreadyWatched);
+    this._filmCardControlsHistoryComponent = new FilmCardControlsHistoryComponent(this._filmCard.alreadyWatched);
     this._filmCardControlsHistoryComponent.setClickHandler((control) => {
       const newMovie = Object.assign({}, this._filmCard, {
-        isAlreadyWatched: !this._filmCard.isAlreadyWatched
+        alreadyWatched: !this._filmCard.alreadyWatched
       });
       this._onControlClickHandler(this._filmCard.id, newMovie, control);
     });
@@ -150,11 +157,10 @@ export default class MovieController {
   }
   _renderPopup() {
     const container = document.querySelector(`body`);
-    const comments = this._commentsModel.getCommentsByFilmId(this._filmCard.id);
     this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(this._filmCard);
     this._filmDetailsPopupComponent.setClickClosePopupHandler(() => {
       this._closeFilmDetailsPopup();
-      document.removeEventListener(`keydon`, this._onEscKeyDown);
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
 
     this._filmDetailsPopupComponent.setWatchlistControlClickHandler(() => {
@@ -178,7 +184,7 @@ export default class MovieController {
     const formDetailsContainerElement = this._filmDetailsPopupComponent.getElement().querySelector(`.form-details__bottom-container`);
     render(formDetailsContainerElement, this._filmDetailsCommentsWrapComponent, RenderPosition.BEFOREEND);
 
-    this._renderComments(comments);
+    this._renderComments(this._comments);
     this._renderAddNewComment(null);
     render(container, this._filmDetailsPopupComponent, RenderPosition.BEFOREEND);
   }
