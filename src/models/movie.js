@@ -1,94 +1,31 @@
-import {getMoviesByFilter} from '../utils/filter.js';
-import {FilterType, SortType} from '../const.js';
-
-export default class Movies {
-  constructor() {
-    this._movies = [];
-
-    this._activeFilterType = FilterType.ALL;
-    this._activeSortType = SortType.DEFAULT;
-    this._dataChangeHandlers = [];
-    this._filterChangeHandlers = [];
-    this._sortTypeChangeHandlers = [];
-
+export default class Movie {
+  constructor(data) {
+    this.id = data[`id`];
+    this.title = data.film_info[`title`];
+    this.originalTitle = data.film_info[`alternative_title`];
+    this.poster = data.film_info[`poster`];
+    this.description = data.film_info[`description`];
+    this.rating = data.film_info[`total_rating`];
+    this.releaseData = new Date(data.film_info.release[`date`]);
+    this.duration = data.film_info[`runtime`];
+    this.genre = data.film_info[`genre`];
+    this.director = data.film_info[`director`];
+    this.writers = data.film_info[`writers`];
+    this.actors = data.film_info[`actors`];
+    this.country = data.film_info.release[`release_country`];
+    this.ageRating = data.film_info[`age_rating`];
+    this.watchlist = Boolean(data.user_details[`watchlist`]);
+    this.alreadyWatched = Boolean(data.user_details[`already_watched`]);
+    this.favorite = Boolean(data.user_details[`favorite`]);
+    this.comments = data[`comments`];
   }
 
-  getMovies() {
-    return getMoviesByFilter(this._movies, this._activeFilterType);
+  static parseMovie(data) {
+    return new Movie(data);
   }
 
-  getMoviesAll() {
-    return this._movies;
-  }
-
-  getWatchedMovies() {
-    return this._movies.filter((movie) => movie.isAlreadyWatched);
-  }
-
-  getMovieById(id) {
-    return this._movies.filter((movie) => movie.id === id)[0];
-  }
-
-  getActiveSortType() {
-    return this._activeSortType;
-  }
-
-  getActiveFilterType() {
-    return this._activeFilterType;
-  }
-
-  getUniqueGenresByFilterType() {
-    const filteredMovies = this._movies.filter((movie) => movie.filterType);
-    const genres = [].concat(...filteredMovies.map((movie) => movie.genres));
-    const uniqueGenres = Array.from(new Set(genres));
-
-    return uniqueGenres;
-  }
-
-
-  setMovies(movies) {
-    this._movies = Array.from(movies);
-    this._callHandlers(this._dataChangeHandlers);
-  }
-
-  setDataChangeHandlers(handler) {
-    this._dataChangeHandlers.push(handler);
-  }
-
-  setFilterChangeHandlers(handler) {
-    this._filterChangeHandlers.push(handler);
-  }
-
-  setSortTypeChangeHandlers(handler) {
-    this._sortTypeChangeHandlers.push(handler);
-  }
-
-  setFilter(filterType) {
-    this._activeFilterType = filterType;
-    this._callHandlers(this._filterChangeHandlers);
-    this._callHandlers(this._dataChangeHandlers);
-  }
-
-  setSortType(sortType) {
-    this._activeSortType = sortType;
-    this._callHandlers(this._sortTypeChangeHandlers);
-  }
-
-  updateMovie(id, movie) {
-    const index = this._movies.findIndex((it) => it.id === id);
-    if (index === -1) {
-      return false;
-    }
-
-    this._movies = [].concat(this._movies.slice(0, index), movie, this._movies.slice(index + 1));
-    return true;
-  }
-
-  updateFilters() {
-    this._callHandlers(this._dataChangeHandlers);
-  }
-
-  _callHandlers(handlers) {
-    handlers.forEach((handler) => handler());
+  static parseMovies(data) {
+    return data.map(Movie.parseMovie);
   }
 }
+
