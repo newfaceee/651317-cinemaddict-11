@@ -291,15 +291,15 @@ export default class MovieController {
           switch (control) {
             case CONTROLS.WATCHLIST:
               this._renderWathListControl();
-              // if (!this._filmCard.watchList && this._moviesModel.getActiveFilterType() === FilterType.WATCHLIST) {
-              //   this._onMovieDelete();
-              // }
+              if (this._filmCard.watchList === false && this._moviesModel.getActiveFilterType() === FilterType.WATCHLIST) {
+                this._onMovieDelete();
+              }
               break;
             case CONTROLS.ALREADY_WATCHED:
               this._renderHistoryControl();
 
               this._userModel.updateUser(this._moviesModel.getWatchedMovies());
-              if (!this._filmCard.alreadyWatched &&
+              if (this._filmCard.alreadyWatched === false &&
                 this._moviesModel.getActiveFilterType() === FilterType.HISTORY) {
                 this._onMovieDelete();
               }
