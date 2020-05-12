@@ -10,9 +10,9 @@ import {render, remove, RenderPosition} from '../utils/render.js';
 const FILM_CARD_COUNT_ON_START = 5;
 const STEP = 5;
 
-const renderFilmCards = (filmCardsData, filmCardsContainer, onViewChange, commentsModel, moviesModel, userModel, onMovieDelete) => {
-  return filmCardsData.map((film, index) => {
-    const filmCardController = new MovieController(filmCardsContainer, onViewChange, commentsModel, moviesModel, userModel, onMovieDelete);
+const renderFilmCards = (filmCardsData, filmCardsContainer, onViewChange, commentsModel, moviesModel, userModel, onMovieDelete, api) => {
+  return filmCardsData.map((film) => {
+    const filmCardController = new MovieController(filmCardsContainer, onViewChange, commentsModel, moviesModel, userModel, onMovieDelete, api);
     filmCardController.render(film);
     return filmCardController;
   });
@@ -36,12 +36,13 @@ const getSortedFilmCards = (filmCardsData, sortType, from, to) => {
 };
 
 export default class PageController {
-  constructor(container, moviesModel, commentsModel, userModel) {
-
+  constructor(container, moviesModel, commentsModel, userModel, api) {
     this._container = container;
     this._moviesModel = moviesModel;
     this._commentsModel = commentsModel;
     this._userModel = userModel;
+    this._api = api;
+
     this._showingFilmCardsCount = FILM_CARD_COUNT_ON_START;
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
@@ -92,7 +93,7 @@ export default class PageController {
 
   _renderMovies(movies) {
     const filmsListContainerElement = this._filmsContainerComponent.getElement(); // .films-list__container
-    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onViewChange, this._commentsModel, this._moviesModel, this._userModel, this._onMovieDelete);
+    const newfilmCards = renderFilmCards(movies, filmsListContainerElement, this._onViewChange, this._commentsModel, this._moviesModel, this._userModel, this._onMovieDelete, this._api);
     this._showedFilmCardControllers = [].concat(newfilmCards);
     this._showingFilmCardsCount = this._showedFilmCardControllers.length;
   }
@@ -141,7 +142,7 @@ export default class PageController {
     const filmsContainerElement = this._filmsContainerComponent.getElement();// .films-list__container
     this._showingFilmCardsCount = this._showingFilmCardsCount + STEP;
     const sortedFilmCards = getSortedFilmCards(movies, this._moviesModel.getActiveSortType(), prevFilmCardsCount, this._showingFilmCardsCount);
-    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onViewChange, this._commentsModel, this._moviesModel, this._userModel, this._onMovieDelete);
+    const newFilmCards = renderFilmCards(sortedFilmCards, filmsContainerElement, this._onViewChange, this._commentsModel, this._moviesModel, this._userModel, this._onMovieDelete, this._api);
 
     this._showedFilmCardControllers = this._showedFilmCardControllers.concat(newFilmCards);
 

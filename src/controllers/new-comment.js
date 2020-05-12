@@ -1,4 +1,5 @@
 import NewCommentComponent from '../components/film-details-new-comment.js';
+import CommentModel from '../models/comment.js';
 import CommentAddEmotionLabelComponent from '../components/comment-add-emoji-label.js';
 import {EMOJIS} from '../const.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
@@ -38,7 +39,14 @@ export default class NewCommentController {
       this._onEmotionChange(emotion);
     });
     this._newCommentComponent.setSubmitFormHandler((emotion, commentValue) => {
-      this._onAddComment(this._comments, emotion, commentValue);
+      const comment = CommentModel.parseComment({
+        "id": Math.trunc(Math.random() * 1000 + 1000),
+        "comment": commentValue,
+        "date": new Date(),
+        "emotion": emotion
+      });
+      const newComment = CommentModel.clone(comment);
+      this._onAddComment(newComment);
     });
 
     render(container, this._newCommentComponent, RenderPosition.BEFOREEND);

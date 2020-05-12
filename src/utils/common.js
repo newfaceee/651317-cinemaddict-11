@@ -1,13 +1,4 @@
-import {COMMENTS} from '../const.js';
-import {emojis} from '../components/film-details-popup.js';
 import moment from 'moment';
-
-export const transformDuration = (minutes) => {
-  const MINUTES_IN_HOUR = 60;
-  const h = Math.floor(minutes / MINUTES_IN_HOUR);
-  const m = minutes - MINUTES_IN_HOUR * h;
-  return [h, m];
-};
 
 export const capitalizeFirstLetters = (string) => {
   const words = string.trim().split(` `);
@@ -16,93 +7,16 @@ export const capitalizeFirstLetters = (string) => {
   });
 };
 
-export const getRandomNumber = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-export const getRandomData = (dataItem) => {
-  return dataItem[getRandomNumber(0, dataItem.length - 1)];
-};
-
-export const getRandomBoolean = () => {
-  return Math.random() >= 0.5;
-};
-
-export const getRandomDate = () => {
-  const YEAR_MIN = 1998;
-  const YEAR_MAX = 2020;
-  const MONTH_MIN = 1;
-  const MONTH_MAX = 12;
-  const DAY_MIN = 1;
-  const DAY_MAX = 28;
-  const generatedYear = getRandomNumber(YEAR_MIN, YEAR_MAX);
-  const generatedMonth = getRandomNumber(MONTH_MIN, MONTH_MAX);
-  const generatedDay = getRandomNumber(DAY_MIN, DAY_MAX);
-  return new Date(generatedYear, generatedMonth, generatedDay);
-};
-
-export const getRating = (min, max) => {
-  return (Math.random() * (max - min + 1) + min).toFixed(1);
-};
-
-export const getRandomDataFromRange = (dataItem, minValue = 1, maxValue = 4) => {
-  const rangeSize = getRandomNumber(minValue, maxValue);
-  return new Array(rangeSize).fill(``).map(() => {
-    return dataItem[getRandomNumber(0, dataItem.length - 1)];
-  });
-};
-
-export const getFilmOverview = () => {
-  const OVERVIEW_SIZE_MIN = 1;
-  const OVERVIEW_SIZE_MAX = 5;
-  let overview = ``;
-  const overviewTemplates = [
-    `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-    `Cras aliquet varius magna, non porta ligula feugiat eget.`,
-    `Fusce tristique felis at fermentum pharetra.`,
-    `Aliquam id orci ut lectus varius viverra.`,
-    `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-    `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
-    `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
-    `Sed sed nisi sed augue convallis suscipit in sed felis.`,
-    `Aliquam erat volutpat.`,
-    `Nunc fermentum tortor ac porta dapibus.`,
-    `In rutrum ac purus sit amet tempus.`,
-  ];
-  const overviewSize = getRandomNumber(OVERVIEW_SIZE_MIN, OVERVIEW_SIZE_MAX);
-  for (let i = 0; i < overviewSize; i++) {
-    overview +=
-      overviewTemplates[getRandomNumber(0, overviewTemplates.length - 1)];
-  }
-  return overview;
-};
-
-const createComment = () => {
-  return {
-    text: COMMENTS[getRandomNumber(0, COMMENTS.length - 1)],
-    emoji: emojis[getRandomNumber(0, emojis.length - 1)].name,
-    author: `John Doe`,
-    date: `2019/12/31/ 23:59`,
-  };
-};
-
-export const getComments = () => {
-  const COMMENTS_MIN = 0;
-  const COMMENTS_MAX = 5;
-  const commentsNumber = getRandomNumber(COMMENTS_MIN, COMMENTS_MAX);
-  return new Array(commentsNumber).fill(``).map(createComment);
-};
-
 export const getGenres = (watchedMovies) => {
   return [].concat(...watchedMovies.map((movie) => {
-    return movie.genres;
+    return movie.genre;
   }));
 };
 
 export const formatTime = (duration) => {
   const hours = moment(duration).format(`h`);
   const minutes = moment(duration).format(`h`);
-  return `${hours}h ${minutes}m`;
+  return [hours, minutes];
 
 };
 
@@ -112,4 +26,4 @@ export const formatDate = (date) => {
 
 export const formatCommentDate = (date) => {
   return moment(date).format(`YYYY/MM/DD/ hh:mm`);
-}
+};

@@ -13,8 +13,7 @@ export default class Comments {
   }
 
   getCommentsByFilmId(id) {
-    const index = this._comments.findIndex((comments) => comments.id === id);
-    return this._comments[index];
+    return this._comments[id];
   }
 
   getActiveEmotion() {
@@ -29,16 +28,8 @@ export default class Comments {
     this._activeEmoji = emotion;
   }
 
-  deleteComment(oldData, clickedCommentId) {
-    const index = this._comments.findIndex((comment) => {
-      return comment.id === oldData.id;
-    });
-    if (index === -1) {
-      return false;
-    }
-    oldData.comments = oldData.comments.filter((comment) => comment.commentId !== clickedCommentId);
-    this._comments = [].concat(this._comments.slice(0, index), oldData, this._comments.slice(index + 1));
-    return true;
+  deleteComment(id) {
+    this._comments = this._comments.filter((comment) => comment.id !== id);
   }
 
   addNewComment(oldData, emotion, commentValue) {
@@ -63,5 +54,9 @@ export default class Comments {
 
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
+  }
+
+  removeComments() {
+    this._comments = [];
   }
 }

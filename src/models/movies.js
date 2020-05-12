@@ -22,7 +22,7 @@ export default class Movies {
   }
 
   getWatchedMovies() {
-    return this._movies.filter((movie) => movie.isAlreadyWatched);
+    return this._movies.filter((movie) => movie.alreadyWatched);
   }
 
   getMovieById(id) {

@@ -5,15 +5,15 @@ export const getAllMovies = (movies) => {
 };
 
 export const getWatchlistMovies = (movies) => {
-  return movies.filter((movie) => movie.isWatchList);
+  return movies.filter((movie) => movie.watchlist);
 };
 
 export const getHistoryMovies = (movies) => {
-  return movies.filter((movie) => movie.isAlreadyWatched);
+  return movies.filter((movie) => movie.alreadyWatched);
 };
 
 export const getFavoritesMovies = (movies) => {
-  return movies.filter((movie) => movie.isFavorite);
+  return movies.filter((movie) => movie.favorite);
 };
 
 export const getMoviesByFilter = (movies, filterType) => {

@@ -1,80 +1,72 @@
 import API from './api.js';
 
 import ProfileRatingComponent from './components/profile-rating.js';
-import StatisticComponent from './components/statistic.js';
 import FooterStatisticsComponent from './components/footerStatistics.js';
+import FilmsListLoadingComponent from './components/films-list-loading.js';
 
 import PageController from './controllers/page.js';
 import FilterController from './controllers/filter.js';
 import SortController from './controllers/sort.js';
+import StatisticController from './controllers/stat.js';
 
 import {generateUserProfile} from './mock/user-profile.js';
-import {generateFilmCards} from './mock/film-cards.js';
-import {generateComments} from './mock/comment.js';
 
 import MoviesModel from './models/movies.js';
 import CommentsModel from './models/comments.js';
 import UserModel from './models/user.js';
 
 import {render, RenderPosition} from './utils/render.js';
-import {formatTime, formatDate} from './utils/common.js';
 
-export const AUTHORIZATION = `Basic adkljgfjsdgkl`;
-const FILM_CARD_COUNT = 17;
 
-const filmCards = generateFilmCards(FILM_CARD_COUNT);
-const filmCardsCount = filmCards.length;
-const comments = generateComments(filmCards);
-
-const siteHeaderElement = document.querySelector(`.header`);
-const siteMainElement = document.querySelector(`.main`);
-const siteFooterStatisticsElement = document.querySelector(`.footer__statistics`);
+const AUTHORIZATION = `Basic adkljgfjsdgkl`;
+const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict/`;
 
 const changeScreenStatHandler = () => {
   pageController.hide();
   sortController.hide();
-  statsComponent.show();
+  statisticController.show();
 };
 
 const changeScreenMovieHandler = () => {
   pageController.show();
   sortController.show();
-  statsComponent.hide();
+  statisticController.hide();
 };
-const api = new API(AUTHORIZATION);
+
+const siteHeaderElement = document.querySelector(`.header`);
+const siteMainElement = document.querySelector(`.main`);
+const siteFooterStatisticsElement = document.querySelector(`.footer__statistics`);
+
+const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
 const userModel = new UserModel();
 const commentsModel = new CommentsModel();
-const pageController = new PageController(siteMainElement, moviesModel, api);
+
+const filmsListLoadingComponent = new FilmsListLoadingComponent();
+
+render(siteMainElement, filmsListLoadingComponent, RenderPosition.BEFOREEND);
+
+const pageController = new PageController(siteMainElement, moviesModel, commentsModel, userModel, api);
+const sortController = new SortController(siteMainElement, moviesModel);
+const filterController = new FilterController(siteMainElement, moviesModel, changeScreenStatHandler, changeScreenMovieHandler);
+const statisticController = new StatisticController(siteMainElement, userModel, moviesModel);
+
 
 api.getMovies().then((data) => {
+  filmsListLoadingComponent.getElement().remove();
   moviesModel.setMovies(data);
+
+  const userProfile = generateUserProfile(moviesModel.getWatchedMovies());
+  userModel.setUser(userProfile);
+  const profileRatingComponent = new ProfileRatingComponent(userProfile);
+  const footerStatisticsComponent = new FooterStatisticsComponent(data.length);
+
+
+  render(siteHeaderElement, profileRatingComponent, RenderPosition.BEFOREEND);
+  render(siteFooterStatisticsElement, footerStatisticsComponent, RenderPosition.BEFOREEND);
+  sortController.render();
+  filterController.render();
   pageController.render();
+  statisticController.render();
+  statisticController.hide();
 });
-
-
-// moviesModel.setMovies(filmCards);
-// const watchedMovies = moviesModel.getWatchedMovies();
-// const userProfile = generateUserProfile(watchedMovies);
-// const userModel = new User();
-// userModel.setUser(userProfile);
-
-// const commentsModel = new CommentsModel();
-// commentsModel.setComments(comments);
-
-// const profileRatingComponent = new ProfileRatingComponent(userProfile);
-// const footerStatisticsComponent = new FooterStatisticsComponent(filmCardsCount);
-
-// const filterController = new FilterController(siteMainElement, moviesModel, changeScreenStatHandler, changeScreenMovieHandler);
-// const sortController = new SortController(siteMainElement, moviesModel);
-// const pageController = new PageController(siteMainElement, moviesModel, commentsModel, userModel);
-// const statsComponent = new StatisticComponent(userModel, moviesModel);
-
-
-// render(siteHeaderElement, profileRatingComponent, RenderPosition.BEFOREEND);
-// render(siteFooterStatisticsElement, footerStatisticsComponent, RenderPosition.BEFOREEND);
-// sortController.render();
-// filterController.render();
-// pageController.render(filmCards);
-// render(siteMainElement, statsComponent, RenderPosition.BEFOREEND);
-// statsComponent.hide();

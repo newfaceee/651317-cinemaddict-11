@@ -1,6 +1,4 @@
-import {MONTH_NAMES} from '../const.js';
 import {formatDate, formatTime} from '../utils/common.js';
-import AbstractSmartComponent from './abstract-smart-component.js';
 import AbstractComponent from './abstract-component.js';
 
 const POPUP_CONTROLS = {
