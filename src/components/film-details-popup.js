@@ -26,9 +26,7 @@ const createControlMarkup = (text, className, checked) => {
 
 const createFilmDetailsPopupMarkup = ({ageRating, actors, alreadyWatched, country, description, director, duration, favorite, genre, originalTitle, poster, rating, releaseDate, title, watchlist, writers}) => {
   const formattedReleaseDate = formatDate(releaseDate);
-  const formattedDuration = formatTime(duration);
-  const hours = formattedDuration.split(` `)[0];
-  const minutes = formattedDuration.split(` `)[1];
+  const [hours, minutes] = formatTime(duration);
   const genresMarkup = genre.map((it) => {
     return createGenresMarkup(it);
   }).join(`\n`);

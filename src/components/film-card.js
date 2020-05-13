@@ -3,9 +3,8 @@ import AbstractComponent from './abstract-component.js';
 
 const createFilmCardTemplate = ({title, poster, description, duration, rating, genre, releaseDate}) => {
   const DESCRIPTION_SIZE = 140;
-  const formattedDuration = formatTime(duration);
-  const hours = formattedDuration.split(` `)[0];
-  const minutes = formattedDuration.split(` `)[1];
+  const [hours, minutes] = formatTime(duration);
+
   const releaseDateYear = releaseDate.getFullYear();
   const filmDescription = description.length > DESCRIPTION_SIZE ? description.substring(0, DESCRIPTION_SIZE) + `...` : description;
   const isGenre = genre.length !== 0 ? genre[0] : ``;
