@@ -1,22 +1,6 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
 import {formatCommentDate} from '../utils/common.js';
-export const emojis = [{
-  name: `smile`,
-  isChecked: false,
-},
-{
-  name: `sleeping`,
-  isChecked: false,
-},
-{
-  name: `puke`,
-  isChecked: false,
-},
-{
-  name: `angry`,
-  isChecked: false,
-}
-];
+
 const createCommentMarkup = ({comment, emotion, date, author, id}) => {
   const formattedDate = formatCommentDate(date);
 
