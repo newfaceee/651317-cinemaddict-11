@@ -55,6 +55,7 @@ export default class MovieController {
     this._onDeleteComment = this._onDeleteComment.bind(this);
     this._renderComments = this._renderComments.bind(this);
     this._onControlClickHandler = this._onControlClickHandler.bind(this);
+    this._onAddComment = this._onAddComment.bind(this);
 
     this._commentsModel = commentsModel;
     this._moviesModel = moviesModel;
@@ -216,6 +217,7 @@ export default class MovieController {
     if (this._newCommentController) {
       this._newCommentController.destroy();
       this._newCommentController = null;
+      this._comments = null;
     }
   }
 
@@ -279,10 +281,18 @@ export default class MovieController {
     });
   }
 
-  // _onAddComment(newComment) {
-  //   this._api.createComment(newComment).then((data) => {
-  //   });
-  // }
+  _onAddComment(comment) {
+    const filmId = this._filmCard.id;
+    this._api.createComment(comment, filmId).then((newComments) => {
+      this._comments = newComments;
+      const commentsCount = this._comments.length;
+      this._removeComments();
+      this._renderComments(this._comments);
+      this._renderCommentsCount(commentsCount);
+      this._removeAddNewComment();
+      this._renderAddNewComment();
+    });
+  }
 
   _onControlClickHandler(id, movie, control) {
 
