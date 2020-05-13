@@ -206,13 +206,17 @@ export default class MovieController {
   }
 
   _removeComments() {
-    this._commentsController.destroy();
-    this._commentsController = null;
+    if (this._commentsController) {
+      this._commentsController.destroy();
+      this._commentsController = null;
+    }
   }
 
   _removeAddNewComment() {
-    this._newCommentController.destroy();
-    this._newCommentController = null;
+    if (this._newCommentController) {
+      this._newCommentController.destroy();
+      this._newCommentController = null;
+    }
   }
 
   destroy() {
