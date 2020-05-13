@@ -1,5 +1,8 @@
 import AbstractComponent from "./abstract-component.js";
 import {encode} from 'he';
+
+const ENTER_KEY_CODE = 13;
+
 const createEmojiListMarkup = ({name, checked}) => {
   const isChecked = checked ? `checked` : ``;
   return (`<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${name}" value="${name}" ${isChecked}>
@@ -44,7 +47,7 @@ export default class NewComment extends AbstractComponent {
 
   setSubmitFormHandler(handler) {
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, (evt) => {
-      if (evt.ctrlKey && evt.keyCode === 13) {
+      if (evt.ctrlKey && evt.keyCode === ENTER_KEY_CODE || evt.metaKey && evt.keyCode === ENTER_KEY_CODE) {
         const commentEmotionElement = this.getElement().querySelector(`.film-details__add-emoji-label img`);
         const notSanitizedCommentText = this.getElement().querySelector(`.film-details__comment-input`).value;
         const commentText = encode(notSanitizedCommentText);
