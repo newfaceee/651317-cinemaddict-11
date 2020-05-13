@@ -54,11 +54,12 @@ const createWatchedMoviesMarkup = (watchedMoviesCount, title) => {
 
 const createDurationMarkup = (timeSpent, title) => {
   const formattedDuration = formatTime(timeSpent);
-  console.log(formattedDuration);
+  const hours = formattedDuration.split(` `)[0];
+  const minutes = formattedDuration.split(` `)[1];
 
   return (`<li class="statistic__text-item">
   <h4 class="statistic__item-title">${title}</h4>
-  <p class="statistic__item-text"> <span class="statistic__item-description">h</span>  <span class="statistic__item-description">m</span></p>
+  <p class="statistic__item-text">${hours}<span class="statistic__item-description">h</span>${minutes}<span class="statistic__item-description">m</span></p>
 </li>`);
 };
 
