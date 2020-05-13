@@ -14,7 +14,7 @@ export const getGenres = (watchedMovies) => {
 };
 
 export const formatTime = (duration) => {
-  return moment.utc(moment.duration(duration, `minutes`).asMilliseconds()).format(`H m`);
+  return moment.utc(moment.duration(duration, `minutes`).asMilliseconds()).format(`h m`);
 };
 
 export const formatDate = (date) => {
