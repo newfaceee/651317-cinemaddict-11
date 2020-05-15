@@ -3,6 +3,8 @@ import CommentAddEmotionLabelComponent from '../components/comment-add-emoji-lab
 import {EMOJIS} from '../const.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export default class NewCommentController {
   constructor(container, commentsModel, activeEmotion, onAddComment, comments) {
     this._container = container;
@@ -16,7 +18,17 @@ export default class NewCommentController {
     this._onAddComment = onAddComment;
 
     this._onDataChange = this._onDataChange.bind(this);
+  }
 
+  shake() {
+    this._newCommentComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this._newCommentComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  showErrorBorder() {
+    this._newCommentComponent.getElement().querySelector(`.film-details__comment-input`).style.border = `1px solid red`;
   }
 
   render() {
@@ -64,4 +76,5 @@ export default class NewCommentController {
     this._commentAddEmotionLabelComponent = new CommentAddEmotionLabelComponent(emotion);
     render(newCommentElement, this._commentAddEmotionLabelComponent, RenderPosition.AFTERBEGIN);
   }
+
 }

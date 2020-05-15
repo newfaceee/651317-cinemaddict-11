@@ -13,11 +13,12 @@ export default class CommentsController {
 
     this._onDataChange = this._onDataChange.bind(this);
 
-    this._newCommentComponent = null;
-    this._newCommentController = null;
+    this._filmDetailsComments = [];
 
   }
+  shake() {
 
+  }
   render() {
     const container = this._container;
     const commentsCount = this._comments.length;
@@ -26,12 +27,13 @@ export default class CommentsController {
 
     const commentsListElement = this._filmDetailsCommentsListComponent.getElement();
 
-    this._comments.forEach((it) => {
-      this._filmDetailsCommentsComponent = new FilmDetailsCommentsComponent(it);
-      this._filmDetailsCommentsComponent.setDeleteButtonClickHandler((commentId) => {
-        this._onDeleteComment(this._comments, commentId);
+    this._comments.forEach((comment) => {
+      const filmDetailsCommentsComponent = new FilmDetailsCommentsComponent(comment);
+      filmDetailsCommentsComponent.setDeleteButtonClickHandler((commentId, deleteButtonElement) => {
+        this._onDeleteComment(this._comments, commentId, deleteButtonElement, filmDetailsCommentsComponent);
       });
-      render(commentsListElement, this._filmDetailsCommentsComponent, RenderPosition.BEFOREEND);
+      this._filmDetailsComments.push(filmDetailsCommentsComponent);
+      render(commentsListElement, filmDetailsCommentsComponent, RenderPosition.BEFOREEND);
     });
     render(container, this._filmDetailsCommentsListComponent, RenderPosition.AFTERBEGIN);
     render(container, this._filmDetailsCommentsTitleComponent, RenderPosition.AFTERBEGIN);

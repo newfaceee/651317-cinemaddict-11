@@ -1,6 +1,8 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
 import {formatCommentDate} from '../utils/common.js';
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 const createCommentMarkup = ({comment, emotion, date, author, id}) => {
   const formattedDate = formatCommentDate(date);
 
@@ -39,9 +41,17 @@ export default class Comments extends AbstractSmartComponent {
     for (const comment of comments) {
       comment.addEventListener(`click`, (evt) => {
         evt.preventDefault();
-        const commentId = evt.target.closest(`.film-details__comment`).dataset.commentId;
-        handler(commentId);
+        const deleteButtonElement = evt.target;
+        const commentId = deleteButtonElement.closest(`.film-details__comment`).dataset.commentId;
+        handler(commentId, deleteButtonElement);
       });
     }
+  }
+
+  shake() {   
+    this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 }

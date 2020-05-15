@@ -270,7 +270,9 @@ export default class MovieController {
     }
   }
 
-  _onDeleteComment(comment, id) {
+  _onDeleteComment(comment, id, deleteButtonElement, commentComponent) {
+    deleteButtonElement.innerHTML = `Deleting...`;
+    deleteButtonElement.disabled = true;
     this._api.deleteComment(id).then(() => {
       this._commentsModel.deleteComment(id);
       this._comments = this._commentsModel.getComments();
@@ -278,6 +280,10 @@ export default class MovieController {
       this._removeComments();
       this._renderComments(this._comments);
       this._renderCommentsCount(commentsCount);
+    }).catch(() => {
+      commentComponent.shake();
+      deleteButtonElement.disabled = false;
+      deleteButtonElement.innerHTML = `Delete`;
     });
   }
 
@@ -291,6 +297,9 @@ export default class MovieController {
       this._renderCommentsCount(commentsCount);
       this._removeAddNewComment();
       this._renderAddNewComment();
+    }).catch(() => {
+      this._newCommentController.showErrorBorder();
+      this._newCommentController.shake();
     });
   }
 
